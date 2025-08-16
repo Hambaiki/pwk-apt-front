@@ -31,3 +31,9 @@ body {
     text-wrap: balance;
   }
 }
+
+@layer components {
+  .translucent-rounded-container {
+    @apply shadow-2xl rounded-2xl bg-black/30 backdrop-blur text-white;
+  }
+}

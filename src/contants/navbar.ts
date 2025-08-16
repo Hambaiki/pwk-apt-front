@@ -1,14 +1,11 @@
-import {
-  DocumentIcon,
-  HomeIcon,
-  InformationCircleIcon,
-} from "@heroicons/react/24/outline";
+import { HomeIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
 
 export const navbarItems = [
   {
     label: "Home",
     href: "/",
     icon: HomeIcon,
+    // add a field of what condition it can be active
   },
   // {
   //   label: "Exercises",

@@ -18,9 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={clsx(montserrat.className, "bg-[#fafafa]")}>
-        {children}
-      </body>
+      <body className={clsx(montserrat.className)}>{children}</body>
     </html>
   );
 }
