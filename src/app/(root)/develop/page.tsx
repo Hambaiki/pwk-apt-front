@@ -1,0 +1,582 @@
+"use client";
+
+import {
+  Button,
+  Input,
+  Select,
+  TextArea,
+  Badge,
+  Card,
+  Alert,
+} from "@/components/ui";
+
+import React, { useState } from "react";
+
+import { Eye, Copy, Check, Palette, Type, Layers, Zap } from "lucide-react";
+
+export default function ColorShowcasePage() {
+  return (
+    <div className="min-h-screen bg-background-secondary">
+      {/* Header */}
+      <div className="bg-primary-500 text-white py-8">
+        <div className="max-w-7xl mx-auto px-6">
+          <h1 className="text-3xl font-bold mb-2">
+            Aptitude Exercise App - Design System
+          </h1>
+          <p className="text-primary-100">
+            Comprehensive showcase of custom Tailwind CSS configuration
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Quick Usage Guide */}
+        <div className="bg-info-50 border border-info-200 rounded-xl p-6 mb-8">
+          <h2 className="text-lg font-semibold text-info-800 mb-3 flex items-center gap-2">
+            <Eye className="w-5 h-5" />
+            Quick Usage Guide
+          </h2>
+          <div className="text-info-700 space-y-2 text-sm">
+            <p>• Click any color swatch to copy its Tailwind class name</p>
+            <p>
+              • Use{" "}
+              <code className="bg-info-100 px-1 rounded">bg-primary-500</code>{" "}
+              for backgrounds,{" "}
+              <code className="bg-info-100 px-1 rounded">text-primary-500</code>{" "}
+              for text
+            </p>
+            <p>
+              • Combine with hover states:{" "}
+              <code className="bg-info-100 px-1 rounded">
+                hover:bg-primary-600
+              </code>
+            </p>
+            <p>
+              • All colors include 50-900 shade variations for maximum
+              flexibility
+            </p>
+          </div>
+        </div>
+
+        {/* Color Palettes */}
+        {colorPalettes.map((palette) => (
+          <ColorPalette
+            key={palette.prefix}
+            title={palette.title}
+            colors={palette.colors}
+            prefix={palette.prefix}
+          />
+        ))}
+
+        {/* Background Colors */}
+        <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <Layers className="w-5 h-5" />
+            Background Colors
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-background-primary border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
+              <div className="font-medium">Primary Background</div>
+              <div className="text-sm text-gray-500 mt-1">
+                bg-background-primary
+              </div>
+              <div className="text-xs font-mono mt-2">#ffffff</div>
+            </div>
+            <div className="bg-background-secondary border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
+              <div className="font-medium">Secondary Background</div>
+              <div className="text-sm text-gray-500 mt-1">
+                bg-background-secondary
+              </div>
+              <div className="text-xs font-mono mt-2">#f8fafc</div>
+            </div>
+            <div className="bg-background-tertiary border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
+              <div className="font-medium">Tertiary Background</div>
+              <div className="text-sm text-gray-500 mt-1">
+                bg-background-tertiary
+              </div>
+              <div className="text-xs font-mono mt-2">#f1f5f9</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Text Colors */}
+        <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <Type className="w-5 h-5" />
+            Text Colors
+          </h3>
+          <div className="space-y-3">
+            <div className="text-text-primary text-lg font-semibold">
+              Primary Text (text-text-primary) - Main content
+            </div>
+            <div className="text-text-secondary text-base">
+              Secondary Text (text-text-secondary) - Supporting content
+            </div>
+            <div className="text-text-tertiary text-sm">
+              Tertiary Text (text-text-tertiary) - Metadata and captions
+            </div>
+            <div className="bg-gray-800 p-3 rounded">
+              <div className="text-text-inverse">
+                Inverse Text (text-text-inverse) - For dark backgrounds
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Component Examples */}
+        <ComponentExamples />
+
+        {/* Typography Examples */}
+        <TypographyExamples />
+
+        {/* Shadow Examples */}
+        <ShadowExamples />
+
+        {/* Animation Examples */}
+        <AnimationExamples />
+
+        {/* Aptitude App UI Preview */}
+        <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
+          <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+            <Eye className="w-5 h-5" />
+            Aptitude App UI Preview
+          </h3>
+
+          <div className="bg-background-secondary rounded-lg p-6 border border-secondary-200">
+            {/* Mock header */}
+            <div className="bg-primary-500 text-white p-4 rounded-lg mb-6">
+              <div className="flex justify-between items-center">
+                <h4 className="text-lg font-semibold">
+                  Mathematical Reasoning
+                </h4>
+                <div className="bg-primary-600 px-3 py-1 rounded text-sm">
+                  Question 5/20
+                </div>
+              </div>
+              <div className="bg-primary-400 h-2 rounded-full mt-3">
+                <div className="bg-white h-full w-1/4 rounded-full"></div>
+              </div>
+            </div>
+
+            {/* Mock question */}
+            <div className="bg-white p-6 rounded-lg shadow-soft mb-4">
+              <h5 className="text-text-primary font-medium mb-3">
+                If a train travels 120 km in 2 hours, what is its average speed?
+              </h5>
+              <div className="space-y-2">
+                <button className="w-full text-left p-3 border border-secondary-200 rounded hover:bg-primary-50 hover:border-primary-300 transition-colors">
+                  A) 50 km/h
+                </button>
+                <button className="w-full text-left p-3 border border-secondary-200 rounded hover:bg-primary-50 hover:border-primary-300 transition-colors">
+                  B) 60 km/h
+                </button>
+                <button className="w-full text-left p-3 border border-secondary-200 rounded hover:bg-primary-50 hover:border-primary-300 transition-colors">
+                  C) 70 km/h
+                </button>
+              </div>
+            </div>
+
+            {/* Mock feedback */}
+            <div className="bg-success-50 border border-success-200 text-success-700 p-4 rounded-lg mb-4">
+              ✓ Correct! The average speed is 60 km/h (120 km ÷ 2 hours = 60
+              km/h)
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex gap-3">
+              <button className="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-lg transition-colors">
+                Next Question
+              </button>
+              <button className="bg-secondary-100 hover:bg-secondary-200 text-secondary-700 px-6 py-2 rounded-lg transition-colors">
+                Review Answer
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Custom Made Elements */}
+        <ElementExample />
+      </div>
+    </div>
+  );
+}
+
+const ColorPalette = ({
+  title,
+  colors,
+  prefix,
+}: {
+  title: string;
+  colors: Record<string, string>;
+  prefix: string;
+}) => {
+  const [copiedColor, setCopiedColor] = useState("");
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedColor(text);
+    setTimeout(() => setCopiedColor(""), 2000);
+  };
+
+  return (
+    <>
+      {/* Copy notification */}
+      {copiedColor && (
+        <div className="fixed z-[999] top-4 right-4 bg-success-500 text-white px-4 py-2 rounded-lg shadow-medium flex items-center gap-2 animate-slide-up">
+          <Check className="w-4 h-4" />
+          Copied: {copiedColor}
+        </div>
+      )}
+
+      <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
+        <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <Palette className="w-5 h-5" />
+          {title}
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-10 gap-3">
+          {Object.entries(colors).map(([shade, color]) => (
+            <div key={shade} className="text-center">
+              <button
+                className={`group w-full h-16 rounded-lg mb-2 cursor-pointer transition-transform hover:scale-105 border border-gray-200`}
+                style={{ backgroundColor: color }}
+                onClick={() => copyToClipboard(`${prefix}-${shade}`)}
+                title={`Click to copy: ${prefix}-${shade}`}
+              >
+                <Copy className="w-4 h-4 text-gray-500 m-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+              </button>
+              <div className="text-xs font-mono text-gray-600">{shade}</div>
+              <div className="text-xs text-gray-500 mt-1">{color}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+};
+
+const ComponentExamples = () => (
+  <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
+    <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+      <Layers className="w-5 h-5" />
+      Component Examples
+    </h3>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Primary Buttons */}
+      <div className="space-y-3">
+        <h4 className="font-medium text-gray-700">Primary Buttons</h4>
+        <button className="w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+          Start Exercise
+        </button>
+        <button className="w-full bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors">
+          Submit Answer
+        </button>
+      </div>
+
+      {/* Status Messages */}
+      <div className="space-y-3">
+        <h4 className="font-medium text-gray-700">Status Messages</h4>
+        <div className="bg-success-50 border border-success-200 text-success-700 px-4 py-2 rounded-lg">
+          ✓ Correct Answer!
+        </div>
+        <div className="bg-error-50 border border-error-200 text-error-700 px-4 py-2 rounded-lg">
+          ✗ Incorrect Answer
+        </div>
+        <div className="bg-warning-50 border border-warning-200 text-warning-700 px-4 py-2 rounded-lg">
+          ⚠ Time Running Out
+        </div>
+      </div>
+
+      {/* Cards */}
+      <div className="space-y-3">
+        <h4 className="font-medium text-gray-700">Cards</h4>
+        <div className="bg-background-secondary border border-secondary-200 p-4 rounded-lg shadow-soft">
+          <h5 className="font-medium text-text-primary">Question 1</h5>
+          <p className="text-text-secondary text-sm mt-1">
+            Sample question content
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const TypographyExamples = () => (
+  <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
+    <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+      <Type className="w-5 h-5" />
+      Typography Examples
+    </h3>
+
+    <div className="space-y-4">
+      <div className="text-text-primary text-4xl font-bold">Main Heading</div>
+      <div className="text-text-primary text-2xl font-semibold">
+        Section Heading
+      </div>
+      <div className="text-text-primary text-xl font-medium">Subsection</div>
+      <div className="text-text-primary text-base">
+        Body text for questions and content
+      </div>
+      <div className="text-text-secondary text-sm">
+        Secondary text for descriptions
+      </div>
+      <div className="text-text-tertiary text-xs">
+        Tertiary text for metadata
+      </div>
+    </div>
+  </div>
+);
+
+const ShadowExamples = () => (
+  <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
+    <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+      <Layers className="w-5 h-5" />
+      Shadow Examples
+    </h3>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="bg-white p-6 rounded-lg shadow-soft border border-gray-100">
+        <h4 className="font-medium mb-2">Soft Shadow</h4>
+        <p className="text-sm text-gray-600">shadow-soft</p>
+      </div>
+      <div className="bg-white p-6 rounded-lg shadow-medium border border-gray-100">
+        <h4 className="font-medium mb-2">Medium Shadow</h4>
+        <p className="text-sm text-gray-600">shadow-medium</p>
+      </div>
+      <div className="bg-white p-6 rounded-lg shadow-strong border border-gray-100">
+        <h4 className="font-medium mb-2">Strong Shadow</h4>
+        <p className="text-sm text-gray-600">shadow-strong</p>
+      </div>
+    </div>
+  </div>
+);
+
+const AnimationExamples = () => (
+  <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
+    <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+      <Zap className="w-5 h-5" />
+      Animation Examples
+    </h3>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="bg-primary-50 p-6 rounded-lg animate-fade-in">
+        <h4 className="font-medium mb-2">Fade In</h4>
+        <p className="text-sm text-gray-600">animate-fade-in</p>
+      </div>
+      <div className="bg-success-50 p-6 rounded-lg animate-slide-up">
+        <h4 className="font-medium mb-2">Slide Up</h4>
+        <p className="text-sm text-gray-600">animate-slide-up</p>
+      </div>
+      <div className="bg-warning-50 p-6 rounded-lg animate-bounce-subtle">
+        <h4 className="font-medium mb-2">Bounce Subtle</h4>
+        <p className="text-sm text-gray-600">animate-bounce-subtle</p>
+      </div>
+    </div>
+  </div>
+);
+
+const ElementExample = () => {
+  return (
+    <div className="bg-white rounded-xl shadow-soft p-6 mb-8 space-y-12">
+      <h1 className="text-2xl font-bold">UI Preview</h1>
+
+      {/* Buttons */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Buttons</h2>
+        <div className="flex flex-wrap gap-4">
+          <Button variant="primary">Primary</Button>
+          <Button variant="secondary">Secondary</Button>
+          <Button variant="success">Success</Button>
+          <Button variant="warning">Warning</Button>
+          <Button variant="error">Error</Button>
+          <Button variant="outline">Outline</Button>
+          <Button variant="ghost">Ghost</Button>
+        </div>
+        <div className="flex gap-4 mt-4">
+          <Button size="sm">Small</Button>
+          <Button size="md">Medium</Button>
+          <Button size="lg">Large</Button>
+        </div>
+      </section>
+
+      {/* Inputs */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Inputs</h2>
+        <div className="space-y-4 max-w-md">
+          <Input placeholder="Text input" />
+          <Select>
+            <option>Option A</option>
+            <option>Option B</option>
+          </Select>
+          <TextArea placeholder="Write something..." />
+        </div>
+      </section>
+
+      {/* Badges */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Badges</h2>
+        <div className="flex flex-wrap gap-2">
+          <Badge color="primary">Primary</Badge>
+          <Badge color="secondary">Secondary</Badge>
+          <Badge color="success">Success</Badge>
+          <Badge color="warning">Warning</Badge>
+          <Badge color="error">Error</Badge>
+          <Badge color="info">Info</Badge>
+        </div>
+      </section>
+
+      {/* Cards */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Cards</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
+          <Card>
+            <h3 className="font-semibold mb-2">Default Card</h3>
+            <p className="text-text-secondary">
+              This is a simple card with default styling.
+            </p>
+          </Card>
+          <Card variant="outlined">
+            <h3 className="font-semibold mb-2">Outlined Card</h3>
+            <p className="text-text-secondary">
+              This card uses the outlined variant.
+            </p>
+          </Card>
+          <Card className="rounded-xl shadow-strong border-info-500 bg-info-50">
+            <h3 className="font-semibold mb-2 text-info-800">
+              Customized Card
+            </h3>
+            <p className="text-info-500">
+              This card uses the customized styling.
+            </p>
+          </Card>
+        </div>
+      </section>
+
+      {/* Alerts */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Alerts</h2>
+        <div className="space-y-4 max-w-2xl">
+          <Alert
+            type="info"
+            title="Information"
+            message="This is an info alert."
+          />
+          <Alert
+            type="success"
+            title="Success"
+            message="Well done! You completed the task."
+          />
+          <Alert
+            type="warning"
+            title="Warning"
+            message="Be careful! This needs your attention."
+          />
+          <Alert
+            type="error"
+            title="Error"
+            message="Something went wrong. Please try again."
+          />
+        </div>
+      </section>
+    </div>
+  );
+};
+
+const colorPalettes = [
+  {
+    title: "Primary (Blue)",
+    prefix: "bg-primary",
+    colors: {
+      50: "#f2f5f8",
+      100: "#e6ebf2",
+      200: "#bfcdde",
+      300: "#99aec8",
+      400: "#4d72a2",
+      500: "#00357a",
+      600: "#00306e",
+      700: "#002049",
+      800: "#001837",
+      900: "#001025",
+    },
+  },
+  {
+    title: "Secondary (Slate)",
+    prefix: "bg-secondary",
+    colors: {
+      50: "#f8fafc",
+      100: "#f1f5f9",
+      200: "#e2e8f0",
+      300: "#cbd5e1",
+      400: "#94a3b8",
+      500: "#64748b",
+      600: "#475569",
+      700: "#334155",
+      800: "#1e293b",
+      900: "#0f172a",
+    },
+  },
+  {
+    title: "Success (Emerald)",
+    prefix: "bg-success",
+    colors: {
+      50: "#ecfdf5",
+      100: "#d1fae5",
+      200: "#a7f3d0",
+      300: "#6ee7b7",
+      400: "#34d399",
+      500: "#10b981",
+      600: "#059669",
+      700: "#047857",
+      800: "#065f46",
+      900: "#064e3b",
+    },
+  },
+  {
+    title: "Warning (Orange)",
+    prefix: "bg-warning",
+    colors: {
+      50: "#fff7ed",
+      100: "#ffedd5",
+      200: "#fed7aa",
+      300: "#fdba74",
+      400: "#fb923c",
+      500: "#f97316",
+      600: "#ea580c",
+      700: "#c2410c",
+      800: "#9a3412",
+      900: "#7c2d12",
+    },
+  },
+  {
+    title: "Error (Red)",
+    prefix: "bg-error",
+    colors: {
+      50: "#fef2f2",
+      100: "#fee2e2",
+      200: "#fecaca",
+      300: "#fca5a5",
+      400: "#f87171",
+      500: "#ef4444",
+      600: "#dc2626",
+      700: "#b91c1c",
+      800: "#991b1b",
+      900: "#7f1d1d",
+    },
+  },
+  {
+    title: "Info (Sky)",
+    prefix: "bg-info",
+    colors: {
+      50: "#f0f9ff",
+      100: "#e0f2fe",
+      200: "#bae6fd",
+      300: "#7dd3fc",
+      400: "#38bdf8",
+      500: "#0ea5e9",
+      600: "#0284c7",
+      700: "#0369a1",
+      800: "#075985",
+      900: "#0c4a6e",
+    },
+  },
+];

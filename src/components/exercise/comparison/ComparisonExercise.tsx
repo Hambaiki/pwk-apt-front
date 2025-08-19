@@ -1,12 +1,10 @@
 "use client";
 
-import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
-
 import { useEffect, useState } from "react";
 import { Answer, ComparisonResult } from "@/types/comparison/question";
 import { countDifferences } from "@/utils/comparison/question";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Button, Input } from "@/components/ui";
 
 export default function ComparisonExercise({
   questions,

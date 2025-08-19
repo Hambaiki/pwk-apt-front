@@ -2,7 +2,7 @@
 
 import Main from "@/components/layout/Main";
 import Breadcrumbs from "@/components/navgiation/Breadcrumbs";
-import Button from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 
 import { Answer, ComparisonResult } from "@/types/comparison/question";
 
@@ -118,7 +118,7 @@ export default function ComparisonExerciseStartPage({
         ]}
       />
 
-      <div className="translucent-rounded-container space-y-6 p-4">
+      <div className="space-y-6 p-4">
         <h1 className="text-2xl font-bold text-center">Comparison Exercise</h1>
 
         <p className="text-center text-sm">
@@ -139,7 +139,7 @@ export default function ComparisonExerciseStartPage({
         </div>
       </div>
 
-      <div className="overflow-x-auto translucent-rounded-container">
+      <div className="overflow-x-auto">
         <table
           className={clsx(
             "min-w-full table-auto text-sm",
@@ -214,12 +214,7 @@ export default function ComparisonExerciseStartPage({
         </Button>
       </div>
 
-      <div
-        className={clsx(
-          "translucent-rounded-container space-y-6 p-4",
-          !submitted && "hidden"
-        )}
-      >
+      <div className={clsx("space-y-6 p-4", !submitted && "hidden")}>
         <div className="text-center text-xl font-semibold">
           You got {correctCount} out of {questions.length} correct!
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Main from "@/components/layout/Main";
-import Input from "@/components/ui/Input";
+import { Input } from "@/components/ui/Input";
 import Breadcrumbs from "@/components/navgiation/Breadcrumbs";
 
 import { useRouter } from "next/navigation";
@@ -49,10 +49,7 @@ export default function ComparisonExerciseConfigPage() {
         ]}
       />
 
-      <form
-        onSubmit={handleSubmit}
-        className="translucent-rounded-container p-6 space-y-4"
-      >
+      <form onSubmit={handleSubmit} className="p-6 space-y-4">
         <h2 className="text-2xl font-bold text-center">Configure Exercise</h2>
 
         <div className="space-y-2">

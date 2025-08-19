@@ -10,8 +10,8 @@ export default function Logo({
       id="navbar"
       className={clsx(`flex items-center font-bold text-xl`, className)}
     >
-      <FaGear className="inline-block mr-2 text-jungle-green-500" />
-      <span className="hidden sm:block">APT EXERCISE</span>
+      <FaGear className="inline-block mr-2 text-primary-500" />
+      <span className="hidden sm:block">APTITUDE EXERCISE</span>
     </div>
   );
 }

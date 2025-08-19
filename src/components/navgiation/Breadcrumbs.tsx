@@ -15,7 +15,7 @@ export default function Breadcrumbs({
   return (
     <div
       className={clsx(
-        "translucent-rounded-container flex flex-row flex-wrap rounded-xl px-4 py-2",
+        "flex flex-row flex-wrap rounded-xl px-4 py-2",
         className
       )}
     >

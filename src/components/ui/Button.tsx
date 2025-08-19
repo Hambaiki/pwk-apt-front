@@ -1,36 +1,54 @@
-import { clsx } from "clsx";
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "solid" | "outline" | "outline-active" | "underline";
-}
+const buttonVariants = cva(
+  "inline-flex items-center justify-center rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
+  {
+    variants: {
+      variant: {
+        primary:
+          "bg-primary-500 text-text-inverse hover:bg-primary-600 focus:ring-primary-400",
+        secondary:
+          "bg-secondary-500 text-text-inverse hover:bg-secondary-600 focus:ring-secondary-400",
+        success:
+          "bg-success-500 text-text-inverse hover:bg-success-600 focus:ring-success-400",
+        warning:
+          "bg-warning-500 text-text-inverse hover:bg-warning-600 focus:ring-warning-400",
+        error:
+          "bg-error-500 text-text-inverse hover:bg-error-600 focus:ring-error-400",
+        outline:
+          "border border-secondary-300 bg-background-primary text-text-primary hover:bg-secondary-50 focus:ring-secondary-400",
+        ghost:
+          "text-text-secondary hover:bg-secondary-100 focus:ring-secondary-400",
+      },
+      size: {
+        sm: "px-3 py-1.5 text-sm",
+        md: "px-4 py-2 text-base",
+        lg: "px-5 py-3 text-lg",
+      },
+    },
+    defaultVariants: {
+      variant: "primary",
+      size: "md",
+    },
+  }
+);
 
-function Button({
-  children,
-  className = "",
-  variant = "solid",
-  ...props
-}: ButtonProps) {
-  return (
-    <button
-      className={clsx(
-        `transition-all`,
-        variant === "solid"
-          ? "bg-nile-blue-500 hover:bg-nile-blue-600 border border-nile-blue-500 text-white shadow-blue-100 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-          : "",
-        variant === "outline"
-          ? "bg-white text-nile-blue-500 border border-nile-blue-500 hover:bg-nile-blue-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-400"
-          : "",
-        variant === "outline-active"
-          ? "bg-nile-blue-100 text-nile-blue-500 border border-nile-blue-500 hover:bg-nile-blue-200"
-          : "",
-        variant === "underline" ? "underline text-nile-blue-500" : "",
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-}
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {}
 
-export default Button;
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, ...props }, ref) => {
+    return (
+      <button
+        ref={ref}
+        className={cn(buttonVariants({ variant, size, className }))}
+        {...props}
+      />
+    );
+  }
+);
+
+Button.displayName = "Button";
