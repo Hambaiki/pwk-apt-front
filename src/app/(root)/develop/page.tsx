@@ -1,5 +1,7 @@
 "use client";
 
+import { ComparisonExerciseCard } from "@/components/exercise/comparison/ComparisionExerciseCard";
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   Button,
   Input,
@@ -10,118 +12,58 @@ import {
   Alert,
 } from "@/components/ui";
 
-import React, { useState } from "react";
+import {
+  Comparison,
+  generateComparisonExercise,
+} from "@/libs/exercises/comparison";
 
-import { Eye, Copy, Check, Palette, Type, Layers, Zap } from "lucide-react";
+import { Eye, Copy, Palette, Type, Layers, Zap } from "lucide-react";
+
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function ColorShowcasePage() {
   return (
-    <div className="min-h-screen bg-background-secondary">
-      {/* Header */}
-      <div className="bg-primary-500 text-white py-8">
-        <div className="max-w-7xl mx-auto px-6">
-          <h1 className="text-3xl font-bold mb-2">
-            Aptitude Exercise App - Design System
-          </h1>
-          <p className="text-primary-100">
-            Comprehensive showcase of custom Tailwind CSS configuration
-          </p>
-        </div>
+    <div className="min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 pb-8">
+        <Breadcrumb>
+          <BreadcrumbItem label="Home" href="/" />
+          <BreadcrumbItem label="Develop" href="/develop" />
+        </Breadcrumb>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      {/* Header */}
+
+      <div className="max-w-7xl mx-auto px-4">
+        <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-primary-400 to-primary-600 shadow-medium">
+          <h1 className="mb-2 text-white">
+            Aptitude Exercise App - Design System
+          </h1>
+          <p className="text-gray-100">
+            Showcase of this application&apos;s configuration
+          </p>
+        </Card>
+
         {/* Quick Usage Guide */}
-        <div className="bg-info-50 border border-info-200 rounded-xl p-6 mb-8">
-          <h2 className="text-lg font-semibold text-info-800 mb-3 flex items-center gap-2">
-            <Eye className="w-5 h-5" />
-            Quick Usage Guide
-          </h2>
-          <div className="text-info-700 space-y-2 text-sm">
-            <p>• Click any color swatch to copy its Tailwind class name</p>
-            <p>
-              • Use{" "}
-              <code className="bg-info-100 px-1 rounded">bg-primary-500</code>{" "}
-              for backgrounds,{" "}
-              <code className="bg-info-100 px-1 rounded">text-primary-500</code>{" "}
-              for text
-            </p>
-            <p>
-              • Combine with hover states:{" "}
-              <code className="bg-info-100 px-1 rounded">
-                hover:bg-primary-600
-              </code>
-            </p>
-            <p>
-              • All colors include 50-900 shade variations for maximum
-              flexibility
-            </p>
-          </div>
-        </div>
+        <UsageGuide />
 
         {/* Color Palettes */}
-        {colorPalettes.map((palette) => (
-          <ColorPalette
-            key={palette.prefix}
-            title={palette.title}
-            colors={palette.colors}
-            prefix={palette.prefix}
-          />
-        ))}
+        <div className="mb-8">
+          {colorPalettes.map((palette) => (
+            <ColorPalette
+              key={palette.prefix}
+              title={palette.title}
+              colors={palette.colors}
+              prefix={palette.prefix}
+            />
+          ))}
+        </div>
 
         {/* Background Colors */}
-        <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Layers className="w-5 h-5" />
-            Background Colors
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-background-primary border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
-              <div className="font-medium">Primary Background</div>
-              <div className="text-sm text-gray-500 mt-1">
-                bg-background-primary
-              </div>
-              <div className="text-xs font-mono mt-2">#ffffff</div>
-            </div>
-            <div className="bg-background-secondary border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
-              <div className="font-medium">Secondary Background</div>
-              <div className="text-sm text-gray-500 mt-1">
-                bg-background-secondary
-              </div>
-              <div className="text-xs font-mono mt-2">#f8fafc</div>
-            </div>
-            <div className="bg-background-tertiary border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
-              <div className="font-medium">Tertiary Background</div>
-              <div className="text-sm text-gray-500 mt-1">
-                bg-background-tertiary
-              </div>
-              <div className="text-xs font-mono mt-2">#f1f5f9</div>
-            </div>
-          </div>
-        </div>
+        <BackgroundColor />
 
         {/* Text Colors */}
-        <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Type className="w-5 h-5" />
-            Text Colors
-          </h3>
-          <div className="space-y-3">
-            <div className="text-text-primary text-lg font-semibold">
-              Primary Text (text-text-primary) - Main content
-            </div>
-            <div className="text-text-secondary text-base">
-              Secondary Text (text-text-secondary) - Supporting content
-            </div>
-            <div className="text-text-tertiary text-sm">
-              Tertiary Text (text-text-tertiary) - Metadata and captions
-            </div>
-            <div className="bg-gray-800 p-3 rounded">
-              <div className="text-text-inverse">
-                Inverse Text (text-text-inverse) - For dark backgrounds
-              </div>
-            </div>
-          </div>
-        </div>
+        <TextColor />
 
         {/* Component Examples */}
         <ComponentExamples />
@@ -136,351 +78,67 @@ export default function ColorShowcasePage() {
         <AnimationExamples />
 
         {/* Aptitude App UI Preview */}
-        <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
-          <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
-            <Eye className="w-5 h-5" />
-            Aptitude App UI Preview
-          </h3>
-
-          <div className="bg-background-secondary rounded-lg p-6 border border-secondary-200">
-            {/* Mock header */}
-            <div className="bg-primary-500 text-white p-4 rounded-lg mb-6">
-              <div className="flex justify-between items-center">
-                <h4 className="text-lg font-semibold">
-                  Mathematical Reasoning
-                </h4>
-                <div className="bg-primary-600 px-3 py-1 rounded text-sm">
-                  Question 5/20
-                </div>
-              </div>
-              <div className="bg-primary-400 h-2 rounded-full mt-3">
-                <div className="bg-white h-full w-1/4 rounded-full"></div>
-              </div>
-            </div>
-
-            {/* Mock question */}
-            <div className="bg-white p-6 rounded-lg shadow-soft mb-4">
-              <h5 className="text-text-primary font-medium mb-3">
-                If a train travels 120 km in 2 hours, what is its average speed?
-              </h5>
-              <div className="space-y-2">
-                <button className="w-full text-left p-3 border border-secondary-200 rounded hover:bg-primary-50 hover:border-primary-300 transition-colors">
-                  A) 50 km/h
-                </button>
-                <button className="w-full text-left p-3 border border-secondary-200 rounded hover:bg-primary-50 hover:border-primary-300 transition-colors">
-                  B) 60 km/h
-                </button>
-                <button className="w-full text-left p-3 border border-secondary-200 rounded hover:bg-primary-50 hover:border-primary-300 transition-colors">
-                  C) 70 km/h
-                </button>
-              </div>
-            </div>
-
-            {/* Mock feedback */}
-            <div className="bg-success-50 border border-success-200 text-success-700 p-4 rounded-lg mb-4">
-              ✓ Correct! The average speed is 60 km/h (120 km ÷ 2 hours = 60
-              km/h)
-            </div>
-
-            {/* Action buttons */}
-            <div className="flex gap-3">
-              <button className="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-lg transition-colors">
-                Next Question
-              </button>
-              <button className="bg-secondary-100 hover:bg-secondary-200 text-secondary-700 px-6 py-2 rounded-lg transition-colors">
-                Review Answer
-              </button>
-            </div>
-          </div>
-        </div>
+        <ExerciseUIPreview />
 
         {/* Custom Made Elements */}
         <ElementExample />
+
+        {/* Test Comparison Exercise */}
+        <TestComparisonExercise />
       </div>
     </div>
   );
 }
 
-const ColorPalette = ({
-  title,
-  colors,
-  prefix,
-}: {
-  title: string;
-  colors: Record<string, string>;
-  prefix: string;
-}) => {
-  const [copiedColor, setCopiedColor] = useState("");
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedColor(text);
-    setTimeout(() => setCopiedColor(""), 2000);
-  };
-
-  return (
-    <>
-      {/* Copy notification */}
-      {copiedColor && (
-        <div className="fixed z-[999] top-4 right-4 bg-success-500 text-white px-4 py-2 rounded-lg shadow-medium flex items-center gap-2 animate-slide-up">
-          <Check className="w-4 h-4" />
-          Copied: {copiedColor}
-        </div>
-      )}
-
-      <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
-        <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <Palette className="w-5 h-5" />
-          {title}
-        </h3>
-        <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-10 gap-3">
-          {Object.entries(colors).map(([shade, color]) => (
-            <div key={shade} className="text-center">
-              <button
-                className={`group w-full h-16 rounded-lg mb-2 cursor-pointer transition-transform hover:scale-105 border border-gray-200`}
-                style={{ backgroundColor: color }}
-                onClick={() => copyToClipboard(`${prefix}-${shade}`)}
-                title={`Click to copy: ${prefix}-${shade}`}
-              >
-                <Copy className="w-4 h-4 text-gray-500 m-auto opacity-0 group-hover:opacity-100 transition-opacity" />
-              </button>
-              <div className="text-xs font-mono text-gray-600">{shade}</div>
-              <div className="text-xs text-gray-500 mt-1">{color}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </>
-  );
-};
-
-const ComponentExamples = () => (
-  <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
-    <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
-      <Layers className="w-5 h-5" />
-      Component Examples
-    </h3>
-
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {/* Primary Buttons */}
-      <div className="space-y-3">
-        <h4 className="font-medium text-gray-700">Primary Buttons</h4>
-        <button className="w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
-          Start Exercise
-        </button>
-        <button className="w-full bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors">
-          Submit Answer
-        </button>
-      </div>
-
-      {/* Status Messages */}
-      <div className="space-y-3">
-        <h4 className="font-medium text-gray-700">Status Messages</h4>
-        <div className="bg-success-50 border border-success-200 text-success-700 px-4 py-2 rounded-lg">
-          ✓ Correct Answer!
-        </div>
-        <div className="bg-error-50 border border-error-200 text-error-700 px-4 py-2 rounded-lg">
-          ✗ Incorrect Answer
-        </div>
-        <div className="bg-warning-50 border border-warning-200 text-warning-700 px-4 py-2 rounded-lg">
-          ⚠ Time Running Out
-        </div>
-      </div>
-
-      {/* Cards */}
-      <div className="space-y-3">
-        <h4 className="font-medium text-gray-700">Cards</h4>
-        <div className="bg-background-secondary border border-secondary-200 p-4 rounded-lg shadow-soft">
-          <h5 className="font-medium text-text-primary">Question 1</h5>
-          <p className="text-text-secondary text-sm mt-1">
-            Sample question content
-          </p>
-        </div>
-      </div>
+const UsageGuide = () => (
+  <div className="bg-info-50 border border-info-200 rounded-xl p-6 mb-8">
+    <h2 className="text-lg font-semibold text-info-800 mb-3 flex items-center gap-2">
+      <Eye className="w-5 h-5" />
+      Quick Usage Guide
+    </h2>
+    <div className="text-info-700 space-y-2 text-sm">
+      <p>• Click any color swatch to copy its Tailwind class name</p>
+      <p>
+        • Use <code className="bg-info-100 px-1 rounded">bg-primary-500</code>{" "}
+        for backgrounds,{" "}
+        <code className="bg-info-100 px-1 rounded">text-primary-500</code> for
+        text
+      </p>
+      <p>
+        • Combine with hover states:{" "}
+        <code className="bg-info-100 px-1 rounded">hover:bg-primary-600</code>
+      </p>
+      <p>
+        • All colors include 50-900 shade variations for maximum flexibility
+      </p>
     </div>
   </div>
 );
 
-const TypographyExamples = () => (
-  <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
-    <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+const TextColor = () => (
+  <div className="mb-8">
+    <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
       <Type className="w-5 h-5" />
-      Typography Examples
+      Text Colors
     </h3>
-
-    <div className="space-y-4">
-      <div className="text-text-primary text-4xl font-bold">Main Heading</div>
-      <div className="text-text-primary text-2xl font-semibold">
-        Section Heading
+    <div className="space-y-3">
+      <div className="text-text-primary text-lg font-semibold">
+        Primary Text (text-text-primary) - Main content
       </div>
-      <div className="text-text-primary text-xl font-medium">Subsection</div>
-      <div className="text-text-primary text-base">
-        Body text for questions and content
+      <div className="text-text-secondary text-base">
+        Secondary Text (text-text-secondary) - Supporting content
       </div>
-      <div className="text-text-secondary text-sm">
-        Secondary text for descriptions
+      <div className="text-text-tertiary text-sm">
+        Tertiary Text (text-text-tertiary) - Metadata and captions
       </div>
-      <div className="text-text-tertiary text-xs">
-        Tertiary text for metadata
+      <div className="bg-gray-800 p-3 rounded">
+        <div className="text-text-inverse">
+          Inverse Text (text-text-inverse) - For dark backgrounds
+        </div>
       </div>
     </div>
   </div>
 );
-
-const ShadowExamples = () => (
-  <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
-    <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
-      <Layers className="w-5 h-5" />
-      Shadow Examples
-    </h3>
-
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div className="bg-white p-6 rounded-lg shadow-soft border border-gray-100">
-        <h4 className="font-medium mb-2">Soft Shadow</h4>
-        <p className="text-sm text-gray-600">shadow-soft</p>
-      </div>
-      <div className="bg-white p-6 rounded-lg shadow-medium border border-gray-100">
-        <h4 className="font-medium mb-2">Medium Shadow</h4>
-        <p className="text-sm text-gray-600">shadow-medium</p>
-      </div>
-      <div className="bg-white p-6 rounded-lg shadow-strong border border-gray-100">
-        <h4 className="font-medium mb-2">Strong Shadow</h4>
-        <p className="text-sm text-gray-600">shadow-strong</p>
-      </div>
-    </div>
-  </div>
-);
-
-const AnimationExamples = () => (
-  <div className="bg-white rounded-xl shadow-soft p-6 mb-8">
-    <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
-      <Zap className="w-5 h-5" />
-      Animation Examples
-    </h3>
-
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div className="bg-primary-50 p-6 rounded-lg animate-fade-in">
-        <h4 className="font-medium mb-2">Fade In</h4>
-        <p className="text-sm text-gray-600">animate-fade-in</p>
-      </div>
-      <div className="bg-success-50 p-6 rounded-lg animate-slide-up">
-        <h4 className="font-medium mb-2">Slide Up</h4>
-        <p className="text-sm text-gray-600">animate-slide-up</p>
-      </div>
-      <div className="bg-warning-50 p-6 rounded-lg animate-bounce-subtle">
-        <h4 className="font-medium mb-2">Bounce Subtle</h4>
-        <p className="text-sm text-gray-600">animate-bounce-subtle</p>
-      </div>
-    </div>
-  </div>
-);
-
-const ElementExample = () => {
-  return (
-    <div className="bg-white rounded-xl shadow-soft p-6 mb-8 space-y-12">
-      <h1 className="text-2xl font-bold">UI Preview</h1>
-
-      {/* Buttons */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Buttons</h2>
-        <div className="flex flex-wrap gap-4">
-          <Button variant="primary">Primary</Button>
-          <Button variant="secondary">Secondary</Button>
-          <Button variant="success">Success</Button>
-          <Button variant="warning">Warning</Button>
-          <Button variant="error">Error</Button>
-          <Button variant="outline">Outline</Button>
-          <Button variant="ghost">Ghost</Button>
-        </div>
-        <div className="flex gap-4 mt-4">
-          <Button size="sm">Small</Button>
-          <Button size="md">Medium</Button>
-          <Button size="lg">Large</Button>
-        </div>
-      </section>
-
-      {/* Inputs */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Inputs</h2>
-        <div className="space-y-4 max-w-md">
-          <Input placeholder="Text input" />
-          <Select>
-            <option>Option A</option>
-            <option>Option B</option>
-          </Select>
-          <TextArea placeholder="Write something..." />
-        </div>
-      </section>
-
-      {/* Badges */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Badges</h2>
-        <div className="flex flex-wrap gap-2">
-          <Badge color="primary">Primary</Badge>
-          <Badge color="secondary">Secondary</Badge>
-          <Badge color="success">Success</Badge>
-          <Badge color="warning">Warning</Badge>
-          <Badge color="error">Error</Badge>
-          <Badge color="info">Info</Badge>
-        </div>
-      </section>
-
-      {/* Cards */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Cards</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
-          <Card>
-            <h3 className="font-semibold mb-2">Default Card</h3>
-            <p className="text-text-secondary">
-              This is a simple card with default styling.
-            </p>
-          </Card>
-          <Card variant="outlined">
-            <h3 className="font-semibold mb-2">Outlined Card</h3>
-            <p className="text-text-secondary">
-              This card uses the outlined variant.
-            </p>
-          </Card>
-          <Card className="rounded-xl shadow-strong border-info-500 bg-info-50">
-            <h3 className="font-semibold mb-2 text-info-800">
-              Customized Card
-            </h3>
-            <p className="text-info-500">
-              This card uses the customized styling.
-            </p>
-          </Card>
-        </div>
-      </section>
-
-      {/* Alerts */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Alerts</h2>
-        <div className="space-y-4 max-w-2xl">
-          <Alert
-            type="info"
-            title="Information"
-            message="This is an info alert."
-          />
-          <Alert
-            type="success"
-            title="Success"
-            message="Well done! You completed the task."
-          />
-          <Alert
-            type="warning"
-            title="Warning"
-            message="Be careful! This needs your attention."
-          />
-          <Alert
-            type="error"
-            title="Error"
-            message="Something went wrong. Please try again."
-          />
-        </div>
-      </section>
-    </div>
-  );
-};
 
 const colorPalettes = [
   {
@@ -580,3 +238,561 @@ const colorPalettes = [
     },
   },
 ];
+
+const BackgroundColor = () => (
+  <div className="mb-8">
+    <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+      <Layers className="w-5 h-5" />
+      Background Colors
+    </h3>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="bg-background-primary border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
+        <div className="font-medium">Primary Background</div>
+        <div className="text-sm text-gray-500 mt-1">bg-background-primary</div>
+        <div className="text-xs font-mono mt-2">#ffffff</div>
+      </div>
+      <div className="bg-background-secondary border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
+        <div className="font-medium">Secondary Background</div>
+        <div className="text-sm text-gray-500 mt-1">
+          bg-background-secondary
+        </div>
+        <div className="text-xs font-mono mt-2">#f8fafc</div>
+      </div>
+      <div className="bg-background-tertiary border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
+        <div className="font-medium">Tertiary Background</div>
+        <div className="text-sm text-gray-500 mt-1">bg-background-tertiary</div>
+        <div className="text-xs font-mono mt-2">#f1f5f9</div>
+      </div>
+    </div>
+  </div>
+);
+
+const ColorPalette = ({
+  title,
+  colors,
+  prefix,
+}: {
+  title: string;
+  colors: Record<string, string>;
+  prefix: string;
+}) => {
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast(
+      <div className="text-sm">
+        <span className="font-semibold">
+          <Palette className="inline w-5 h-5 mr-1" />
+          Text copied to clipboard:
+        </span>
+        <br />
+        {text}
+      </div>
+    );
+  };
+
+  return (
+    <div className="mb-8">
+      <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+        <Palette className="w-5 h-5" />
+        {title}
+      </h3>
+      <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-10 gap-3">
+        {Object.entries(colors).map(([shade, color]) => (
+          <div key={shade} className="text-center">
+            <button
+              className={`group w-full h-16 rounded-lg mb-2 cursor-pointer transition-transform hover:scale-105 border border-gray-200`}
+              style={{ backgroundColor: color }}
+              onClick={() => copyToClipboard(`${prefix}-${shade}`)}
+              title={`Click to copy: ${prefix}-${shade}`}
+            >
+              <Copy className="w-4 h-4 text-gray-500 m-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+            </button>
+            <div className="text-xs font-mono text-gray-600">{shade}</div>
+            <div className="text-xs text-gray-500 mt-1">{color}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ComponentExamples = () => (
+  <div className="mb-8">
+    <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+      <Layers className="w-5 h-5" />
+      Component Examples
+    </h3>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Primary Buttons */}
+      <div className="space-y-3">
+        <h4 className="font-medium text-gray-700">Primary Buttons</h4>
+        <button className="w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+          Start Exercise
+        </button>
+        <button className="w-full bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors">
+          Submit Answer
+        </button>
+      </div>
+
+      {/* Status Messages */}
+      <div className="space-y-3">
+        <h4 className="font-medium text-gray-700">Status Messages</h4>
+        <div className="bg-success-50 border border-success-200 text-success-700 px-4 py-2 rounded-lg">
+          ✓ Correct Answer!
+        </div>
+        <div className="bg-error-50 border border-error-200 text-error-700 px-4 py-2 rounded-lg">
+          ✗ Incorrect Answer
+        </div>
+        <div className="bg-warning-50 border border-warning-200 text-warning-700 px-4 py-2 rounded-lg">
+          ⚠ Time Running Out
+        </div>
+      </div>
+
+      {/* Cards */}
+      <div className="space-y-3">
+        <h4 className="font-medium text-gray-700">Cards</h4>
+        <div className="bg-background-secondary border border-secondary-200 p-4 rounded-lg shadow-soft">
+          <h5 className="font-medium text-text-primary">Question 1</h5>
+          <p className="text-text-secondary text-sm mt-1">
+            Sample question content
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const TypographyExamples = () => (
+  <div className="mb-8">
+    <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+      <Type className="w-5 h-5" />
+      Typography Examples
+    </h3>
+
+    <div className="space-y-4">
+      <div className="text-text-primary text-4xl font-bold">Main Heading</div>
+      <div className="text-text-primary text-2xl font-semibold">
+        Section Heading
+      </div>
+      <div className="text-text-primary text-xl font-medium">Subsection</div>
+      <div className="text-text-primary text-base">
+        Body text for questions and content
+      </div>
+      <div className="text-text-secondary text-sm">
+        Secondary text for descriptions
+      </div>
+      <div className="text-text-tertiary text-xs">
+        Tertiary text for metadata
+      </div>
+    </div>
+  </div>
+);
+
+const ShadowExamples = () => (
+  <div className="mb-8">
+    <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+      <Layers className="w-5 h-5" />
+      Shadow Examples
+    </h3>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="bg-white p-6 rounded-lg shadow-soft border border-gray-100">
+        <h4 className="font-medium mb-2">Soft Shadow</h4>
+        <p className="text-sm text-gray-600">shadow-soft</p>
+      </div>
+      <div className="bg-white p-6 rounded-lg shadow-medium border border-gray-100">
+        <h4 className="font-medium mb-2">Medium Shadow</h4>
+        <p className="text-sm text-gray-600">shadow-medium</p>
+      </div>
+      <div className="bg-white p-6 rounded-lg shadow-strong border border-gray-100">
+        <h4 className="font-medium mb-2">Strong Shadow</h4>
+        <p className="text-sm text-gray-600">shadow-strong</p>
+      </div>
+    </div>
+  </div>
+);
+
+const AnimationExamples = () => (
+  <div className="mb-8">
+    <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+      <Zap className="w-5 h-5" />
+      Animation Examples
+    </h3>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="bg-primary-50 p-6 rounded-lg animate-fade-in">
+        <h4 className="font-medium mb-2">Fade In</h4>
+        <p className="text-sm text-gray-600">animate-fade-in</p>
+      </div>
+      <div className="bg-success-50 p-6 rounded-lg animate-slide-up">
+        <h4 className="font-medium mb-2">Slide Up</h4>
+        <p className="text-sm text-gray-600">animate-slide-up</p>
+      </div>
+      <div className="bg-warning-50 p-6 rounded-lg animate-bounce-subtle">
+        <h4 className="font-medium mb-2">Bounce Subtle</h4>
+        <p className="text-sm text-gray-600">animate-bounce-subtle</p>
+      </div>
+    </div>
+  </div>
+);
+
+const ExerciseUIPreview = () => (
+  <div className="mb-8">
+    <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+      <Eye className="w-5 h-5" />
+      Aptitude App UI Preview
+    </h3>
+
+    <div className="bg-background-secondary rounded-lg p-6 border border-secondary-200">
+      {/* Mock header */}
+      <div className="bg-primary-500 text-white p-4 rounded-lg mb-6">
+        <div className="flex justify-between items-center">
+          <h4 className="text-lg text-white font-semibold">
+            Mathematical Reasoning
+          </h4>
+          <div className="bg-primary-600 px-3 py-1 rounded text-sm">
+            Question 5/20
+          </div>
+        </div>
+        <div className="bg-primary-400 h-2 rounded-full mt-3">
+          <div className="bg-white h-full w-1/4 rounded-full"></div>
+        </div>
+      </div>
+
+      {/* Mock question */}
+      <div className="bg-white p-6 rounded-lg shadow-soft mb-4">
+        <h5 className="text-text-primary font-medium mb-3">
+          If a train travels 120 km in 2 hours, what is its average speed?
+        </h5>
+        <div className="space-y-2">
+          <button className="w-full text-left p-3 border border-secondary-200 rounded hover:bg-primary-50 hover:border-primary-300 transition-colors">
+            A) 50 km/h
+          </button>
+          <button className="w-full text-left p-3 border border-secondary-200 rounded hover:bg-primary-50 hover:border-primary-300 transition-colors">
+            B) 60 km/h
+          </button>
+          <button className="w-full text-left p-3 border border-secondary-200 rounded hover:bg-primary-50 hover:border-primary-300 transition-colors">
+            C) 70 km/h
+          </button>
+        </div>
+      </div>
+
+      {/* Mock feedback */}
+      <div className="bg-success-50 border border-success-200 text-success-700 p-4 rounded-lg mb-4">
+        ✓ Correct! The average speed is 60 km/h (120 km ÷ 2 hours = 60 km/h)
+      </div>
+
+      {/* Action buttons */}
+      <div className="flex gap-3">
+        <button className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+          Next Question
+        </button>
+        <button className="bg-secondary-100 hover:bg-secondary-200 text-secondary-700 px-4 py-2 rounded-lg transition-colors">
+          Review Answer
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+const ElementExample = () => {
+  return (
+    <div className="mb-8 space-y-8">
+      <h2>UI Preview</h2>
+
+      {/* Buttons */}
+      <section>
+        <h3 className="text-xl font-semibold mb-4">Buttons</h3>
+        <div className="flex flex-wrap gap-4">
+          <Button variant="primary">Primary</Button>
+          <Button variant="secondary">Secondary</Button>
+          <Button variant="success">Success</Button>
+          <Button variant="warning">Warning</Button>
+          <Button variant="error">Error</Button>
+          <Button variant="outline">Outline</Button>
+          <Button variant="ghost">Ghost</Button>
+        </div>
+        <div className="flex gap-4 mt-4">
+          <Button size="sm">Small</Button>
+          <Button size="md">Medium</Button>
+          <Button size="lg">Large</Button>
+        </div>
+      </section>
+
+      {/* Inputs */}
+      <section>
+        <h3 className="text-xl font-semibold mb-4">Inputs</h3>
+        <div className="space-y-4 max-w-md">
+          <Input placeholder="Text input" />
+          <Select>
+            <option>Option A</option>
+            <option>Option B</option>
+          </Select>
+          <TextArea placeholder="Write something..." />
+        </div>
+      </section>
+
+      {/* Badges */}
+      <section>
+        <h3 className="text-xl font-semibold mb-4">Badges</h3>
+        <div className="flex flex-wrap gap-2">
+          <Badge color="primary">Primary</Badge>
+          <Badge color="secondary">Secondary</Badge>
+          <Badge color="success">Success</Badge>
+          <Badge color="warning">Warning</Badge>
+          <Badge color="error">Error</Badge>
+          <Badge color="info">Info</Badge>
+        </div>
+      </section>
+
+      {/* Cards */}
+      <section>
+        <h3 className="text-xl font-semibold mb-4">Cards</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
+          <Card>
+            <p className="font-semibold mb-2">Default Card</p>
+            <p className="text-text-secondary">
+              This is a simple card with default styling.
+            </p>
+          </Card>
+          <Card variant="outlined">
+            <p className="font-semibold mb-2">Outlined Card</p>
+            <p className="text-text-secondary">
+              This card uses the outlined variant.
+            </p>
+          </Card>
+          <Card className="rounded-xl shadow-strong border-info-500 bg-info-50">
+            <p className="font-semibold mb-2 text-info-800">Customized Card</p>
+            <p className="text-info-500">
+              This card uses the customized styling.
+            </p>
+          </Card>
+        </div>
+      </section>
+
+      {/* Alerts */}
+      <section>
+        <h3 className="text-xl font-semibold mb-4">Alerts</h3>
+        <div className="space-y-4 max-w-2xl">
+          <Alert
+            type="info"
+            title="Information"
+            message="This is an info alert."
+          />
+          <Alert
+            type="success"
+            title="Success"
+            message="Well done! You completed the task."
+          />
+          <Alert
+            type="warning"
+            title="Warning"
+            message="Be careful! This needs your attention."
+          />
+          <Alert
+            type="error"
+            title="Error"
+            message="Something went wrong. Please try again."
+          />
+        </div>
+      </section>
+    </div>
+  );
+};
+
+enum Choice {
+  A = "A",
+  B = "B",
+  C = "C",
+  D = "D",
+  E = "E",
+  F = "F",
+}
+
+const comparisonAnswers = {
+  [Choice.A]: {
+    description: "No mutations",
+    check: (count: number) => count === 0,
+  },
+  [Choice.B]: {
+    description: "One mutation",
+    check: (count: number) => count === 1,
+  },
+  [Choice.C]: {
+    description: "Two mutations",
+    check: (count: number) => count === 2,
+  },
+  [Choice.D]: {
+    description: "Three mutations",
+    check: (count: number) => count === 3,
+  },
+  [Choice.E]: {
+    description: "Four mutations",
+    check: (count: number) => count === 4,
+  },
+  [Choice.F]: {
+    description: "Five or more mutations",
+    check: (count: number) => count >= 5,
+  },
+};
+
+const TestComparisonExercise = () => {
+  const [questionIndex, setQuestionIndex] = useState<number>(0);
+  const [questionList, setQuestionList] = useState<
+    { question: Comparison; answer: Choice | undefined }[] | undefined
+  >();
+  const [complete, setComplete] = useState<boolean>(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setComplete(false);
+    setQuestionIndex(0);
+
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const count = parseInt(formData.get("count") as string);
+    const length = parseInt(formData.get("length") as string);
+
+    const questions = generateComparisonExercise({
+      count: count ?? 1,
+      length: length ?? 1,
+    });
+
+    setQuestionList(questions.map((q) => ({ question: q, answer: undefined })));
+  };
+
+  return (
+    <div className="mb-8 space-y-8">
+      <h2>Test Comparison Exercise</h2>
+      <p>This is a test comparison exercise component.</p>
+
+      <Card>
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+          <label>
+            Count
+            <Input name="count" type="number" />
+          </label>
+          <label>
+            Length
+            <Input name="length" type="number" />
+          </label>
+          <Button>Generate Questions</Button>
+        </form>
+      </Card>
+
+      {!complete && questionList && questionList.length > 0 && (
+        <ComparisonExerciseCard
+          progress={questionIndex / questionList.length}
+          exercise={questionList[questionIndex].question}
+          selected={questionList[questionIndex].answer}
+          hasNext={questionIndex < questionList.length - 1}
+          hasPrevious={questionIndex > 0}
+          isLast={questionIndex === questionList.length - 1}
+          onNext={() => {
+            if (questionIndex === questionList.length - 1) {
+              setComplete(true);
+              return;
+            }
+            setQuestionIndex((prev) =>
+              Math.min(prev + 1, questionList.length - 1)
+            );
+          }}
+          onPrevious={() => {
+            setQuestionIndex((prev) => Math.max(prev - 1, 0));
+          }}
+          onAnswer={(choice) => {
+            setQuestionList((prev) => {
+              if (!prev) return prev;
+              const newList = [...prev];
+              newList[questionIndex].answer = choice as Choice;
+              return newList;
+            });
+          }}
+        />
+      )}
+
+      {complete && questionList && (
+        <div className="mt-8 space-y-4">
+          <h3 className="text-xl font-semibold">Results</h3>
+          <p className="text-sm text-muted-foreground">
+            Here’s how you did in this exercise:
+          </p>
+
+          <Card className="p-4 space-y-4">
+            {questionList.map((item, index) => {
+              const question = item.question;
+              const answer = item.answer;
+              const correct = answer
+                ? comparisonAnswers[answer]?.check(question?.mutationCount ?? 0)
+                : false;
+
+              return (
+                <div
+                  key={index}
+                  className="flex items-start justify-between p-3 border rounded-lg bg-muted/30"
+                >
+                  <div>
+                    <p className="font-medium">Question {index + 1}</p>
+                    <p className="text-sm text-muted-foreground">
+                      Your answer:{" "}
+                      <span className="font-semibold">
+                        {answer ?? "<no answer>"}
+                      </span>
+                    </p>
+                    {answer
+                      ? comparisonAnswers[answer] && (
+                          <p className="text-sm text-muted-foreground">
+                            {comparisonAnswers[answer].description}
+                          </p>
+                        )
+                      : null}
+                    <p className="text-sm text-muted-foreground">
+                      Mutations in total:{" "}
+                      <span className="font-semibold">
+                        {question?.mutationCount}
+                      </span>
+                    </p>
+                  </div>
+
+                  <div>
+                    {correct ? (
+                      <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800">
+                        Correct
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-800">
+                        Incorrect
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </Card>
+
+          <div className="flex justify-end gap-3">
+            <Button
+              onClick={() => {
+                setComplete(false);
+                setQuestionIndex((prev) => Math.max(prev, 0));
+              }}
+            >
+              Back
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setComplete(false);
+                setQuestionIndex(0);
+                setQuestionList(undefined);
+              }}
+            >
+              Try Again
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

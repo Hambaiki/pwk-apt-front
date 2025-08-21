@@ -2,7 +2,6 @@
 
 import Main from "@/components/layout/Main";
 import { Input } from "@/components/ui/Input";
-import Breadcrumbs from "@/components/navgiation/Breadcrumbs";
 
 import { useRouter } from "next/navigation";
 
@@ -40,15 +39,6 @@ export default function ComparisonExerciseConfigPage() {
 
   return (
     <Main className="space-y-4">
-      <Breadcrumbs
-        breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Exercise", href: "/exercises" },
-          { label: "Comparison", href: "/exercises/comparison" },
-          { label: "Configure", href: "/exercises/comparison/configure" },
-        ]}
-      />
-
       <form onSubmit={handleSubmit} className="p-6 space-y-4">
         <h2 className="text-2xl font-bold text-center">Configure Exercise</h2>
 

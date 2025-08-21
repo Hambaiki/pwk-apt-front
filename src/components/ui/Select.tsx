@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 
 export interface SelectProps
   extends React.SelectHTMLAttributes<HTMLSelectElement> {}
@@ -12,7 +12,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         className={cn(
           "flex w-full rounded-lg border border-secondary-300 bg-background-primary px-3 py-2 text-sm placeholder-text-tertiary text-text-primary",
           // Focus state
-          "focus:border-primary-500 focus focus:ring-2 focus:ring-primary-400 focus:ring-offset-1 transition-all",
+          "focus:border-primary-500 focus focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0",
           // Disabled state
           "disabled:cursor-not-allowed disabled:opacity-50",
           className

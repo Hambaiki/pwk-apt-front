@@ -2,34 +2,37 @@ import { exercises } from "@/contants/exercise";
 import Link from "next/link";
 import { Button } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Lightbulb, Target, BarChart } from "lucide-react";
+import { Lightbulb, Target, BarChart, PenSquareIcon } from "lucide-react";
 
-export default function TestPage() {
+export default function HomePage() {
   return (
     <div className="flex flex-col gap-16 px-4 py-10 max-w-6xl mx-auto">
       {/* Hero Section */}
-      <div className="text-center space-y-4">
+      <div className="text-center">
         <h1 className="text-4xl font-bold text-primary">
-          Welcome to Aptitude Practice Hub
+          Start Sharpening Your Aptitude Skills
         </h1>
-        <p className="text-text-secondary max-w-2xl mx-auto">
-          Sharpen your aptitude skills with interactive exercises and
-          challenges. Choose a topic below to get started!
+
+        <p className="text-text-secondary max-w-2xl mx-auto mt-2">
+          Refine your aptitude skills with interactive exercises and challenges.
+          Choose a topic below to get started.
         </p>
 
-        <div className="grid sm:grid-cols-2 gap-4 max-w-xl mx-auto">
-          <Button size="lg" variant="primary">
-            Start Practicing
-          </Button>
+        <div className="max-w-xl mx-auto mt-4">
+          <Link href="/exercises">
+            <Button size="lg" variant="primary">
+              Start Practicing
+            </Button>
+          </Link>
 
-          <Button size="lg" variant="secondary">
+          {/* <Button size="lg" variant="secondary">
             Learn More
-          </Button>
+          </Button> */}
         </div>
       </div>
 
       {/* How It Works Section */}
-      <Card variant="shadowed" size="lg" className="space-y-8">
+      <Card size="lg" className="space-y-8">
         <div className="text-center space-y-2">
           <h2 className="text-3xl font-semibold text-primary">How It Works</h2>
           <p className="text-text-secondary">
@@ -68,20 +71,23 @@ export default function TestPage() {
       </Card>
 
       {/* Exercises Section */}
-      <Card variant="shadowed" size="lg" className="space-y-6">
-        <div className="text-center space-y-2">
-          <h2 className="text-3xl font-semibold text-primary">Exercises</h2>
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+            <PenSquareIcon className="w-5 h-5" />
+            Exercises
+          </h3>
           <p className="text-text-secondary">
-            Explore different areas to improve your problem-solving skills.
+            Explore different areas to improve your skills.
           </p>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {exercises.map((item) => (
             <Link href={item.href} key={item.label}>
-              <Card className="group h-full hover:shadow-md transition-shadow">
+              <Card className="h-full">
                 <CardHeader className="flex flex-col items-center space-y-3">
-                  <item.icon className="w-16 h-16 text-primary transition-transform group-hover:scale-110" />
+                  <item.icon className="w-16 h-16 text-primary transition-transform" />
                   <CardTitle className="text-xl font-semibold text-center">
                     {item.label}
                   </CardTitle>
@@ -95,10 +101,10 @@ export default function TestPage() {
             </Link>
           ))}
         </div>
-      </Card>
+      </div>
 
       {/* Why Practice Section */}
-      <Card variant="shadowed" size="lg" className="space-y-6 text-center">
+      <Card size="lg" className="space-y-6 text-center">
         <h2 className="text-3xl font-semibold text-primary">
           Why Practice Here?
         </h2>

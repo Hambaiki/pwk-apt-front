@@ -1,7 +1,6 @@
 "use client";
 
 import Main from "@/components/layout/Main";
-import Breadcrumbs from "@/components/navgiation/Breadcrumbs";
 import { Button } from "@/components/ui/Button";
 
 import { Answer, ComparisonResult } from "@/types/comparison/question";
@@ -15,8 +14,8 @@ import {
   generateComparisonExercise,
 } from "@/utils/comparison/question";
 
-import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { clsx } from "clsx";
+import { Check, X } from "lucide-react";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -110,14 +109,6 @@ export default function ComparisonExerciseStartPage({
 
   return (
     <Main className="space-y-4">
-      <Breadcrumbs
-        breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Exercise", href: "/exercises" },
-          { label: "Comparison", href: "/exercises/comparison" },
-        ]}
-      />
-
       <div className="space-y-6 p-4">
         <h1 className="text-2xl font-bold text-center">Comparison Exercise</h1>
 
@@ -187,11 +178,11 @@ export default function ComparisonExerciseStartPage({
                     }`}
                   >
                     {answers[index] === q.correctAnswer ? (
-                      <CheckIcon className="w-4 h-4 shrink-0" />
+                      <Check className="w-4 h-4 shrink-0" />
                     ) : (
                       <>
-                        <XMarkIcon className="inline-block w-4 h-4 shrink-0" />{" "}
-                        ({q.correctAnswer})
+                        <X className="inline-block w-4 h-4 shrink-0" /> (
+                        {q.correctAnswer})
                       </>
                     )}
                   </td>

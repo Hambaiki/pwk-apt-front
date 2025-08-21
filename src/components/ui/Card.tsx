@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 import { cva, VariantProps } from "class-variance-authority";
 
 const cardVariants = cva("rounded-lg transition-colors", {
@@ -8,6 +8,7 @@ const cardVariants = cva("rounded-lg transition-colors", {
       default: "bg-background-primary border border-secondary-200",
       outlined: "bg-background-primary border-2 border-secondary-300",
       shadowed: "shadow-soft bg-background-primary",
+      borderless: "bg-background-primary border-0",
     },
     size: {
       sm: "p-2",

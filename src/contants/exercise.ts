@@ -1,10 +1,10 @@
-import { DocumentTextIcon } from "@heroicons/react/24/outline";
+import { File } from "lucide-react";
 
 export const exercises = [
   {
     label: "Comparison Exercise",
     href: "/exercises/comparison",
     description: "Comparision of two texts",
-    icon: DocumentTextIcon,
+    icon: File,
   },
 ];

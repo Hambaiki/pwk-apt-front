@@ -1,12 +1,7 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 import { cva, VariantProps } from "class-variance-authority";
 
-import {
-  ExclamationTriangleIcon,
-  CheckCircleIcon,
-  InformationCircleIcon,
-  XCircleIcon,
-} from "@heroicons/react/24/outline";
+import { CheckCircle, Info, TriangleAlert, XCircle } from "lucide-react";
 
 const alertVariants = cva(
   "flex items-start gap-3 rounded-lg border p-2.5 text-sm",
@@ -24,16 +19,16 @@ const alertVariants = cva(
 
 const iconMap = {
   info: {
-    icon: <InformationCircleIcon className="h-5 w-5 text-info-500" />,
+    icon: <Info className="h-5 w-5 text-info-500" />,
   },
   success: {
-    icon: <CheckCircleIcon className="h-5 w-5 text-success-500" />,
+    icon: <CheckCircle className="h-5 w-5 text-success-500" />,
   },
   warning: {
-    icon: <ExclamationTriangleIcon className="h-5 w-5 text-warning-500" />,
+    icon: <TriangleAlert className="h-5 w-5 text-warning-500" />,
   },
   error: {
-    icon: <XCircleIcon className="h-5 w-5 text-error-500" />,
+    icon: <XCircle className="h-5 w-5 text-error-500" />,
   },
 };
 
@@ -57,7 +52,7 @@ export function Alert({
     <div className={cn(alertVariants({ type, className }))} {...props}>
       <span className="flex-shrink-0">{icon}</span>
       <div className="flex-1">
-        {title && <h4 className="font-semibold mb-1">{title}</h4>}
+        {title && <p className="font-semibold mb-1">{title}</p>}
         <p>{message}</p>
       </div>
     </div>

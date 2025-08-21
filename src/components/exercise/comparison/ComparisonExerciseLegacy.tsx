@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Answer, ComparisonResult } from "@/types/comparison/question";
-import { countDifferences } from "@/utils/comparison/question";
-import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Button, Input } from "@/components/ui";
+
+import { countDifferences } from "@/utils/comparison/question";
+
+import { Answer, ComparisonResult } from "@/types/comparison/question";
+
+import { Check, X } from "lucide-react";
+
+import { useEffect, useState } from "react";
 
 export default function ComparisonExercise({
   questions,
@@ -196,11 +200,11 @@ export default function ComparisonExercise({
                     }`}
                   >
                     {userAnswers[index] === q.correctAnswer ? (
-                      <CheckIcon className="w-4 h-4 shrink-0" />
+                      <Check className="w-4 h-4 shrink-0" />
                     ) : (
                       <>
-                        <XMarkIcon className="inline-block w-4 h-4 shrink-0" />{" "}
-                        ({q.correctAnswer})
+                        <X className="inline-block w-4 h-4 shrink-0" /> (
+                        {q.correctAnswer})
                       </>
                     )}
                   </td>

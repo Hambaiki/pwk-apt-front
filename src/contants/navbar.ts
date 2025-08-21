@@ -1,20 +1,25 @@
-import { HomeIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
+import { File, Home, Info } from "lucide-react";
 
 export const navbarItems = [
   {
     label: "Home",
     href: "/",
-    icon: HomeIcon,
+    icon: Home,
     // add a field of what condition it can be active
   },
+  {
+    label: "Exercises",
+    href: "/exercises",
+    icon: File,
+  },
   // {
-  //   label: "Exercises",
-  //   href: "/exercises",
-  //   icon: DocumentIcon,
+  //   label: "About",
+  //   href: "/about",
+  //   icon: Info,
   // },
   {
-    label: "About",
-    href: "/about",
-    icon: InformationCircleIcon,
+    label: "Develop",
+    href: "/develop",
+    icon: Info,
   },
 ];
