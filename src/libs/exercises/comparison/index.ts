@@ -1,24 +1,12 @@
 import { randomInt } from "@/utils/common";
 
+import { GenerationType, MutationType } from "@/types/exercises/comparison";
+
 import { generate } from "random-words";
 
 /*  Pipeline for generating questions for comparision exercise
  *  TBD...
  */
-
-enum GenerationType {
-  WORDS = "words",
-  MIXED = "mixed",
-  CHARS_ONLY = "chars-only",
-  NUMBERS_ONLY = "numbers-only",
-  SYMBOLS_ONLY = "symbols-only",
-}
-
-enum MutationType {
-  INSERT = "insert",
-  DELETE = "delete",
-  REPLACE = "replace",
-}
 
 interface ComparisonBase {
   base: string[];
@@ -71,13 +59,21 @@ export function generateComparisonExercise(
     length?: number;
     minMutation?: number;
     maxMutation?: number;
+    generationTypes?: GenerationType[];
+    mutationTypes?: MutationType[];
   } = {}
 ) {
-  const { count = 1, length = 1, minMutation = 0, maxMutation = 6 } = options;
+  const {
+    count = 1,
+    length = 1,
+    minMutation = 0,
+    maxMutation = 6,
+    generationTypes = Object.values(GenerationType),
+    mutationTypes = Object.values(MutationType),
+  } = options;
 
-  const comparisonTypes = Object.values(GenerationType);
   const sampledTypes = Array.from({ length: count }, () => {
-    const type = comparisonTypes[randomInt(0, comparisonTypes.length - 1)];
+    const type = generationTypes[randomInt(0, generationTypes.length - 1)];
     return type;
   });
 
@@ -104,9 +100,12 @@ export function generateComparisonExercise(
         Math.random() < maxMutationCount / mutatedBase.length;
       if (!shouldMutate) continue;
 
-      const mutationResult = Object.values(mutationHandlers)[
-        randomInt(0, Object.values(mutationHandlers).length - 1)
-      ]({ base: mutatedBase, generationType: item.generationType, index: i });
+      const sampledType = mutationTypes[randomInt(0, mutationTypes.length - 1)];
+      const mutationResult = mutationHandlers[sampledType]({
+        base: mutatedBase,
+        generationType: item.generationType,
+        index: i,
+      });
 
       mutations.push(mutationResult);
 

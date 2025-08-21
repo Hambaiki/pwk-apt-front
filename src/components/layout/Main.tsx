@@ -8,7 +8,7 @@ export default function Main({
   className?: string;
 }) {
   return (
-    <div className={clsx("w-full max-w-6xl mx-auto", className)}>
+    <div className={clsx("w-full max-w-7xl mx-auto", className)}>
       {children}
     </div>
   );

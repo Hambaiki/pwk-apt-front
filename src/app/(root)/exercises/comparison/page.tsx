@@ -1,261 +1,241 @@
 "use client";
 
-import Main from "@/components/layout/Main";
-import { Button } from "@/components/ui/Button";
+import { Card, Button, Input, Checkbox } from "@/components/ui";
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 
-import { Answer, ComparisonResult } from "@/types/comparison/question";
+import { GenerationType, MutationType } from "@/types/exercises/comparison";
 
-import {
-  generateBaseSamples,
-  generateComparisonPairsWithBase,
-} from "@/utils/comparison/algorithm";
-import {
-  countDifferences,
-  generateComparisonExercise,
-} from "@/utils/comparison/question";
+import { Info, Wrench } from "lucide-react";
 
-import { clsx } from "clsx";
-import { Check, X } from "lucide-react";
+import { useState } from "react";
 
-import { useEffect, useMemo, useState } from "react";
+export default function ComparisonExercisePage() {
+  const [started, setStarted] = useState(false);
+  const [config, setConfig] = useState({
+    count: 5,
+    length: 5,
+    minMutation: 0,
+    maxMutation: 6,
+    generationTypes: Object.values(GenerationType),
+    mutationTypes: Object.values(MutationType),
+    timer: 300,
+  });
 
-interface PageProps {
-  searchParams?: { [key: string]: string | string[] | undefined };
-}
-
-export default function ComparisonExerciseStartPage({
-  searchParams,
-}: PageProps) {
-  const [questions, setQuestions] = useState<ComparisonResult[]>([]);
-  const [answers, setAnswers] = useState<Record<number, Answer | null>>({});
-
-  const [startTime, setStartTime] = useState<Date | null>(null);
-  const [elapsedTime, setElapsedTime] = useState<number>(0);
-  const [submitted, setSubmitted] = useState<boolean>(false);
-
-  const options = useMemo(() => {
-    const timeLimit = searchParams?.timeLimit;
-    const totalCount = searchParams?.totalCount;
-
-    const parsedTimeLimit = timeLimit
-      ? parseInt(timeLimit as string, 10)
-      : null;
-    const parsedTotalCount = totalCount
-      ? parseInt(totalCount as string, 10)
-      : null;
-
-    return {
-      timeLimit: parsedTimeLimit,
-      totalCount: parsedTotalCount || 10,
-    };
-  }, [searchParams]);
-
-  const correctCount = useMemo(() => {
-    return questions.reduce((acc, q, i) => {
-      return answers[i] === q.correctAnswer ? acc + 1 : acc;
-    }, 0);
-  }, [questions, answers]);
-
-  useEffect(() => {
-    const count = options.totalCount;
-
-    // TODO: Make this a pipeline
-    const baseSamples = generateBaseSamples(count);
-    const examples: [string, string][] =
-      generateComparisonPairsWithBase(baseSamples);
-    const questions = generateComparisonExercise(examples);
-
-    console.log("Generated Questions:", questions);
-
-    const shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
-    const selectedQuestions = shuffledQuestions.slice(0, count);
-
-    setQuestions(selectedQuestions);
-  }, [options]);
-
-  useEffect(() => {
-    if (!startTime) return;
-
-    const interval = setInterval(() => {
-      const now = new Date();
-      const diff = Math.floor((now.getTime() - startTime.getTime()) / 1000);
-      setElapsedTime(diff);
-
-      if (options.timeLimit && diff >= options.timeLimit * 60) {
-        handleSubmit(); // Auto-submit on timeout
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [startTime, options]);
-
-  function handleStart() {
-    setStartTime(new Date());
-  }
-
-  function handleSubmit() {
-    setSubmitted(true);
-  }
-
-  function handleReset() {
-    setSubmitted(false);
-    setElapsedTime(0);
-    setStartTime(null);
-  }
-
-  function handleChange(index: number, value: Answer) {
-    setAnswers((prev) => ({ ...prev, [index]: value }));
-  }
+  if (started) return;
 
   return (
-    <Main className="space-y-4">
-      <div className="space-y-6 p-4">
-        <h1 className="text-2xl font-bold text-center">Comparison Exercise</h1>
+    <div className="flex flex-col max-w-7xl mx-auto p-6 space-y-6">
+      <Breadcrumb>
+        <BreadcrumbItem label="Home" href="/" />
+        <BreadcrumbItem label="Exercises" href="/exercises" />
+        <BreadcrumbItem label="Comparison" href="/exercises/comparison" />
+      </Breadcrumb>
 
-        <p className="text-center text-sm">
-          If the left and the right are the same, select A. If 1 mistake, select
-          B. If 2 mistakes, select C. If 3 mistakes, select D. If 4 mistakes,
-          select E, If 5 or more mistakes, select F.
+      {/* Header */}
+      <Card className="p-20 rounded-xl bg-gradient-to-br from-primary-800 to-primary-600 shadow-md">
+        <h1 className="mb-2 text-white">Comparison Exercise</h1>
+        <p className="text-gray-100">
+          Compare 2 values and determine whether they are the same or not.
         </p>
+      </Card>
 
-        <div className="text-center text-sm">
-          Time elapsed: {elapsedTime} seconds
-          {options.timeLimit && (
-            <span>
-              {" "}
-              / Limit: {options.timeLimit * 60}s (
-              {Math.max(0, options.timeLimit * 60 - elapsedTime)}s left)
-            </span>
-          )}
-        </div>
+      <div className="mb-8">
+        <h2 className="mb-4 flex items-center gap-2">
+          <Info className="w-8 h-8" />
+          Introduction
+        </h2>
+        <p>
+          This exercise will help you improve your ability to identify
+          differences and similarities between sequences. Follow the
+          instructions carefully and select the correct option for each
+          question.
+        </p>
       </div>
 
-      <div className="overflow-x-auto">
-        <table
-          className={clsx(
-            "min-w-full table-auto text-sm",
-            !startTime && "blur"
-          )}
-        >
-          <thead>
-            <tr className="text-left">
-              <th className="p-2">#</th>
-              <th className="p-2">Left</th>
-              <th className="p-2">Right</th>
-              {Object.values(Answer).map((opt) => (
-                <th key={opt} className="p-2 text-center">
-                  {opt}
-                </th>
+      {/* Instructions */}
+      <Card size="lg" className="space-y-6 bg-background-secondary">
+        <h3 className="text-2xl font-semibold mb-2">
+          How to use this exercise
+        </h3>
+
+        <ol className="list-decimal list-inside space-y-3 text-gray-700">
+          <li>
+            You will see two sequences side by side: <strong>Left</strong> and{" "}
+            <strong>Right</strong>.
+          </li>
+          <li>
+            Your task is to determine how many differences (mutations) exist
+            between them.
+          </li>
+          <li>
+            Select one of the options from <strong>A</strong> to{" "}
+            <strong>F</strong>:
+            <ul className="list-disc list-inside ml-5 text-gray-600 mt-1">
+              <li>A: Both sequences are the same</li>
+              <li>B: 1 difference</li>
+              <li>C: 2 differences</li>
+              <li>D: 3 differences</li>
+              <li>E: 4 differences</li>
+              <li>F: 5 or more differences</li>
+            </ul>
+          </li>
+          <li>
+            Use the <strong>Next</strong> and <strong>Previous</strong> buttons
+            to navigate through questions.
+          </li>
+          <li>
+            At the end, you will see your results and the correct answers with
+            explanations.
+          </li>
+        </ol>
+      </Card>
+
+      <div className="mb-8">
+        <h2 className="mb-4 flex items-center gap-2">
+          <Wrench className="w-8 h-8" />
+          Configuration
+        </h2>
+        <p>
+          Configure your exercise settings and challenge yourself. You can
+          adjust the number of questions, sequence length, mutation range, types
+          of generation and mutation, and even set a timer.
+        </p>
+      </div>
+
+      <Card size="lg" className="space-y-6 bg-background-primary">
+        <h3 className="text-2xl font-semibold">Configure Exercise</h3>
+
+        <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <label className="flex flex-col">
+            Number of Questions
+            <Input
+              type="number"
+              min={1}
+              max={10}
+              value={config.count}
+              onChange={(e) =>
+                setConfig((prev) => ({
+                  ...prev,
+                  count: Number(e.target.value),
+                }))
+              }
+            />
+          </label>
+
+          <label className="flex flex-col">
+            Sequence Length
+            <Input
+              type="number"
+              min={1}
+              max={10}
+              value={config.length}
+              onChange={(e) =>
+                setConfig((prev) => ({
+                  ...prev,
+                  length: Number(e.target.value),
+                }))
+              }
+            />
+          </label>
+
+          <label className="flex flex-col">
+            Minimum Mutations
+            <Input
+              type="number"
+              min={0}
+              value={config.minMutation}
+              onChange={(e) =>
+                setConfig((prev) => ({
+                  ...prev,
+                  minMutation: Number(e.target.value),
+                }))
+              }
+            />
+          </label>
+
+          <label className="flex flex-col">
+            Maximum Mutations
+            <Input
+              type="number"
+              min={0}
+              value={config.maxMutation}
+              onChange={(e) =>
+                setConfig((prev) => ({
+                  ...prev,
+                  maxMutation: Number(e.target.value),
+                }))
+              }
+            />
+          </label>
+
+          <div className="flex flex-col md:col-span-2">
+            Generation Types
+            <div className="flex flex-wrap gap-2 mt-1">
+              {Object.values(GenerationType).map((type) => (
+                <label key={type} className="flex items-center space-x-2">
+                  <Checkbox
+                    defaultChecked={config.generationTypes.includes(type)}
+                    onChange={(checked) => {
+                      setConfig((prev) => ({
+                        ...prev,
+                        generationTypes: checked
+                          ? [...prev.generationTypes, type]
+                          : prev.generationTypes.filter((t) => t !== type),
+                      }));
+                    }}
+                  />
+                  <span className="text-sm">{type}</span>
+                </label>
               ))}
-              {submitted && <th className="p-2 text-center">Result</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {questions.map((q, index) => (
-              <tr key={index}>
-                <td className="p-2">{index + 1}</td>
-                <td className="p-2 font-mono">{q.left}</td>
-                <td className="p-2 font-mono">{q.right}</td>
-                {Object.values(Answer).map((opt) => (
-                  <td key={opt} className="p-2 text-center">
-                    <input
-                      type="radio"
-                      name={`q${index}`}
-                      value={opt}
-                      checked={answers[index] === opt}
-                      onChange={() => handleChange(index, opt)}
-                      disabled={submitted}
-                      className="form-radio"
-                    />
-                  </td>
-                ))}
-                {submitted && (
-                  <td
-                    className={`p-2 text-center font-bold ${
-                      answers[index] === q.correctAnswer
-                        ? "text-green-600"
-                        : "text-red-600"
-                    }`}
-                  >
-                    {answers[index] === q.correctAnswer ? (
-                      <Check className="w-4 h-4 shrink-0" />
-                    ) : (
-                      <>
-                        <X className="inline-block w-4 h-4 shrink-0" /> (
-                        {q.correctAnswer})
-                      </>
-                    )}
-                  </td>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </div>
+          </div>
 
-      <div className={clsx("text-center mt-4", startTime && "hidden")}>
-        <Button onClick={handleStart} className="px-6 py-2">
-          Start
+          <div className="flex flex-col md:col-span-2">
+            Mutation Types
+            <div className="flex flex-wrap gap-2 mt-1">
+              {Object.values(MutationType).map((type) => (
+                <label key={type} className="flex items-center space-x-2">
+                  <Checkbox
+                    defaultChecked={config.mutationTypes.includes(type)}
+                    onChange={(checked) => {
+                      setConfig((prev) => ({
+                        ...prev,
+                        mutationTypes: checked
+                          ? [...prev.mutationTypes, type]
+                          : prev.mutationTypes.filter((t) => t !== type),
+                      }));
+                    }}
+                  />
+                  <span className="text-sm">{type}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <label className="flex flex-col">
+            Timer (seconds)
+            <Input
+              type="number"
+              min={10}
+              max={10_000}
+              value={config.timer}
+              onChange={(e) =>
+                setConfig((prev) => ({
+                  ...prev,
+                  timer: Number(e.target.value),
+                }))
+              }
+            />
+          </label>
+        </form>
+      </Card>
+
+      {/* Start Button */}
+      <div className="flex justify-center">
+        <Button variant="primary" size="lg" onClick={() => setStarted(true)}>
+          Start Exercise
         </Button>
       </div>
-
-      <div className={clsx("text-center mt-4", submitted && "hidden")}>
-        <Button onClick={handleSubmit} className="px-6 py-2">
-          Submit Answers
-        </Button>
-      </div>
-
-      <div className={clsx("space-y-6 p-4", !submitted && "hidden")}>
-        <div className="text-center text-xl font-semibold">
-          You got {correctCount} out of {questions.length} correct!
-        </div>
-
-        <h3 className="text-lg font-bold mb-3">Per-Question Explanations</h3>
-
-        <div className="block">
-          {questions.map((q, i) => {
-            const diffCount = countDifferences(q.left, q.right);
-
-            return (
-              <div
-                key={i}
-                aria-label={`Explanation for question ${i + 1}`}
-                className="odd:bg-black/5 even:bg-black/20 backdrop-blur first:rounded-t-xl last:rounded-b-xl p-4"
-              >
-                <div>
-                  <strong>Question {i + 1}:</strong> Difference count:{" "}
-                  {diffCount}
-                </div>
-                <div>
-                  <strong>Correct answer:</strong> {q.correctAnswer}
-                </div>
-                <div className="mt-1">
-                  <em>
-                    Explanation: The strings differ by {diffCount} character
-                    {diffCount !== 1 ? "s" : ""}. Your answer was{" "}
-                    <span
-                      className={
-                        answers[i] === q.correctAnswer
-                          ? "text-green-600 font-semibold"
-                          : "text-red-600 font-semibold"
-                      }
-                    >
-                      {answers[i] ?? "No answer"}
-                    </span>
-                    .
-                  </em>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="text-center mt-4">
-          <Button onClick={handleReset} className="px-6 py-2 rounded-full">
-            Retry Exercise
-          </Button>
-        </div>
-      </div>
-    </Main>
+    </div>
   );
 }

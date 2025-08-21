@@ -6,30 +6,27 @@ import { Lightbulb, Target, BarChart, PenSquareIcon } from "lucide-react";
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col gap-16 px-4 py-10 max-w-6xl mx-auto">
+    <div className="flex flex-col gap-16 p-6 max-w-7xl mx-auto">
       {/* Hero Section */}
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-primary">
+      <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-primary-800 to-primary-600 shadow-medium">
+        <h1 className="mb-2 text-white">
           Start Sharpening Your Aptitude Skills
         </h1>
-
-        <p className="text-text-secondary max-w-2xl mx-auto mt-2">
+        <p className="text-gray-100">
           Refine your aptitude skills with interactive exercises and challenges.
           Choose a topic below to get started.
         </p>
 
-        <div className="max-w-xl mx-auto mt-4">
+        <div className="flex gap-4 max-w-xl mt-4">
           <Link href="/exercises">
-            <Button size="lg" variant="primary">
-              Start Practicing
-            </Button>
+            <Button variant="primary">Start Practicing</Button>
           </Link>
 
-          {/* <Button size="lg" variant="secondary">
-            Learn More
-          </Button> */}
+          <Link href="/about">
+            <Button variant="secondary">About</Button>
+          </Link>
         </div>
-      </div>
+      </Card>
 
       {/* How It Works Section */}
       <Card size="lg" className="space-y-8">
@@ -84,12 +81,12 @@ export default function HomePage() {
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {exercises.map((item) => (
-            <Link href={item.href} key={item.label}>
+            <Link href={item.href} key={item.title}>
               <Card className="h-full">
                 <CardHeader className="flex flex-col items-center space-y-3">
                   <item.icon className="w-16 h-16 text-primary transition-transform" />
                   <CardTitle className="text-xl font-semibold text-center">
-                    {item.label}
+                    {item.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>

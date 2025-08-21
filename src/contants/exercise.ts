@@ -1,10 +1,23 @@
-import { File } from "lucide-react";
+import { GitCompareArrows, ShieldQuestionMarkIcon } from "lucide-react";
 
 export const exercises = [
   {
-    label: "Comparison Exercise",
+    title: "Comparison",
+    description:
+      "Compare 2 values and determine whether they are the same or not",
     href: "/exercises/comparison",
-    description: "Comparision of two texts",
-    icon: File,
+    icon: GitCompareArrows,
+  },
+  {
+    title: "Coming Soon",
+    description: "This exercise is coming soon.",
+    href: "",
+    icon: ShieldQuestionMarkIcon,
+  },
+  {
+    title: "Coming Soon",
+    description: "This exercise is coming soon.",
+    href: "",
+    icon: ShieldQuestionMarkIcon,
   },
 ];

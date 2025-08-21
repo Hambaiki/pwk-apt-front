@@ -24,18 +24,15 @@ import { toast } from "react-toastify";
 
 export default function ColorShowcasePage() {
   return (
-    <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 pb-8">
-        <Breadcrumb>
-          <BreadcrumbItem label="Home" href="/" />
-          <BreadcrumbItem label="Develop" href="/develop" />
-        </Breadcrumb>
-      </div>
+    <div className="flex flex-col p-6 max-w-7xl mx-auto">
+      <Breadcrumb className="mb-6">
+        <BreadcrumbItem label="Home" href="/" />
+        <BreadcrumbItem label="Develop" href="/develop" />
+      </Breadcrumb>
 
       {/* Header */}
-
-      <div className="max-w-7xl mx-auto px-4">
-        <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-primary-400 to-primary-600 shadow-medium">
+      <div className="space-y-6">
+        <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-primary-800 to-primary-600 shadow-medium">
           <h1 className="mb-2 text-white">
             Aptitude Exercise App - Design System
           </h1>

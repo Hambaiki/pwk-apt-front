@@ -2,7 +2,7 @@ import * as React from "react";
 import { cn } from "@/libs/utils";
 import { cva, VariantProps } from "class-variance-authority";
 
-const cardVariants = cva("rounded-lg transition-colors", {
+const cardVariants = cva("transition-colors", {
   variants: {
     variant: {
       default: "bg-background-primary border border-secondary-200",
@@ -11,9 +11,9 @@ const cardVariants = cva("rounded-lg transition-colors", {
       borderless: "bg-background-primary border-0",
     },
     size: {
-      sm: "p-2",
-      md: "p-4",
-      lg: "p-6",
+      sm: "p-2 rounded-md",
+      md: "p-4 rounded-lg",
+      lg: "p-6 rounded-xl",
     },
   },
   defaultVariants: {
@@ -27,10 +27,10 @@ export interface CardProps
     VariantProps<typeof cardVariants> {}
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant, children, ...props }, ref) => (
+  ({ className, variant, size, children, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn(cardVariants({ variant, className }))}
+      className={cn(cardVariants({ variant, size, className }))}
       {...props}
     >
       {children}

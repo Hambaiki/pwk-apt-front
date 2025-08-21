@@ -69,4 +69,7 @@ body {
   small {
     @apply text-sm text-text-tertiary;
   }
+  label {
+    @apply text-sm text-text-secondary leading-normal;
+  }
 }
