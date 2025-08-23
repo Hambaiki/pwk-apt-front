@@ -1,9 +1,8 @@
+import ExerciseCard from "@/components/exercise/ExerciseCard";
 import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import { Card } from "@/components/ui";
 
 import { exercises } from "@/contants/exercise";
-
-import Link from "next/link";
 
 export default function ExercisesPage() {
   return (
@@ -22,26 +21,7 @@ export default function ExercisesPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {exercises.map((exercise, index) => (
-          <Link
-            key={index}
-            href={exercise.href}
-            className={exercise.href ? "" : "pointer-events-none opacity-50"}
-          >
-            <Card
-              // variant="borderless"
-              size="lg"
-              className="group p-0 h-full overflow-hidden transition-shadow"
-            >
-              <div className="flex items-center justify-center h-56 w-full bg-gradient-to-br from-primary-500 to-primary-400">
-                <exercise.icon className="group-hover:scale-110 transition-transform duration-300 w-32 h-32 text-white" />
-              </div>
-
-              <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2">{exercise.title}</h2>
-                <p className="text-gray-700 mb-3">{exercise.description}</p>
-              </div>
-            </Card>
-          </Link>
+          <ExerciseCard key={index} exercise={exercise} />
         ))}
       </div>
     </div>

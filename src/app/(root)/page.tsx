@@ -1,8 +1,13 @@
-import { exercises } from "@/contants/exercise";
-import Link from "next/link";
+import ExerciseCard from "@/components/exercise/ExerciseCard";
 import { Button } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+
+import { exercises } from "@/contants/exercise";
+import { benefits, howItWorks } from "@/contants/home";
+
 import { Lightbulb, Target, BarChart, PenSquareIcon } from "lucide-react";
+
+import Link from "next/link";
 
 export default function HomePage() {
   return (
@@ -29,7 +34,7 @@ export default function HomePage() {
       </Card>
 
       {/* How It Works Section */}
-      <Card size="lg" className="space-y-8">
+      <div className="space-y-6">
         <div className="text-center space-y-2">
           <h2 className="text-3xl font-semibold text-primary">How It Works</h2>
           <p className="text-text-secondary">
@@ -37,71 +42,41 @@ export default function HomePage() {
           </p>
         </div>
         <div className="grid gap-6 sm:grid-cols-3">
-          {[
-            {
-              icon: Lightbulb,
-              title: "Choose a Topic",
-              desc: "Pick an exercise you would like to practice.",
-            },
-            {
-              icon: Target,
-              title: "Practice Exercises",
-              desc: "Solve interactive questions and track your progress instantly.",
-            },
-            {
-              icon: BarChart,
-              title: "Track Growth",
-              desc: "Review performance analytics to identify strengths and weaknesses.",
-            },
-          ].map((step, i) => (
+          {howItWorks.map((item, i) => (
             <Card key={i} className="h-full text-center">
               <CardHeader className="flex flex-col items-center space-y-3">
-                <step.icon className="w-12 h-12 text-primary" />
-                <CardTitle className="text-xl">{step.title}</CardTitle>
+                <item.icon className="w-12 h-12 text-primary" />
+                <CardTitle className="text-xl">{item.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-text-secondary">{step.desc}</p>
+                <p className="text-text-secondary">{item.description}</p>
               </CardContent>
             </Card>
           ))}
         </div>
-      </Card>
+      </div>
 
       {/* Exercises Section */}
       <div className="space-y-6">
         <div className="space-y-2">
-          <h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-            <PenSquareIcon className="w-5 h-5" />
+          <h2 className="flex items-center gap-2">
+            <PenSquareIcon className="w-6 h-6" />
             Exercises
-          </h3>
+          </h2>
           <p className="text-text-secondary">
             Explore different areas to improve your skills.
           </p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {exercises.map((item) => (
-            <Link href={item.href} key={item.title}>
-              <Card className="h-full">
-                <CardHeader className="flex flex-col items-center space-y-3">
-                  <item.icon className="w-16 h-16 text-primary transition-transform" />
-                  <CardTitle className="text-xl font-semibold text-center">
-                    {item.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-text-secondary text-center">
-                    {item.description}
-                  </p>
-                </CardContent>
-              </Card>
-            </Link>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {exercises.map((exercise, index) => (
+            <ExerciseCard key={index} exercise={exercise} />
           ))}
         </div>
       </div>
 
       {/* Why Practice Section */}
-      <Card size="lg" className="space-y-6 text-center">
+      <div className="space-y-6 text-center">
         <h2 className="text-3xl font-semibold text-primary">
           Why Practice Here?
         </h2>
@@ -110,31 +85,20 @@ export default function HomePage() {
           and real-life problem solving. Consistent practice helps you stay
           sharp, confident, and ready for challenges.
         </p>
-        <div className="flex flex-wrap justify-center gap-4">
-          <Card className="p-6 w-60">
-            <p className="font-semibold text-lg text-primary">
-              🎯 Job Readiness
-            </p>
-            <p className="text-text-secondary">
-              Excel in interviews & assessments.
-            </p>
-          </Card>
-          <Card className="p-6 w-60">
-            <p className="font-semibold text-lg text-primary">📚 Exam Prep</p>
-            <p className="text-text-secondary">
-              Boost scores in competitive exams.
-            </p>
-          </Card>
-          <Card className="p-6 w-60">
-            <p className="font-semibold text-lg text-primary">
-              💡 Daily Growth
-            </p>
-            <p className="text-text-secondary">
-              Enhance logical & analytical thinking.
-            </p>
-          </Card>
+        <div className="grid gap-6 sm:grid-cols-3">
+          {benefits.map((item, i) => (
+            <Card key={i} className="h-full text-center">
+              <CardHeader className="flex flex-col items-center space-y-3">
+                <item.icon className="w-12 h-12 text-primary" />
+                <CardTitle className="text-xl">{item.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-text-secondary">{item.description}</p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      </Card>
+      </div>
 
       {/* Call to Action */}
       <div className="text-center space-y-4 bg-primary text-white p-10 rounded-xl">

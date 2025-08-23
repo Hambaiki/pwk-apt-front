@@ -1,6 +1,8 @@
+import { Exercise } from "@/types/exercises";
+
 import { GitCompareArrows, ShieldQuestionMarkIcon } from "lucide-react";
 
-export const exercises = [
+export const exercises: Exercise[] = [
   {
     title: "Comparison",
     description:
