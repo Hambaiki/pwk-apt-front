@@ -1,3 +1,4 @@
+import { Footer } from "@/components/navgiation/Footer";
 import Navbar from "@/components/navgiation/Navbar";
 
 import { Bounce, Slide, ToastContainer } from "react-toastify";
@@ -13,7 +14,10 @@ export default function MainLayout({
         <Navbar className="p-6 h-16 backdrop-blur" />
       </header>
 
-      <main className="flex-1">{children}</main>
+      <main className="flex-1">
+        {children}
+        <Footer />
+      </main>
 
       <ToastContainer
         position="top-right"

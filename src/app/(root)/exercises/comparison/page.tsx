@@ -3,7 +3,11 @@
 import { Card, Button, Input, Checkbox } from "@/components/ui";
 import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 
-import { GenerationType, MutationType } from "@/types/exercises/comparison";
+import {
+  GenerationType,
+  GeneratorOptions,
+  MutationType,
+} from "@/types/exercises/comparison";
 
 import { Info, Wrench } from "lucide-react";
 
@@ -11,7 +15,11 @@ import { useState } from "react";
 
 export default function ComparisonExercisePage() {
   const [started, setStarted] = useState(false);
-  const [config, setConfig] = useState({
+  const [config, setConfig] = useState<
+    GeneratorOptions & {
+      timer: number;
+    }
+  >({
     count: 5,
     length: 5,
     minMutation: 0,
@@ -102,7 +110,7 @@ export default function ComparisonExercisePage() {
         </p>
       </div>
 
-      <Card size="lg" className="space-y-6 bg-background-primary">
+      <Card size="lg" className="space-y-6 bg-background-secondary">
         <h3 className="text-2xl font-semibold">Configure Exercise</h3>
 
         <form className="grid grid-cols-1 md:grid-cols-2 gap-4">

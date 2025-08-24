@@ -1,6 +1,16 @@
 import { randomInt } from "@/utils/common";
 
-import { GenerationType, MutationType } from "@/types/exercises/comparison";
+import {
+  Comparison,
+  GeneratedBase,
+  GenerationOptions,
+  GenerationResult,
+  GenerationType,
+  GeneratorOptions,
+  MutationOptions,
+  MutationResult,
+  MutationType,
+} from "@/types/exercises/comparison";
 
 import { generate } from "random-words";
 
@@ -8,43 +18,12 @@ import { generate } from "random-words";
  *  TBD...
  */
 
-interface ComparisonBase {
-  base: string[];
-}
-
-export interface Comparison extends ComparisonBase {
-  generationType: GenerationType;
-  mutatedBase: string[];
-  mutationCount: number;
-  mutations: MutationResult[];
-}
-
-interface GeneratedBase
-  extends Omit<Comparison, "mutatedBase" | "mutationCount" | "mutations"> {}
-
-interface GenerationOptions {
-  length?: number;
-}
-
-interface GenerationResult extends ComparisonBase {
-  generationType: GenerationType;
-}
-
-interface MutationOptions extends GenerationResult {
-  index: number;
-}
-
-interface MutationResult extends ComparisonBase {
-  mutatedBase: string[];
-  mutationType: MutationType;
-}
-
 const generatorHandlers = {
   [GenerationType.WORDS]: generateWords,
-  [GenerationType.MIXED]: generateMixed,
-  [GenerationType.CHARS_ONLY]: generateChars,
-  [GenerationType.NUMBERS_ONLY]: generateNumbers,
-  [GenerationType.SYMBOLS_ONLY]: generateSymbols,
+  [GenerationType.CHARS_MIXED]: generateMixed,
+  [GenerationType.CHARS_LETTERS_ONLY]: generateChars,
+  [GenerationType.CHARS_NUMBERS_ONLY]: generateNumbers,
+  [GenerationType.CHARS_SYMBOLS_ONLY]: generateSymbols,
 };
 
 const mutationHandlers = {
@@ -54,14 +33,7 @@ const mutationHandlers = {
 };
 
 export function generateComparisonExercise(
-  options: {
-    count?: number;
-    length?: number;
-    minMutation?: number;
-    maxMutation?: number;
-    generationTypes?: GenerationType[];
-    mutationTypes?: MutationType[];
-  } = {}
+  options: Partial<GeneratorOptions> = {}
 ) {
   const {
     count = 1,
@@ -124,7 +96,9 @@ export function generateComparisonExercise(
   return mutatedBases;
 }
 
-function generateWords(options: GenerationOptions = {}): GenerationResult {
+export function generateWords(
+  options: Partial<GenerationOptions> = {}
+): GenerationResult {
   const { length = 1 } = options;
   const generatedWords = generate({ exactly: length, join: "," });
   return {
@@ -133,34 +107,42 @@ function generateWords(options: GenerationOptions = {}): GenerationResult {
   };
 }
 
-function generateChars(options: GenerationOptions = {}): GenerationResult {
+export function generateChars(
+  options: Partial<GenerationOptions> = {}
+): GenerationResult {
   const { length = 1 } = options;
   const generatedChars = Array.from({ length }, () =>
     String.fromCharCode(randomInt(97, 122))
   ).join(",");
   return {
     base: generatedChars.split(","),
-    generationType: GenerationType.CHARS_ONLY,
+    generationType: GenerationType.CHARS_LETTERS_ONLY,
   };
 }
 
-function generateNumbers(options: GenerationOptions = {}): GenerationResult {
+export function generateNumbers(
+  options: Partial<GenerationOptions> = {}
+): GenerationResult {
   const { length = 1 } = options;
   return {
     base: Array.from({ length }, () => randomInt(0, 9).toString()),
-    generationType: GenerationType.NUMBERS_ONLY,
+    generationType: GenerationType.CHARS_NUMBERS_ONLY,
   };
 }
 
-function generateSymbols(options: GenerationOptions = {}): GenerationResult {
+export function generateSymbols(
+  options: Partial<GenerationOptions> = {}
+): GenerationResult {
   const { length = 1 } = options;
   return {
     base: Array.from({ length }, () => String.fromCharCode(randomInt(33, 47))),
-    generationType: GenerationType.SYMBOLS_ONLY,
+    generationType: GenerationType.CHARS_SYMBOLS_ONLY,
   };
 }
 
-function generateMixed(options: GenerationOptions = {}): GenerationResult {
+export function generateMixed(
+  options: Partial<GenerationOptions> = {}
+): GenerationResult {
   const { length = 1 } = options;
   const mixedGenerator = [generateChars, generateNumbers, generateSymbols];
 
@@ -169,15 +151,17 @@ function generateMixed(options: GenerationOptions = {}): GenerationResult {
     return generator().base;
   });
 
-  return { base: mixed.flat(), generationType: GenerationType.MIXED };
+  return { base: mixed.flat(), generationType: GenerationType.CHARS_MIXED };
 }
 
-// Modifications for bases
-
-function mutateInsert(options: MutationOptions): MutationResult {
-  const { base, generationType: type, index } = options;
+export function mutateInsert(options: MutationOptions): MutationResult {
+  const { base, generationType, index } = options;
   const mutatedBase = [...base];
-  const toAdd = generatorHandlers[type]().base;
+  let toAdd: string | undefined;
+  while (!toAdd || base.includes(toAdd)) {
+    const candidates = generatorHandlers[generationType]().base;
+    toAdd = candidates.length > 0 ? candidates[0] : undefined;
+  }
   mutatedBase.splice(
     index,
     1,
@@ -190,7 +174,7 @@ function mutateInsert(options: MutationOptions): MutationResult {
   };
 }
 
-function mutateDelete(options: MutationOptions): MutationResult {
+export function mutateDelete(options: MutationOptions): MutationResult {
   const { base, index } = options;
   const mutatedBase = [...base];
   mutatedBase[index] = "";
@@ -201,7 +185,8 @@ function mutateDelete(options: MutationOptions): MutationResult {
   };
 }
 
-function mutateReplace(options: MutationOptions): MutationResult {
+export function mutateReplace(options: MutationOptions): MutationResult {
+  // TODO: Handle to replace where there maybe difficult to differenciate numbers
   const { base, index } = options;
   const mutatedBase = [...base];
   let toReplace: string | undefined;

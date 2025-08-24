@@ -1,11 +1,11 @@
 import { cn } from "@/libs/utils";
-import { cva } from "class-variance-authority";
+import { cva, VariantProps } from "class-variance-authority";
 
 const badgeVariants = cva(
   "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
   {
     variants: {
-      color: {
+      variant: {
         primary: "bg-primary-100 text-primary-700",
         secondary: "bg-secondary-100 text-secondary-700",
         success: "bg-success-100 text-success-700",
@@ -14,19 +14,20 @@ const badgeVariants = cva(
         info: "bg-info-100 text-info-700",
       },
     },
+    defaultVariants: {
+      variant: "primary",
+    },
   }
 );
 
-export function Badge({
-  children,
-  color = "primary",
-  className,
-}: {
-  children: React.ReactNode;
-  color?: "primary" | "secondary" | "success" | "warning" | "error" | "info";
-  className?: string;
-}) {
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLSpanElement>,
+    VariantProps<typeof badgeVariants> {}
+
+export function Badge({ children, variant, className }: BadgeProps) {
   return (
-    <span className={cn(badgeVariants({ color, className }))}>{children}</span>
+    <span className={cn(badgeVariants({ variant, className }))}>
+      {children}
+    </span>
   );
 }

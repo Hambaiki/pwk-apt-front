@@ -1,8 +1,8 @@
 import ExerciseCard from "@/components/exercise/ExerciseCard";
 import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
-import { Card } from "@/components/ui";
+import { Badge, Card } from "@/components/ui";
 
-import { exercises } from "@/contants/exercise";
+import { exercises } from "@/contants/common/exercise";
 
 export default function ExercisesPage() {
   return (

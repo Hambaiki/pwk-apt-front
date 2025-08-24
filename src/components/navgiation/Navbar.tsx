@@ -1,7 +1,7 @@
 import Logo from "@/components/common/Logo";
 import { Button } from "@/components/ui";
 
-import { navbarItems } from "@/contants/navbar";
+import { navbarItems } from "@/contants/common/navbar";
 
 import Link from "next/link";
 import { clsx } from "clsx";

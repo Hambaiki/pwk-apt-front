@@ -11,7 +11,7 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col gap-16 p-6 max-w-7xl mx-auto">
+    <div className="flex flex-col space-y-12 p-6 max-w-7xl mx-auto">
       {/* Hero Section */}
       <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-primary-800 to-primary-600 shadow-medium">
         <h1 className="mb-2 text-white">
@@ -107,7 +107,7 @@ export default function HomePage() {
           Join thousands of learners and start your journey towards mastery
           today.
         </p>
-        <Button size="lg" variant="secondary">
+        <Button size="lg" variant="primary">
           Get Started Now
         </Button>
       </div>

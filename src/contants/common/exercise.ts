@@ -9,17 +9,20 @@ export const exercises: Exercise[] = [
       "Compare 2 values and determine whether they are the same or not",
     href: "/exercises/comparison",
     icon: GitCompareArrows,
+    tag: "new",
   },
   {
     title: "Coming Soon",
     description: "This exercise is coming soon.",
     href: "",
-    icon: ShieldQuestionMarkIcon,
+    icon: CircleQuestionMark,
+    tag: "coming-soon",
   },
   {
     title: "Coming Soon",
     description: "This exercise is coming soon.",
     href: "",
-    icon: ShieldQuestionMarkIcon,
+    icon: CircleQuestionMark,
+    tag: "coming-soon",
   },
 ];
