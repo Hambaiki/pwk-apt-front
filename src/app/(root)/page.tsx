@@ -1,11 +1,11 @@
 import ExerciseCard from "@/components/exercise/ExerciseCard";
 import { Button } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { exercises } from "@/constants/common/exercise";
 
-import { exercises } from "@/contants/exercise";
-import { benefits, howItWorks } from "@/contants/home";
+import { benefits, howItWorks } from "@/constants/home";
 
-import { Lightbulb, Target, BarChart, PenSquareIcon } from "lucide-react";
+import { PenSquareIcon } from "lucide-react";
 
 import Link from "next/link";
 

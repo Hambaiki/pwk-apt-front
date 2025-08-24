@@ -2,7 +2,7 @@ import ExerciseCard from "@/components/exercise/ExerciseCard";
 import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import { Badge, Card } from "@/components/ui";
 
-import { exercises } from "@/contants/common/exercise";
+import { exercises } from "@/constants/common/exercise";
 
 export default function ExercisesPage() {
   return (

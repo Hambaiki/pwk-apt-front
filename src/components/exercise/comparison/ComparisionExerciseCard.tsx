@@ -1,4 +1,4 @@
-import { Comparison } from "@/libs/exercises/comparison";
+import { Comparison } from "@/types/exercises/comparison";
 
 import { OptionButton } from "../QuestionButton";
 import { QuestionCard } from "../QuestionCard";

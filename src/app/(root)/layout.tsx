@@ -14,10 +14,9 @@ export default function MainLayout({
         <Navbar className="p-6 h-16 backdrop-blur" />
       </header>
 
-      <main className="flex-1">
-        {children}
-        <Footer />
-      </main>
+      <main className="flex-1">{children}</main>
+
+      <Footer />
 
       <ToastContainer
         position="top-right"

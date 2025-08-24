@@ -12,10 +12,9 @@ import {
   Alert,
 } from "@/components/ui";
 
-import {
-  Comparison,
-  generateComparisonExercise,
-} from "@/libs/exercises/comparison";
+import { generateComparisonExercise } from "@/libs/exercises/comparison";
+
+import { Comparison } from "@/types/exercises/comparison";
 
 import { Eye, Copy, Palette, Type, Layers, Zap } from "lucide-react";
 

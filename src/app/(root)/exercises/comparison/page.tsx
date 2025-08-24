@@ -14,7 +14,6 @@ import { Info, Wrench } from "lucide-react";
 import { useState } from "react";
 
 export default function ComparisonExercisePage() {
-  const [started, setStarted] = useState(false);
   const [config, setConfig] = useState<
     GeneratorOptions & {
       timer: number;
@@ -28,8 +27,6 @@ export default function ComparisonExercisePage() {
     mutationTypes: Object.values(MutationType),
     timer: 300,
   });
-
-  if (started) return;
 
   return (
     <div className="flex flex-col max-w-7xl mx-auto p-6 space-y-6">
@@ -240,7 +237,7 @@ export default function ComparisonExercisePage() {
 
       {/* Start Button */}
       <div className="flex justify-center">
-        <Button variant="primary" size="lg" onClick={() => setStarted(true)}>
+        <Button variant="primary" size="lg" onClick={() => {}}>
           Start Exercise
         </Button>
       </div>

@@ -7,7 +7,6 @@ import {
   Goal,
   Lightbulb,
   Target,
-  TargetIcon,
 } from "lucide-react";
 
 export const howItWorks: GenericCard[] = [
