@@ -16,7 +16,9 @@ export default function Navbar({ className }: NavbarProps) {
     <nav
       className={clsx(`flex flex-row items-center justify-between`, className)}
     >
-      <Logo />
+      <Link href={"/"}>
+        <Logo />
+      </Link>
 
       <div className="flex flex-row items-center gap-4">
         {navbarItems.map((item, index) => (

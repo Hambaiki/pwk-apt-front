@@ -1,7 +1,7 @@
 import { Footer } from "@/components/navgiation/Footer";
 import Navbar from "@/components/navgiation/Navbar";
 
-import { Bounce, Slide, ToastContainer } from "react-toastify";
+import { Slide, ToastContainer } from "react-toastify";
 
 export default function MainLayout({
   children,

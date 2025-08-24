@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "../common/Logo";
 
 export function Footer() {
   return (
@@ -6,8 +7,8 @@ export function Footer() {
       <div className="flex justify-evenly gap-8 text-sm">
         {/* Brand */}
         <div>
-          <h2 className="text-lg font-semibold">Aptitude Exercise</h2>
-          <p className="text-text-secondary mt-2">
+          <Logo />
+          <p className="">
             Sharpen your mind with interactive exercises.
           </p>
         </div>
