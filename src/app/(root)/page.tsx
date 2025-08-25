@@ -43,7 +43,10 @@ export default function HomePage() {
         </div>
         <div className="grid gap-6 sm:grid-cols-3">
           {howItWorks.map((item, i) => (
-            <Card key={i} className="h-full text-center">
+            <Card
+              key={i}
+              className="h-full text-center bg-background-secondary"
+            >
               <CardHeader className="flex flex-col items-center space-y-3">
                 <item.icon className="w-12 h-12 text-primary" />
                 <CardTitle className="text-xl">{item.title}</CardTitle>
@@ -87,7 +90,10 @@ export default function HomePage() {
         </p>
         <div className="grid gap-6 sm:grid-cols-3">
           {benefits.map((item, i) => (
-            <Card key={i} className="h-full text-center">
+            <Card
+              key={i}
+              className="h-full text-center bg-background-secondary"
+            >
               <CardHeader className="flex flex-col items-center space-y-3">
                 <item.icon className="w-12 h-12 text-primary" />
                 <CardTitle className="text-xl">{item.title}</CardTitle>
@@ -101,15 +107,17 @@ export default function HomePage() {
       </div>
 
       {/* Call to Action */}
-      <div className="text-center space-y-4 bg-primary text-white p-10 rounded-xl">
+      <div className="text-center bg-primary text-white p-10 rounded-xl">
         <h2 className="text-3xl font-bold">Ready to Sharpen Your Skills?</h2>
         <p className="max-w-2xl mx-auto">
-          Join thousands of learners and start your journey towards mastery
-          today.
+          Start your journey towards mastery today.
         </p>
-        <Button size="lg" variant="primary">
-          Get Started Now
-        </Button>
+
+        <div className="mt-4">
+          <Link href="/exercises">
+            <Button variant="primary">Get Started Now</Button>
+          </Link>
+        </div>
       </div>
     </div>
   );

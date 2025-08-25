@@ -18,7 +18,7 @@ export const QuestionCard = ({
   footer,
 }: QuestionCardProps) => {
   return (
-    <div className="bg-background-secondary rounded-lg p-6 space-y-4 border border-secondary-200">
+    <div className="bg-background-secondary rounded-xl p-6 space-y-4 border border-secondary-200">
       {/* Header */}
       <div className="bg-primary-500 text-white p-4 rounded-lg mb-6">
         <div className="flex justify-between items-center">
@@ -43,7 +43,7 @@ export const QuestionCard = ({
       </div>
 
       {/* Question Content */}
-      <div className="bg-white p-6 rounded-lg shadow-soft">{children}</div>
+      <div className="bg-white p-6 rounded-lg border border-secondary-200">{children}</div>
 
       {/* Footer Actions */}
       {footer && <div className="flex gap-3">{footer}</div>}

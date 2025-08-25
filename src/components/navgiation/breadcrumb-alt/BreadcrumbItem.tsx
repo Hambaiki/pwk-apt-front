@@ -1,4 +1,4 @@
-import { FaChevronRight } from "react-icons/fa";
+import { ChevronRight } from "lucide-react";
 
 import Link from "next/link";
 
@@ -21,7 +21,7 @@ export function BreadcrumbItem({
       }`}
     >
       {label}
-      {!isLast && <FaChevronRight className="inline ml-2" />}
+      {!isLast && <ChevronRight className="inline ml-2" />}
     </Link>
   );
 }

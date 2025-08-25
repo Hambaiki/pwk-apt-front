@@ -1,6 +1,7 @@
-import { FaChevronRight } from "react-icons/fa";
+import { cn } from "@/libs/utils";
 
-import { clsx } from "clsx";
+import { ChevronRight } from "lucide-react";
+
 import Link from "next/link";
 import { Children, cloneElement, isValidElement } from "react";
 
@@ -14,7 +15,7 @@ export function Breadcrumb({ children, className }: BreadcrumbProps) {
 
   return (
     <div
-      className={clsx(
+      className={cn(
         "flex flex-row flex-wrap rounded-xl px-6 py-2 bg-background-tertiary",
         className
       )}
@@ -49,10 +50,12 @@ export function BreadcrumbItem({
   return (
     <Link
       href={href}
-      className={`transition-colors mr-2 ${isLast ? "font-bold text-primary-500" : ""}`}
+      className={`transition-colors mr-2 ${
+        isLast ? "font-bold text-primary-500" : ""
+      }`}
     >
       {label}
-      {!isLast && <FaChevronRight className="inline ml-2" />}
+      {!isLast && <ChevronRight className="inline ml-2" />}
     </Link>
   );
 }

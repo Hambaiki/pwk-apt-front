@@ -9,6 +9,7 @@ import {
   mutateReplace,
 } from "@/libs/exercises/comparison";
 
+import { Choice } from "@/types/exercises";
 import {
   GenerationOptions,
   GenerationType,
@@ -80,5 +81,32 @@ export const comparisonMutators: Record<
     description:
       "Randomly replaces existing characters with new ones to introduce variation.",
     handler: mutateReplace,
+  },
+};
+
+export const comparisonAnswers = {
+  [Choice.A]: {
+    description: "No mutations",
+    check: (count: number) => count === 0,
+  },
+  [Choice.B]: {
+    description: "One mutation",
+    check: (count: number) => count === 1,
+  },
+  [Choice.C]: {
+    description: "Two mutations",
+    check: (count: number) => count === 2,
+  },
+  [Choice.D]: {
+    description: "Three mutations",
+    check: (count: number) => count === 3,
+  },
+  [Choice.E]: {
+    description: "Four mutations",
+    check: (count: number) => count === 4,
+  },
+  [Choice.F]: {
+    description: "Five or more mutations",
+    check: (count: number) => count >= 5,
   },
 };

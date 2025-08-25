@@ -2,7 +2,7 @@ import { cn } from "@/libs/utils";
 import { cva, VariantProps } from "class-variance-authority";
 
 const optionButtonVariants = cva(
-  "w-full text-left p-3 border rounded transition-colors",
+  "w-full text-left px-4 py-3 border rounded transition-colors",
   {
     variants: {
       variant: {

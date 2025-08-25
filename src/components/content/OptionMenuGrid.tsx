@@ -1,14 +1,13 @@
-import Link from "next/link";
+import { ChevronRight, LucideIcon } from "lucide-react";
 
-import { IconType } from "react-icons";
-import { FaChevronRight } from "react-icons/fa6";
+import Link from "next/link";
 
 interface OptionMenuGridProps {
   items: {
     title: string;
     description: string;
     href: string;
-    icon: IconType;
+    icon: LucideIcon;
   }[];
 }
 
@@ -29,7 +28,7 @@ function OptionMenuGrid({ items }: OptionMenuGridProps) {
             <p className="text-base">{item.description}</p>
           </div>
 
-          <FaChevronRight className="text-suzuha-teal-500" />
+          <ChevronRight className="text-suzuha-teal-500" />
         </Link>
       ))}
     </div>
