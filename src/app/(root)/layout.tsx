@@ -10,7 +10,7 @@ export default function MainLayout({
 }>) {
   return (
     <div className="flex flex-col w-full min-h-[100dvh]">
-      <header className="z-[999] sticky top-0 w-full">
+      <header className="z-10 sticky top-0 w-full">
         <Navbar className="p-6 h-16 backdrop-blur" />
       </header>
 

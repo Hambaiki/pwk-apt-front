@@ -1,60 +1,41 @@
 "use client";
 
 import { ComparisonExerciseCard } from "@/components/exercise/comparison/ComparisionExerciseCard";
+import ConfigurerCard from "@/components/exercise/comparison/ConfigurerCard";
 import HowToCard from "@/components/exercise/comparison/HowToCard";
-import { Button, Card } from "@/components/ui";
+import { Button, Card, Checkbox, Input, Modal } from "@/components/ui";
+import { ModalContent, ModalHeader } from "@/components/ui/Modal";
 
-import { comparisonAnswers } from "@/constants/exercises/comparison";
+import {
+  comparisonAnswers,
+  defaultComparisonOptions,
+} from "@/constants/exercises/comparison";
 import { generateComparisonExercise } from "@/libs/exercises/comparison";
 
 import { Choice } from "@/types/exercises";
 import {
   Comparison,
-  GenerationType,
-  GeneratorOptions,
-  MutationType,
+  ComparisonGeneratorOptions,
 } from "@/types/exercises/comparison";
 
-import { useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 export default function ComparisonExerciseQuestionPage() {
-  const searchParams = useSearchParams();
+  const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
 
-  const options: GeneratorOptions & { timer: number } = useMemo(() => {
-    const getInt = (key: string, fallback: number) =>
-      parseInt(searchParams.get(key) ?? "", 10) || fallback;
-
-    const getArray = <T extends string>(key: string, fallback: T[]) =>
-      searchParams.get(key)
-        ? (searchParams.get(key)!.split(",") as T[])
-        : fallback;
-
-    return {
-      count: getInt("count", 5),
-      length: getInt("length", 5),
-      minMutation: getInt("minMutation", 0),
-      maxMutation: getInt("maxMutation", 6),
-      generationTypes: getArray(
-        "generationTypes",
-        Object.values(GenerationType)
-      ),
-      mutationTypes: getArray("mutationTypes", Object.values(MutationType)),
-      timer: getInt("timer", 300),
-    };
-  }, [searchParams]);
-
+  const [isComplete, setIsComplete] = useState<boolean>(false);
   const [questionIndex, setQuestionIndex] = useState<number>(0);
   const [questionList, setQuestionList] = useState<
     { question: Comparison; answer: Choice | undefined }[] | undefined
   >();
-  const [isComplete, setIsComplete] = useState<boolean>(false);
 
-  const handleStart = (options: GeneratorOptions & { timer: number }) => {
+  const handleStart = (
+    configs: ComparisonGeneratorOptions & { timer: number }
+  ) => {
     setIsComplete(false);
     setQuestionIndex(0);
 
-    const questions = generateComparisonExercise({ ...options });
+    const questions = generateComparisonExercise({ ...configs });
 
     setQuestionList(questions.map((q) => ({ question: q, answer: undefined })));
   };
@@ -70,19 +51,29 @@ export default function ComparisonExerciseQuestionPage() {
   };
 
   return (
-    <div className="flex flex-col max-w-7xl mx-auto p-6 space-y-6">
+    <div className="flex flex-col max-w-7xl mx-auto p-6">
       <Card>
         <div className="flex gap-3">
           <Button
             disabled={questionList !== undefined}
-            onClick={() => handleStart(options)}
+            onClick={() => handleStart(defaultComparisonOptions)}
           >
             Start
           </Button>
           <Button onClick={() => handleEnd()}>End</Button>
           <Button onClick={() => handleReset()}>Reset</Button>
+          <Button onClick={() => setIsConfigOpen(true)}>Configure</Button>
         </div>
       </Card>
+
+      <Modal isOpen={isConfigOpen} onClose={() => setIsConfigOpen(false)}>
+        <ModalContent>
+          <ModalHeader>
+            <h3 className="text-2xl font-semibold">Configure Exercise</h3>
+          </ModalHeader>
+          <ConfigurerCard onSubmit={handleStart} />
+        </ModalContent>
+      </Modal>
 
       {!isComplete && questionList && questionList.length > 0 && (
         <ComparisonExerciseCard

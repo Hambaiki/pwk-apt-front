@@ -11,6 +11,7 @@ import {
 
 import { Choice } from "@/types/exercises";
 import {
+  ComparisonGeneratorOptions,
   GenerationOptions,
   GenerationType,
   MutationOptions,
@@ -109,4 +110,16 @@ export const comparisonAnswers = {
     description: "Five or more mutations",
     check: (count: number) => count >= 5,
   },
+};
+
+export const defaultComparisonOptions: ComparisonGeneratorOptions & {
+  timer: number;
+} = {
+  count: 5,
+  length: 5,
+  minMutation: 0,
+  maxMutation: 6,
+  generationTypes: Object.values(GenerationType),
+  mutationTypes: Object.values(MutationType),
+  timer: 300,
 };

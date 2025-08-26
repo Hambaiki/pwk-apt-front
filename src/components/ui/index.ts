@@ -4,5 +4,6 @@ export { Checkbox } from "./Checkbox";
 export { Select } from "./Select";
 export { TextArea } from "./TextArea";
 export { Card } from "./Card";
+export { Modal } from "./Modal";
 export { Badge } from "./Badge";
 export { Alert } from "./Alert";

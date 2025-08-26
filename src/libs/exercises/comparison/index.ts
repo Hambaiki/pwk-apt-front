@@ -6,7 +6,7 @@ import {
   GenerationOptions,
   GenerationResult,
   GenerationType,
-  GeneratorOptions,
+  ComparisonGeneratorOptions,
   MutationOptions,
   MutationResult,
   MutationType,
@@ -33,7 +33,7 @@ const mutationHandlers = {
 };
 
 export function generateComparisonExercise(
-  options: Partial<GeneratorOptions> = {}
+  options: Partial<ComparisonGeneratorOptions> = {}
 ) {
   const {
     count = 1,

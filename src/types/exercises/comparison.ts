@@ -44,7 +44,7 @@ export interface MutationResult extends ComparisonBase {
   mutationType: MutationType;
 }
 
-export interface GeneratorOptions {
+export interface ComparisonGeneratorOptions {
   count: number;
   length: number;
   minMutation: number;
