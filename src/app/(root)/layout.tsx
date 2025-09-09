@@ -10,11 +10,11 @@ export default function MainLayout({
 }>) {
   return (
     <div className="flex flex-col w-full min-h-[100dvh]">
-      <header className="z-10 sticky top-0 w-full">
-        <Navbar className="p-6 h-16 backdrop-blur" />
+      <header className="w-full mx-auto max-w-7xl">
+        <Navbar className="p-6 lg:py-12" />
       </header>
 
-      <main className="flex-1">{children}</main>
+      <div className="flex-1">{children}</div>
 
       <Footer />
 

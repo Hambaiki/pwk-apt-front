@@ -1,8 +1,9 @@
+import MainSection from "@/components/template/MainSection";
 import { Card } from "@/components/ui";
 
 export default function TermsOfServicePage() {
   return (
-    <main className="flex flex-col p-6 max-w-7xl mx-auto">
+    <MainSection>
       <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-primary-800 to-primary-600 shadow-medium">
         <h1 className="mb-2 text-white font-bold">Terms of Service</h1>
         <p className="text-gray-100 mt-1">
@@ -80,6 +81,6 @@ export default function TermsOfServicePage() {
           </a>
         </p>
       </section>
-    </main>
+    </MainSection>
   );
 }

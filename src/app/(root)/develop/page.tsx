@@ -11,6 +11,7 @@ import {
   Card,
   Alert,
 } from "@/components/ui";
+import MainSection from "@/components/template/MainSection";
 
 import { generateComparisonExercise } from "@/libs/exercises/comparison";
 
@@ -23,7 +24,7 @@ import { toast } from "react-toastify";
 
 export default function ColorShowcasePage() {
   return (
-    <div className="flex flex-col p-6 max-w-7xl mx-auto">
+    <MainSection>
       <Breadcrumb className="mb-6">
         <BreadcrumbItem label="Home" href="/" />
         <BreadcrumbItem label="Develop" href="/develop" />
@@ -82,7 +83,7 @@ export default function ColorShowcasePage() {
         {/* Test Comparison Exercise */}
         <TestComparisonExercise />
       </div>
-    </div>
+    </MainSection>
   );
 }
 

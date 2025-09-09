@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Montserrat, Sarabun, Kanit, Noto_Sans_Thai } from "next/font/google";
 import "./globals.css";
 
 import { clsx } from "clsx";
 
-const montserrat = Montserrat({ subsets: ["latin"] });
+const noto = Noto_Sans_Thai({
+  subsets: ["latin", "thai"], // Specify the required subsets
+  weight: "variable", // Specify the desired weights
+});
 
 export const metadata: Metadata = {
   title: "PWK APT PRACTICE",
@@ -18,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={clsx(montserrat.className)}>{children}</body>
+      <body className={clsx(noto.className)}>{children}</body>
     </html>
   );
 }

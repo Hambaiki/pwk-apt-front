@@ -3,14 +3,12 @@ import Logo from "../common/Logo";
 
 export function Footer() {
   return (
-    <footer className="w-full bg-background-tertiary py-8 mt-12">
+    <footer className="w-full py-6 mt-12">
       <div className="flex justify-evenly gap-8 text-sm">
         {/* Brand */}
         <div>
           <Logo />
-          <p className="">
-            Sharpen your mind with interactive exercises.
-          </p>
+          <p className="">Sharpen your mind with interactive exercises.</p>
         </div>
 
         {/* Navigation */}
@@ -23,10 +21,6 @@ export function Footer() {
             <li>
               <Link href="/exercises">Exercises</Link>
             </li>
-            <li>
-              <Link href="/develop">Develop</Link>
-            </li>
-            {/* <li><Link href="/about">About</Link></li> */}
           </ul>
         </div>
 
@@ -41,7 +35,7 @@ export function Footer() {
               <Link href="/terms">Terms of Service</Link>
             </li>
             <li>
-              <Link href="/contact">Contact</Link>
+              <Link href="/about">Contact</Link>
             </li>
           </ul>
         </div>

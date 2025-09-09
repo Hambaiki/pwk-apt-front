@@ -10,6 +10,7 @@ import { Info } from "lucide-react";
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import MainSection from "@/components/template/MainSection";
 
 export default function ComparisonExerciseMainPage() {
   const router = useRouter();
@@ -44,7 +45,7 @@ export default function ComparisonExerciseMainPage() {
   }
 
   return (
-    <div className="flex flex-col max-w-7xl mx-auto p-6 space-y-6">
+    <MainSection className="gap-6">
       <Breadcrumb>
         <BreadcrumbItem label="Home" href="/" />
         <BreadcrumbItem label="Exercises" href="/exercises" />
@@ -59,7 +60,7 @@ export default function ComparisonExerciseMainPage() {
         </p>
       </Card>
 
-      <div className="mb-8">
+      <div>
         <h2 className="mb-4 flex items-center gap-2">
           <Info className="w-8 h-8" />
           Introduction
@@ -72,7 +73,6 @@ export default function ComparisonExerciseMainPage() {
         </p>
       </div>
 
-      {/* Instructions */}
       <HowToCard />
 
       <div className="mx-auto">
@@ -80,6 +80,6 @@ export default function ComparisonExerciseMainPage() {
           <Button>Start Exercise</Button>
         </Link>
       </div>
-    </div>
+    </MainSection>
   );
 }

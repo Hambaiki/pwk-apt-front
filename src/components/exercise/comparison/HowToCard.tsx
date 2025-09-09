@@ -3,8 +3,6 @@ import { Card } from "@/components/ui";
 export default function HowToCard() {
   return (
     <Card size="lg" className="space-y-6 bg-background-secondary">
-      <h3 className="text-2xl font-semibold mb-2">How to use this exercise</h3>
-
       <ol className="list-decimal list-inside space-y-3 text-gray-700">
         <li>
           You will see two sequences side by side: <strong>Left</strong> and{" "}

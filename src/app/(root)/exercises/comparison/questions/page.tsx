@@ -3,7 +3,8 @@
 import { ComparisonExerciseCard } from "@/components/exercise/comparison/ComparisionExerciseCard";
 import ConfigurerCard from "@/components/exercise/comparison/ConfigurerCard";
 import HowToCard from "@/components/exercise/comparison/HowToCard";
-import { Button, Card, Checkbox, Input, Modal } from "@/components/ui";
+import MainSection from "@/components/template/MainSection";
+import { Button, Card, Modal } from "@/components/ui";
 import { ModalContent, ModalHeader } from "@/components/ui/Modal";
 
 import {
@@ -17,11 +18,13 @@ import {
   Comparison,
   ComparisonGeneratorOptions,
 } from "@/types/exercises/comparison";
+import { CircleQuestionMark, Pause, Play } from "lucide-react";
 
 import { useState } from "react";
 
 export default function ComparisonExerciseQuestionPage() {
   const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
+  const [isViewingHelp, setIsViewingHelp] = useState<boolean>(false);
 
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [questionIndex, setQuestionIndex] = useState<number>(0);
@@ -44,25 +47,30 @@ export default function ComparisonExerciseQuestionPage() {
     setIsComplete(true);
   };
 
-  const handleReset = () => {
-    setIsComplete(false);
-    setQuestionIndex(0);
-    setQuestionList(undefined);
-  };
-
   return (
-    <div className="flex flex-col max-w-7xl mx-auto p-6">
+    <MainSection className="gap-6">
       <Card>
         <div className="flex gap-3">
           <Button
+            variant="primary"
             disabled={questionList !== undefined}
             onClick={() => handleStart(defaultComparisonOptions)}
           >
+            <Play width={16} height={16} className="mr-2" />
             Start
           </Button>
-          <Button onClick={() => handleEnd()}>End</Button>
-          <Button onClick={() => handleReset()}>Reset</Button>
-          <Button onClick={() => setIsConfigOpen(true)}>Configure</Button>
+          <Button
+            variant="error"
+            disabled={isComplete}
+            onClick={() => handleEnd()}
+          >
+            <Pause width={16} height={16} className="mr-2" />
+            End
+          </Button>
+          <Button variant="outline" onClick={() => setIsViewingHelp(true)}>
+            <CircleQuestionMark width={16} height={16} className="mr-2" />
+            How to
+          </Button>
         </div>
       </Card>
 
@@ -174,21 +182,20 @@ export default function ComparisonExerciseQuestionPage() {
             >
               Back
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setIsComplete(false);
-                setQuestionIndex(0);
-                setQuestionList(undefined);
-              }}
-            >
-              Try Again
-            </Button>
           </div>
         </div>
       )}
 
-      <HowToCard />
-    </div>
+      <Modal isOpen={isViewingHelp} onClose={() => setIsViewingHelp(false)}>
+        <ModalContent>
+          <ModalHeader>
+            <h2 className="text-lg font-semibold">
+              How to Complete the Exercise
+            </h2>
+          </ModalHeader>
+          <HowToCard />
+        </ModalContent>
+      </Modal>
+    </MainSection>
   );
 }

@@ -1,8 +1,10 @@
 import ExerciseCard from "@/components/exercise/ExerciseCard";
+import MainSection from "@/components/template/MainSection";
+import { HeaderCard } from "@/components/template/HeaderCard";
 import { Button } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { exercises } from "@/constants/common/exercise";
 
+import { exercises } from "@/constants/common/exercise";
 import { benefits, howItWorks } from "@/constants/home";
 
 import { PenSquareIcon } from "lucide-react";
@@ -11,9 +13,9 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col space-y-12 p-6 max-w-7xl mx-auto">
+    <MainSection className="space-y-20">
       {/* Hero Section */}
-      <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-primary-800 to-primary-600 shadow-medium">
+      <HeaderCard>
         <h1 className="mb-2 text-white">
           Start Sharpening Your Aptitude Skills
         </h1>
@@ -21,7 +23,6 @@ export default function HomePage() {
           Refine your aptitude skills with interactive exercises and challenges.
           Choose a topic below to get started.
         </p>
-
         <div className="flex gap-4 max-w-xl mt-4">
           <Link href="/exercises">
             <Button variant="primary">Start Practicing</Button>
@@ -31,13 +32,13 @@ export default function HomePage() {
             <Button variant="secondary">About</Button>
           </Link>
         </div>
-      </Card>
+      </HeaderCard>
 
       {/* How It Works Section */}
       <div className="space-y-6">
         <div className="text-center space-y-2">
-          <h2 className="text-3xl font-semibold text-primary">How It Works</h2>
-          <p className="text-text-secondary">
+          <h2>How It Works</h2>
+          <p>
             Simple steps to improve your aptitude and problem-solving skills.
           </p>
         </div>
@@ -66,9 +67,7 @@ export default function HomePage() {
             <PenSquareIcon className="w-6 h-6" />
             Exercises
           </h2>
-          <p className="text-text-secondary">
-            Explore different areas to improve your skills.
-          </p>
+          <p>Explore different areas to improve your skills.</p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -80,10 +79,8 @@ export default function HomePage() {
 
       {/* Why Practice Section */}
       <div className="space-y-6 text-center">
-        <h2 className="text-3xl font-semibold text-primary">
-          Why Practice Here?
-        </h2>
-        <p className="text-text-secondary max-w-2xl mx-auto">
+        <h2>Why Practice Here?</h2>
+        <p className="mx-auto">
           Aptitude skills are essential for competitive exams, job interviews,
           and real-life problem solving. Consistent practice helps you stay
           sharp, confident, and ready for challenges.
@@ -108,7 +105,7 @@ export default function HomePage() {
 
       {/* Call to Action */}
       <div className="text-center bg-primary text-white p-10 rounded-xl">
-        <h2 className="text-3xl font-bold">Ready to Sharpen Your Skills?</h2>
+        <h2>Ready to Sharpen Your Skills?</h2>
         <p className="max-w-2xl mx-auto">
           Start your journey towards mastery today.
         </p>
@@ -119,6 +116,6 @@ export default function HomePage() {
           </Link>
         </div>
       </div>
-    </div>
+    </MainSection>
   );
 }

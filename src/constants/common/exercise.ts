@@ -1,6 +1,6 @@
 import { Exercise } from "@/types/exercises";
 
-import { GitCompareArrows, CircleQuestionMark } from "lucide-react";
+import { GitCompareArrows, CircleQuestionMark, Shapes } from "lucide-react";
 
 export const exercises: Exercise[] = [
   {
@@ -12,11 +12,11 @@ export const exercises: Exercise[] = [
     tag: "new",
   },
   {
-    title: "Coming Soon",
-    description: "This exercise is coming soon.",
-    href: "",
-    icon: CircleQuestionMark,
-    tag: "coming-soon",
+    title: "Scanning Shapes",
+    description: "Identify and count specific shapes in a grid",
+    href: "/exercises/scanning",
+    icon: Shapes,
+    tag: "new",
   },
   {
     title: "Coming Soon",

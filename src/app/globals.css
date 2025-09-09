@@ -16,20 +16,34 @@
   }
 } */
 
-:root {
+/* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
+} */
+
+/* :root {
+  --foreground-rgb: #000000;
+  --background-start-rgb: #f1f5f9;
+  --background-end-rgb: #ebf2fa;
+} */
+
+:root {
+  --foreground-rgb: #000000;
+  --background-start-rgb: #ffffff;
+  --background-end-rgb: #ffffff;
 }
 
+/* :root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 50, 50, 50;
+  --background-end-rgb: 50, 50, 50;
+} */
+
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: var(--foreground-rgb);
+  background: linear-gradient(to bottom, transparent, var(--background-end-rgb))
+    var(--background-start-rgb);
 }
 
 @layer utilities {

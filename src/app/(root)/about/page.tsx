@@ -1,9 +1,10 @@
 import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import MainSection from "@/components/template/MainSection";
 import { Card } from "@/components/ui";
 
 export default function AboutPage() {
   return (
-    <div className="flex flex-col p-6 max-w-7xl mx-auto">
+    <MainSection>
       <Breadcrumb className="mb-6">
         <BreadcrumbItem label="Home" href="/" />
         <BreadcrumbItem label="Exercises" href="/exercises" />
@@ -16,6 +17,14 @@ export default function AboutPage() {
           skills.
         </p>
       </Card>
-    </div>
+
+      <Card className="text-center p-10">
+        <p>
+          <strong>Coming Soon...</strong>
+          <br />
+          Stay tuned for updates!
+        </p>
+      </Card>
+    </MainSection>
   );
 }

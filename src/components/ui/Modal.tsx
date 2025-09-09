@@ -117,7 +117,7 @@ const ModalContent = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "bg-background-primary p-6 m-6 rounded-lg shadow-lg transition-all ease-in-out duration-300",
+        "bg-background-primary p-6 m-6 rounded-2xl shadow-2xl transition-all ease-in-out duration-300",
         isOpen ? "scale-100" : "scale-95",
         className
       )}
