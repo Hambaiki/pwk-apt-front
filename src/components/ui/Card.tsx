@@ -2,14 +2,14 @@ import * as React from "react";
 import { cn } from "@/libs/utils";
 import { cva, VariantProps } from "class-variance-authority";
 
-const cardVariants = cva("transition-colors border", {
+const cardVariants = cva("transition-colors", {
   variants: {
     variant: {
       default: "bg-background-secondary",
       outlined: "bg-background-primary",
       shadowed: "shadow-strong bg-background-primary",
       borderless: "bg-background-primary border-0",
-      info: "bg-info-50 border-info-200 text-info-700",
+      info: "bg-primary-50 border-info-200 text-info-700",
     },
     size: {
       sm: "p-2 rounded-lg",

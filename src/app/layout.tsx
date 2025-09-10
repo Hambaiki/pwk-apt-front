@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat, Sarabun, Kanit, Noto_Sans_Thai } from "next/font/google";
+import { Noto_Sans_Thai } from "next/font/google";
 import "./globals.css";
 
 import { clsx } from "clsx";
@@ -10,8 +10,8 @@ const noto = Noto_Sans_Thai({
 });
 
 export const metadata: Metadata = {
-  title: "PWK APT PRACTICE",
-  description: "A collection of PWK APT practice questions and solutions",
+  title: "AptEx",
+  description: "Sharpen your mind with interactive exercises.",
 };
 
 export default function RootLayout({

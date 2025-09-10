@@ -3,7 +3,7 @@
 import { ComparisonExerciseCard } from "@/components/exercise/comparison/ComparisionExerciseCard";
 import ConfigurerCard from "@/components/exercise/comparison/ConfigurerCard";
 import HowToCard from "@/components/exercise/comparison/HowToCard";
-import MainSection from "@/components/template/MainSection";
+import MainSection from "@/components/content/MainSection";
 import { Button, Card, Modal } from "@/components/ui";
 import { ModalContent, ModalHeader } from "@/components/ui/Modal";
 

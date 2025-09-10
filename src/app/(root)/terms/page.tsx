@@ -1,9 +1,15 @@
-import MainSection from "@/components/template/MainSection";
+import MainSection from "@/components/content/MainSection";
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import { Card } from "@/components/ui";
 
 export default function TermsOfServicePage() {
   return (
     <MainSection>
+      <Breadcrumb className="mb-4">
+        <BreadcrumbItem label="Home" href="/" />
+        <BreadcrumbItem label="Terms of Service" href="/terms" />
+      </Breadcrumb>
+
       <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-primary-800 to-primary-600 shadow-medium">
         <h1 className="mb-2 text-white font-bold">Terms of Service</h1>
         <p className="text-gray-100 mt-1">

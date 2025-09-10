@@ -11,7 +11,7 @@ import {
   Card,
   Alert,
 } from "@/components/ui";
-import MainSection from "@/components/template/MainSection";
+import MainSection from "@/components/content/MainSection";
 
 import { generateComparisonExercise } from "@/libs/exercises/comparison";
 

@@ -139,9 +139,12 @@ const config: Config = {
         },
         // Background variations
         background: {
+          // primary: "#ffffff",
+          // secondary: "#f8fafc",
+          // tertiary: "#f1f5f9",
           primary: "#ffffff",
-          secondary: "#f8fafc",
-          tertiary: "#f1f5f9",
+          secondary: "#f5f5f5",
+          tertiary: "#e2e8f0",
         },
         // Text variations
         text: {

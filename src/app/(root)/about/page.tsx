@@ -1,5 +1,5 @@
 import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
-import MainSection from "@/components/template/MainSection";
+import MainSection from "@/components/content/MainSection";
 import { Card } from "@/components/ui";
 
 export default function AboutPage() {

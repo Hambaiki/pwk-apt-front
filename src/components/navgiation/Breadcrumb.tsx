@@ -16,7 +16,7 @@ export function Breadcrumb({ children, className }: BreadcrumbProps) {
   return (
     <div
       className={cn(
-        "flex flex-row flex-wrap rounded-xl px-6 py-2 border bg-background-secondary",
+        "flex flex-row flex-wrap rounded-xl px-6 py-2 bg-background-secondary",
         className
       )}
     >

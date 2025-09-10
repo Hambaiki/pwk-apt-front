@@ -1,6 +1,10 @@
 import ExerciseCard from "@/components/exercise/ExerciseCard";
-import MainSection from "@/components/template/MainSection";
-import { HeaderCard } from "@/components/template/HeaderCard";
+import MainSection from "@/components/content/MainSection";
+import {
+  HeaderCard,
+  HeaderCardDescription,
+  HeaderCardTitle,
+} from "@/components/content/HeaderCard";
 import { Button } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 
@@ -16,13 +20,13 @@ export default function HomePage() {
     <MainSection className="space-y-20">
       {/* Hero Section */}
       <HeaderCard>
-        <h1 className="mb-2 text-white">
+        <HeaderCardTitle className="mb-2">
           Start Sharpening Your Aptitude Skills
-        </h1>
-        <p className="text-gray-100">
+        </HeaderCardTitle>
+        <HeaderCardDescription>
           Refine your aptitude skills with interactive exercises and challenges.
           Choose a topic below to get started.
-        </p>
+        </HeaderCardDescription>
         <div className="flex gap-4 max-w-xl mt-4">
           <Link href="/exercises">
             <Button variant="primary">Start Practicing</Button>

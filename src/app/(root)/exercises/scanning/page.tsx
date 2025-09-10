@@ -1,16 +1,20 @@
 "use client";
 
+import { Button, Card, Input, Modal } from "@/components/ui";
 import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
   HeaderCardTitle,
   HeaderCardDescription,
-} from "@/components/template/HeaderCard";
-import MainSection from "@/components/template/MainSection";
+} from "@/components/content/HeaderCard";
+import MainSection from "@/components/content/MainSection";
+import Toolbar from "@/components/exercise/Toolbar";
 
-import React, { useState, useEffect } from "react";
-import { Play, RotateCcw, Palette, Info, Wrench, Cog } from "lucide-react";
-import { Button, Card, Input } from "@/components/ui";
+import { Play, RotateCcw, Info, Cog, RefreshCcw } from "lucide-react";
+
+import React, { useState } from "react";
+import { ModalContent, ModalHeader } from "@/components/ui/Modal";
+import { cn } from "@/libs/utils";
 
 enum Stage {
   Reference = "reference",
@@ -39,6 +43,7 @@ interface ShapeGridItem {
   letter: string;
   color: string;
   size: number;
+  rotation: number;
   x: number;
   y: number;
 }
@@ -47,6 +52,7 @@ interface Config {
   itemCount: number;
   questionCount: number;
   timeLimit: number;
+  isMonotoneMode?: boolean;
   shapes: Shape[];
 }
 
@@ -55,7 +61,7 @@ const shapeRenderers: Record<
   ShapeName,
   (size: number, color: string) => React.ReactNode
 > = {
-  circle: (size, color) => (
+  [ShapeName.Circle]: (size, color) => (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
       <circle
         cx={size / 2}
@@ -67,7 +73,7 @@ const shapeRenderers: Record<
       />
     </svg>
   ),
-  square: (size, color) => (
+  [ShapeName.Square]: (size, color) => (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
       <rect
         x="5"
@@ -80,7 +86,7 @@ const shapeRenderers: Record<
       />
     </svg>
   ),
-  triangle: (size, color) => (
+  [ShapeName.Triangle]: (size, color) => (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
       <polygon
         points={`${size / 2},5 ${size - 5},${size - 5} 5,${size - 5}`}
@@ -90,19 +96,20 @@ const shapeRenderers: Record<
       />
     </svg>
   ),
-  diamond: (size, color) => (
+  [ShapeName.Diamond]: (size, color) => (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      {/* Make the width more thin so that it does not look like square */}
       <polygon
-        points={`${size / 2},5 ${size - 5},${size / 2} ${size / 2},${
+        points={`${size / 2},5 ${size * 0.8},${size / 2} ${size / 2},${
           size - 5
-        } 5,${size / 2}`}
+        } ${size * 0.2},${size / 2}`}
         stroke={color}
         strokeWidth={2}
         fill="rgba(255, 255, 255, 0.75)"
       />
     </svg>
   ),
-  oval: (size, color) => (
+  [ShapeName.Oval]: (size, color) => (
     <svg width={size} height={size / 1.5} viewBox={`0 0 ${size} ${size / 1.5}`}>
       <ellipse
         cx={size / 2}
@@ -115,7 +122,7 @@ const shapeRenderers: Record<
       />
     </svg>
   ),
-  parallelogram: (size, color) => (
+  [ShapeName.Parallelogram]: (size, color) => (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
       <polygon
         points={`20,5 ${size - 5},5 ${size - 20},${size - 5} 5,${size - 5}`}
@@ -125,7 +132,7 @@ const shapeRenderers: Record<
       />
     </svg>
   ),
-  trapezoid: (size, color) => (
+  [ShapeName.Trapezoid]: (size, color) => (
     <svg width={size} height={size / 1.5} viewBox={`0 0 ${size} ${size / 1.5}`}>
       <polygon
         points={`20,5 ${size - 20},5 ${size - 5},${size / 1.5 - 5} 5,${
@@ -156,13 +163,23 @@ const colors = [
   "rgba(144, 238, 144, 1)", // light green
 ];
 
-const sampleShapes: Omit<ShapeGridItem, "id" | "size" | "x" | "y">[] =
-  shapes.map((shape, index) => ({
-    shape,
-    color: colors[index % colors.length],
-    number: index + 1,
-    letter: String.fromCharCode(65 + (index % 26)),
-  }));
+const sampleShapes: Omit<
+  ShapeGridItem,
+  "id" | "size" | "x" | "y" | "rotation"
+>[] = shapes.map((shape, index) => ({
+  shape,
+  color: colors[index % colors.length],
+  number: index + 1,
+  letter: String.fromCharCode(65 + (index % 26)),
+}));
+
+const defaultConfig: Config = {
+  itemCount: 40, // Number of item groups
+  questionCount: 20, // Questions per group
+  timeLimit: 600, // Time limit in seconds
+  shapes: shapes, // Shapes to use
+  isMonotoneMode: false,
+};
 
 const ScanningExercise = () => {
   const [stage, setStage] = useState<Stage>(Stage.Reference); // 'reference', 'questions', 'results'
@@ -174,19 +191,13 @@ const ScanningExercise = () => {
   const [score, setScore] = useState(0);
 
   // Timer state (in seconds)
-  const [timeRemaining, setTimeRemaining] = useState(600);
   const [isTimerActive, setIsTimerActive] = useState(false);
 
   // Configuration state
-  const [config, setConfig] = useState<Config>({
-    itemCount: 40, // Number of item groups
-    questionCount: 20, // Questions per group
-    timeLimit: 600, // Time limit in seconds
-    shapes: shapes, // Shapes to use
-  });
+  const [config, setConfig] = useState<Config>(defaultConfig);
 
-  // Configurations
-  const [isMonotoneMode, setIsMonotoneMode] = useState(false);
+  // Misc
+  const [isViewingHelp, setIsViewingHelp] = useState(false);
 
   const generateItemsWithGrid = () => {
     const newItems = [];
@@ -233,15 +244,18 @@ const ScanningExercise = () => {
 
     // Generate items with pre-calculated positions
     for (let i = 0; i < itemCount && i < positions.length; i++) {
-      let shape, number, letter, color;
+      let shape, number, letter, color, rotation;
       let combination;
 
       // Ensure unique combinations
       do {
+        const shouldRotate = Math.random() < 0.5;
+
         shape = shapes[Math.floor(Math.random() * shapes.length)];
         number = Math.floor(Math.random() * 99) + 1;
         letter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
         color = colors[Math.floor(Math.random() * colors.length)];
+        rotation = shouldRotate ? Math.floor(Math.random() * 46) : 0;
         combination = `${shape.name}-${number}-${letter}`;
       } while (usedCombinations.has(combination));
 
@@ -261,6 +275,7 @@ const ScanningExercise = () => {
         size,
         x: positions[i].x,
         y: positions[i].y,
+        rotation,
       });
     }
 
@@ -283,13 +298,6 @@ const ScanningExercise = () => {
 
     setQuestions(selectedItems);
     setAnswers({});
-  };
-
-  // Format time display
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
   // Handle answer input
@@ -315,42 +323,23 @@ const ScanningExercise = () => {
   const startExercise = () => {
     generateItemsWithGrid();
     setStage(Stage.Questions);
-    setTimeRemaining(config.timeLimit);
     setIsTimerActive(true);
   };
 
   // Reset exercise
   const resetExercise = () => {
     setStage(Stage.Reference);
-    setTimeRemaining(600);
     setIsTimerActive(false);
     setAnswers({});
     setScore(0);
   };
-
-  // Timer effect
-  useEffect(() => {
-    let interval = null;
-    if (isTimerActive && timeRemaining > 0) {
-      interval = setInterval(() => {
-        setTimeRemaining((timeRemaining) => timeRemaining - 1);
-      }, 1000);
-    } else if (timeRemaining === 0 && isTimerActive) {
-      setIsTimerActive(false);
-      calculateScore();
-      setStage(Stage.Results);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isTimerActive, timeRemaining]);
 
   return (
     <MainSection className="gap-6">
       <Breadcrumb>
         <BreadcrumbItem label="Home" href="/" />
         <BreadcrumbItem label="Exercises" href="/exercises" />
-        <BreadcrumbItem label="Comparison" href="/exercises/comparison" />
+        <BreadcrumbItem label="Scanning" href="/exercises/scanning" />
       </Breadcrumb>
 
       {stage === Stage.Reference && (
@@ -395,170 +384,178 @@ const ScanningExercise = () => {
               Adjust the settings below to customize your exercise experience.
             </p>
 
+            <Card variant="info" className="space-y-4">
+              <h3 className="text-lg font-semibold text-info-800 mb-3 flex items-center gap-2">
+                Exercise Summary
+              </h3>
+
+              <ul className="space-y-2 list-disc list-inside">
+                <li>
+                  Total: <code>{config.itemCount}</code> items/
+                  <code>{config.questionCount}</code> questions
+                </li>
+                <li>
+                  Time limit: <code>{(config.timeLimit / 60).toFixed(1)}</code>{" "}
+                  minutes
+                </li>
+                <li>
+                  Shapes:{" "}
+                  <code>
+                    {config.shapes.length > 0
+                      ? config.shapes.map((shape) => shape.name).join(", ")
+                      : "All Shapes"}
+                  </code>
+                </li>
+                <li>
+                  Color mode:{" "}
+                  <code>{config.isMonotoneMode ? "Monotone" : "Color"}</code>
+                </li>
+              </ul>
+
+              <p>
+                Preview the shapes and letters that will be used in the
+                exercise.
+              </p>
+
+              <Card className="flex flex-wrap gap-1 bg-white">
+                {sampleShapes
+                  .filter((question) => config.shapes.includes(question.shape))
+                  .map((question, index) => (
+                    <ShapeItem
+                      key={index}
+                      shape={question.shape.name}
+                      color={question.color}
+                      number={question.number}
+                      letter={question.letter}
+                      isMonotoneMode={config.isMonotoneMode}
+                    />
+                  ))}
+              </Card>
+            </Card>
+
             <Card className="space-y-4">
               <h3>Preferences</h3>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Number of Items
-                  <Input
-                    type="number"
-                    min={1}
-                    max={40}
-                    value={config.itemCount}
-                    onChange={(e) =>
-                      setConfig((prev) => ({
-                        ...prev,
-                        itemCount:
-                          parseInt(e.target.value) < prev.questionCount
-                            ? prev.questionCount
-                            : parseInt(e.target.value) || 1,
-                      }))
-                    }
-                  />
-                </label>
-                <p className="text-xs text-gray-500 mt-1">
-                  Total number of items to display (must be greater than or
-                  equal to maximum number of questions)
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Number of Questions
-                  <Input
-                    type="number"
-                    min={1}
-                    max={config.itemCount}
-                    value={config.questionCount}
-                    onChange={(e) =>
-                      setConfig((prev) => ({
-                        ...prev,
-                        questionCount:
-                          parseInt(e.target.value) > prev.itemCount
-                            ? prev.itemCount
-                            : parseInt(e.target.value) || 1,
-                      }))
-                    }
-                  />
-                </label>
-                <p className="text-xs text-gray-500 mt-1">
-                  Number of questions to answer during the exercise (must be
-                  less than or equal to number of items)
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Time Limit (minutes)
-                  <Input
-                    type="number"
-                    min="1"
-                    max="30"
-                    value={config.timeLimit}
-                    onChange={(e) =>
-                      setConfig((prev) => ({
-                        ...prev,
-                        timeLimit: parseInt(e.target.value) || 10,
-                      }))
-                    }
-                  />
-                </label>
-              </div>
-
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Monotone Mode
-                <div className="flex items-center mt-2">
-                  <Input
-                    type="checkbox"
-                    checked={isMonotoneMode}
-                    onChange={(e) => setIsMonotoneMode(e.target.checked)}
-                    className="w-4 h-4 mr-2"
-                  />
-                  Enable Monotone Mode
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Number of Items
+                    <Input
+                      type="number"
+                      value={config.itemCount}
+                      onChange={(e) =>
+                        setConfig((prev) => ({
+                          ...prev,
+                          itemCount:
+                            parseInt(e.target.value) < prev.questionCount
+                              ? prev.questionCount
+                              : parseInt(e.target.value) || 1,
+                        }))
+                      }
+                    />
+                  </label>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Total number of items to display (must be greater than or
+                    equal to maximum number of questions)
+                  </p>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  Enable monotone mode for a simplified color scheme
-                </p>
-              </label>
 
-              <div className="block text-sm font-medium text-gray-700 mb-2">
-                Shapes to Include
-                <div className="flex flex-wrap gap-3 mt-2">
-                  {shapes.map((shape) => (
-                    <label className="flex items-center" key={shape.name}>
-                      <Input
-                        type="checkbox"
-                        defaultChecked={config.shapes.includes(shape)}
-                        onChange={(e) => {
-                          setConfig((prev) => ({
-                            ...prev,
-                            shapes: e.target.checked
-                              ? [...prev.shapes, shape]
-                              : prev.shapes.filter((s) => s !== shape),
-                          }));
-                        }}
-                        className="w-4 h-4 mr-2"
-                      />
-                      {shape.name}
-                    </label>
-                  ))}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Number of Questions
+                    <Input
+                      type="number"
+                      value={config.questionCount}
+                      onChange={(e) =>
+                        setConfig((prev) => ({
+                          ...prev,
+                          questionCount:
+                            parseInt(e.target.value) > prev.itemCount
+                              ? prev.itemCount
+                              : parseInt(e.target.value) || 1,
+                        }))
+                      }
+                    />
+                  </label>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Number of questions to answer during the exercise (must be
+                    less than or equal to number of items)
+                  </p>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  Select which shapes to include in the exercise
-                </p>
-              </div>
 
-              <h3>Preview</h3>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Time Limit (seconds)
+                    <Input
+                      type="number"
+                      value={config.timeLimit}
+                      onChange={(e) =>
+                        setConfig((prev) => ({
+                          ...prev,
+                          timeLimit: parseInt(e.target.value) || 10,
+                        }))
+                      }
+                    />
+                  </label>
+                </div>
 
-              <Card className="bg-white">
-                <div className="flex">
-                  {sampleShapes
-                    .filter((question) =>
-                      config.shapes.includes(question.shape)
-                    )
-                    .map((question, index) => (
-                      <div
-                        key={index}
-                        className="relative flex items-center justify-center"
-                      >
-                        {/* Shape SVG */}
-                        {shapeRenderers[question.shape.name](
-                          80,
-                          isMonotoneMode ? "rgb(59,59,59)" : question.color
-                        )}
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Monotone Mode
+                  <div className="flex items-center mt-2">
+                    <Input
+                      type="checkbox"
+                      checked={config.isMonotoneMode}
+                      onChange={(e) =>
+                        setConfig((prev) => ({
+                          ...prev,
+                          isMonotoneMode: e.target.checked,
+                        }))
+                      }
+                      className="w-4 h-4 mr-2"
+                    />
+                    Enable Monotone Mode
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Enable monotone mode for a simplified color scheme
+                  </p>
+                </label>
 
-                        {/* Text overlay */}
-                        <span
-                          className="absolute font-bold w-12 h-12 flex items-center justify-center"
-                          style={{
-                            color: "rgb(59,59,59)",
+                <div className="block text-sm font-medium text-gray-700 mb-2">
+                  Shapes to Include
+                  <div className="flex flex-wrap gap-3 mt-2">
+                    {shapes.map((shape) => (
+                      <label className="flex items-center" key={shape.name}>
+                        <Input
+                          type="checkbox"
+                          defaultChecked={config.shapes.includes(shape)}
+                          onChange={(e) => {
+                            setConfig((prev) => ({
+                              ...prev,
+                              shapes: e.target.checked
+                                ? [...prev.shapes, shape]
+                                : prev.shapes.filter((s) => s !== shape),
+                            }));
                           }}
-                        >
-                          {question.number}
-                          {question.letter}
-                        </span>
-                      </div>
+                          className="w-4 h-4 mr-2"
+                        />
+                        {shape.name}
+                      </label>
                     ))}
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Select which shapes to include in the exercise
+                  </p>
                 </div>
-              </Card>
-
-              <Card variant="info">
-                <h3 className="text-lg font-semibold text-info-800 mb-3 flex items-center gap-2">
-                  Exercise Summary
-                </h3>
-                <ul className="space-y-2 list-disc list-inside">
-                  <li>
-                    Total: {config.itemCount} items/{config.questionCount}{" "}
-                    questions
-                  </li>
-                  <li>
-                    Time limit: {(config.timeLimit / 60).toFixed(1)} minutes
-                  </li>
-                </ul>
-              </Card>
+              </div>
 
               <div className="flex gap-4 justify-end mb-4">
+                <Button
+                  variant="secondary"
+                  onClick={() => setConfig(defaultConfig)}
+                >
+                  <RefreshCcw size={20} className="mr-2" />
+                  Reset Configuration
+                </Button>
                 <Button onClick={startExercise}>
                   <Play size={20} className="mr-2" />
                   Start Exercise ({(config.timeLimit / 60).toFixed(1)} minutes)
@@ -571,31 +568,12 @@ const ScanningExercise = () => {
 
       {stage === Stage.Questions && (
         <section className="space-y-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Questions</h1>
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <div
-              className={`text-xl font-bold px-4 py-2 rounded-lg ${
-                timeRemaining < 60
-                  ? "bg-red-100 text-red-600"
-                  : "bg-blue-100 text-blue-600"
-              }`}
-            >
-              Time: {formatTime(timeRemaining)}
-            </div>
-            <button
-              onClick={() => {
-                calculateScore();
-                setStage(Stage.Results);
-                setIsTimerActive(false);
-              }}
-              className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
-            >
-              Submit Early
-            </button>
-          </div>
-          <p className="text-gray-600">
-            What letter is in each shape and number combination?
-          </p>
+          <HeaderCard>
+            <HeaderCardTitle>Scanning - Questions</HeaderCardTitle>
+            <HeaderCardDescription>
+              What letter is in each shape and number combination?
+            </HeaderCardDescription>
+          </HeaderCard>
         </section>
       )}
 
@@ -604,7 +582,10 @@ const ScanningExercise = () => {
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Results</h1>
           <div className="text-2xl font-bold text-blue-600 mb-4">
             Score: {score} / {questions.length} (
-            {Math.round((score / questions.length) * 100)}%)
+            {Math.round((score / questions.length) * 100)}%) Accuracy:{" "}
+            {answers && Object.keys(answers).length > 0
+              ? `${Math.round((score / Object.keys(answers).length) * 100)}%`
+              : "N/A"}
           </div>
           <button
             onClick={resetExercise}
@@ -617,170 +598,197 @@ const ScanningExercise = () => {
       )}
 
       {(stage === Stage.Results || stage === Stage.Questions) && (
-        <section className="overflow-auto bg-gray-50 p-4 border border-gray-200">
-          <div className="relative mx-auto w-[800px] h-[400px]">
-            {items.map((item) => (
-              <div
-                key={item.id}
-                className="absolute flex items-center justify-center text-white font-bold text-sm"
-                style={{
-                  left: `${item.x}%`,
-                  top: `${item.y}%`,
-                  transform: "translate(-50%, -50%)",
-                }}
-              >
-                <div className="relative flex items-center justify-center">
-                  {/* Shape SVG */}
-                  {shapeRenderers[item.shape.name](
-                    item.size,
-                    isMonotoneMode ? "rgb(59,59,59)" : item.color
-                  )}
+        <section className="space-y-6">
+          <Card className="space-y-4">
+            <Toolbar
+              isRunning={isTimerActive}
+              timerLimit={config.timeLimit}
+              onEnd={() => {
+                calculateScore();
+                setStage(Stage.Results);
+                setIsTimerActive(false);
+              }}
+              onPause={() => setIsTimerActive((prev) => !prev)}
+              onHelp={() => setIsViewingHelp(true)}
+            />
 
-                  {/* Text overlay */}
-                  <span
-                    className="absolute font-bold"
-                    style={{
-                      fontSize: `${Math.max(12, item.size / 8)}px`,
-                      color: "rgb(59,59,59)",
-                    }}
-                  >
-                    {item.number}
-                    {item.letter}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {stage === Stage.Questions && (
-        <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {questions.map((question, index) => (
-            <div
-              key={question.id}
-              className="bg-gray-50 rounded-lg p-4 border border-gray-200"
-            >
-              <div className="text-center mb-3">
-                <span className="text-sm font-semibold text-gray-600">
-                  Question {index + 1}
-                </span>
-              </div>
-
-              <div className="flex justify-center mb-4">
-                <div className="relative flex items-center justify-center">
-                  {/* Shape SVG */}
-                  {shapeRenderers[question.shape.name](
-                    80,
-                    isMonotoneMode ? "rgb(59,59,59)" : question.color
-                  )}
-
-                  {/* Text overlay */}
-                  <span
-                    className="absolute font-bold w-12 h-12 flex items-center justify-center"
-                    style={{
-                      color: "rgb(59,59,59)",
-                    }}
-                  >
-                    {question.number}
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                <p className="text-sm text-gray-600 mb-2">
-                  {question.shape.name.charAt(0).toUpperCase() +
-                    question.shape.name.slice(1)}{" "}
-                  with {question.number}
-                </p>
-                <input
-                  type="text"
-                  maxLength={1}
-                  value={answers[question.id] || ""}
-                  onChange={(e) =>
-                    handleAnswerChange(question.id, e.target.value)
-                  }
-                  className="w-12 h-12 text-center text-xl font-bold border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
-                  placeholder="?"
-                />
-              </div>
-            </div>
-          ))}
-        </section>
-      )}
-
-      {stage === Stage.Results && (
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {questions.map((question, index) => {
-            const userAnswer = answers[question.id] || "";
-            const isCorrect = userAnswer === question.letter;
-
-            return (
-              <div
-                key={question.id}
-                className={`
-                p-4 rounded-lg border ${
-                  isCorrect
-                    ? "bg-green-50 border-green-300"
-                    : "bg-red-50 border-red-300"
-                }
-              `}
-              >
-                <div className="space-y-6">
-                  <div className="mb-2">
-                    <span className="text-sm font-semibold text-gray-600">
-                      Question {index + 1}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-center mb-2">
-                    <div className="relative flex items-center justify-center">
-                      {/* Shape SVG */}
-                      {shapeRenderers[question.shape.name](
-                        80,
-                        isMonotoneMode ? "rgb(59,59,59)" : question.color
-                      )}
-
-                      {/* Text overlay */}
-                      <span
-                        className="absolute font-bold w-12 h-12 flex items-center justify-center"
-                        style={{
-                          color: "rgb(59,59,59)",
-                        }}
-                      >
-                        {question.number}
-                        {question.letter}
-                      </span>
+            <Card className="bg-background-primary">
+              <div className="pr-1 overflow-x-auto">
+                <div className="relative w-[800px] h-[400px] mx-auto">
+                  {items.map((item) => (
+                    <div
+                      key={item.id}
+                      className="absolute flex items-center justify-center text-white font-bold text-sm"
+                      style={{
+                        left: `${item.x}%`,
+                        top: `${item.y}%`,
+                        transform: "translate(-50%, -50%)",
+                        rotate: `${item.rotation}deg`,
+                      }}
+                    >
+                      <ShapeItem
+                        shape={item.shape.name}
+                        color={item.color}
+                        number={item.number}
+                        letter={item.letter}
+                        isMonotoneMode={config.isMonotoneMode}
+                        size={item.size}
+                        fontSize={Math.max(14, item.size / 6)}
+                      />
                     </div>
-                  </div>
-
-                  <div className="text-sm">
-                    <p className="text-gray-600 mb-1">
-                      {question.shape.name} {question.number}
-                    </p>
-                    <p>
-                      <span className="font-semibold">Your answer: </span>
-                      <span
-                        className={
-                          isCorrect ? "text-green-600" : "text-red-600"
-                        }
-                      >
-                        {userAnswer || "No answer"}
-                      </span>
-                    </p>
-                    <p>
-                      <span className="font-semibold">Correct answer: </span>
-                      <span className="text-green-600">{question.letter}</span>
-                    </p>
-                  </div>
+                  ))}
                 </div>
               </div>
-            );
-          })}
+            </Card>
+
+            <Card className="bg-background-primary">
+              <div className="pr-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-96 overflow-y-auto">
+                {questions.map((question, index) => {
+                  const userAnswer = answers[question.id] || "";
+                  const isCorrect = userAnswer === question.letter;
+                  const isSubmitted = stage === Stage.Results;
+
+                  return (
+                    <Card
+                      key={question.id}
+                      className={cn(
+                        `flex flex-col`,
+                        isSubmitted
+                          ? isCorrect
+                            ? "bg-green-50 border-green-300"
+                            : "bg-red-50 border-red-300"
+                          : ""
+                      )}
+                    >
+                      <div className="text-center mb-3">
+                        <span className="text-sm font-semibold text-gray-600">
+                          Question {index + 1}
+                        </span>
+                      </div>
+                      <div className="flex-1 flex items-center justify-center mb-4">
+                        <ShapeItem
+                          shape={question.shape.name}
+                          color={question.color}
+                          number={question.number}
+                          isMonotoneMode={config.isMonotoneMode}
+                          fontSize={Math.max(14, question.size / 6)}
+                        />
+                      </div>
+                      <div className="text-center">
+                        <p className="text-sm text-gray-600 mb-2">
+                          {question.shape.name.charAt(0).toUpperCase() +
+                            question.shape.name.slice(1)}{" "}
+                          with {question.number}
+                        </p>
+                        <input
+                          type="text"
+                          maxLength={1}
+                          disabled={stage === Stage.Results}
+                          value={answers[question.id] || ""}
+                          onChange={(e) =>
+                            handleAnswerChange(question.id, e.target.value)
+                          }
+                          className="w-12 h-12 text-center text-xl font-bold border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                          placeholder="?"
+                        />
+                      </div>
+
+                      {stage === Stage.Results && (
+                        <Card variant="info" className="mt-4 text-sm">
+                          <p>
+                            <span className="font-semibold">Your answer: </span>
+                            <span
+                              className={
+                                isCorrect ? "text-green-600" : "text-red-600"
+                              }
+                            >
+                              {userAnswer || "No answer"}
+                            </span>
+                          </p>
+                          <p>
+                            <span className="font-semibold">
+                              Correct answer:{" "}
+                            </span>
+                            <span className="text-green-600">
+                              {question.letter}
+                            </span>
+                          </p>
+                        </Card>
+                      )}
+                    </Card>
+                  );
+                })}
+              </div>
+            </Card>
+          </Card>
         </section>
       )}
+
+      <Modal isOpen={isViewingHelp} onClose={() => setIsViewingHelp(false)}>
+        <ModalContent>
+          <ModalHeader>
+            <h2 className="text-lg font-semibold">
+              How to Complete the Exercise
+            </h2>
+          </ModalHeader>
+          <HowToCard />
+        </ModalContent>
+      </Modal>
     </MainSection>
   );
 };
+
+interface ShapesItemProps {
+  shape: ShapeName;
+  color?: string;
+  number?: number;
+  size?: number;
+  letter?: string;
+  fontSize?: number;
+  isMonotoneMode?: boolean;
+}
+
+const ShapeItem = ({
+  shape,
+  color = "rgba(0,0,0,0.1)",
+  size = 80,
+  number,
+  letter,
+  isMonotoneMode = false,
+  fontSize = 14,
+}: ShapesItemProps) => {
+  return (
+    <div className="relative flex items-center justify-center">
+      {/* Shape SVG */}
+      {shapeRenderers[shape](size, isMonotoneMode ? "rgb(59,59,59)" : color)}
+
+      {/* Text overlay */}
+      <span
+        className="absolute font-bold flex items-center justify-center"
+        style={{
+          color: "rgb(59,59,59)",
+          fontSize: `${fontSize}px`,
+        }}
+      >
+        {number}
+        {letter}
+      </span>
+    </div>
+  );
+};
+
+const HowToCard = () => (
+  <Card variant="info" className="space-y-4">
+    <ol className="list-decimal list-inside space-y-2">
+      <li>Review the grid of shapes, each containing a number and a letter.</li>
+      <li>
+        For each question, identify the letter associated with the given shape
+        and number.
+      </li>
+      <li>Type your answer in the input box provided for each question.</li>
+      <li>Submit early or when time runs out to see results</li>
+    </ol>
+  </Card>
+);
 
 export default ScanningExercise;

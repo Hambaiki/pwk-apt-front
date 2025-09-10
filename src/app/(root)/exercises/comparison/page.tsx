@@ -2,6 +2,11 @@
 
 import { Card, Button } from "@/components/ui";
 import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import {
+  HeaderCard,
+  HeaderCardDescription,
+  HeaderCardTitle,
+} from "@/components/content/HeaderCard";
 import HowToCard from "@/components/exercise/comparison/HowToCard";
 
 import { GenerationType, MutationType } from "@/types/exercises/comparison";
@@ -10,7 +15,7 @@ import { Info } from "lucide-react";
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import MainSection from "@/components/template/MainSection";
+import MainSection from "@/components/content/MainSection";
 
 export default function ComparisonExerciseMainPage() {
   const router = useRouter();
@@ -53,12 +58,12 @@ export default function ComparisonExerciseMainPage() {
       </Breadcrumb>
 
       {/* Header */}
-      <Card className="p-20 rounded-xl bg-gradient-to-br from-primary-800 to-primary-600 shadow-md">
-        <h1 className="mb-2 text-white">Comparison Exercise</h1>
-        <p className="text-gray-100">
+      <HeaderCard>
+        <HeaderCardTitle className="mb-2">Comparison Exercise</HeaderCardTitle>
+        <HeaderCardDescription>
           Compare 2 values and determine whether they are the same or not.
-        </p>
-      </Card>
+        </HeaderCardDescription>
+      </HeaderCard>
 
       <div>
         <h2 className="mb-4 flex items-center gap-2">
