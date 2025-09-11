@@ -19,11 +19,11 @@ export default function HomePage() {
   return (
     <MainSection className="space-y-20">
       {/* Hero Section */}
-      <HeaderCard>
-        <HeaderCardTitle className="mb-2">
+      <HeaderCard className="p-20 rounded-xl bg-gradient-to-br from-primary-600 to-primary-400 shadow-medium">
+        <HeaderCardTitle className="mb-2 text-white">
           Start Sharpening Your Aptitude Skills
         </HeaderCardTitle>
-        <HeaderCardDescription>
+        <HeaderCardDescription className="text-gray-100">
           Refine your aptitude skills with interactive exercises and challenges.
           Choose a topic below to get started.
         </HeaderCardDescription>

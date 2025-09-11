@@ -1,7 +1,14 @@
 import { Button, Card } from "@/components/ui";
 import { cn } from "@/libs/utils";
 
-import { CircleQuestionMark, Flag, Pause, Play } from "lucide-react";
+import {
+  CircleQuestionMark,
+  Flag,
+  LogOut,
+  Pause,
+  Play,
+  RefreshCcw,
+} from "lucide-react";
 
 import React, { useEffect, useState } from "react";
 
@@ -12,6 +19,8 @@ interface ToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
   onEnd?: () => void;
   onHelp?: () => void;
   onPause?: () => void;
+  onRestart?: () => void;
+  onExit?: () => void;
 }
 
 const Toolbar = ({
@@ -22,6 +31,8 @@ const Toolbar = ({
   onEnd,
   onHelp,
   onPause,
+  onRestart,
+  onExit,
 }: ToolbarProps) => {
   const [timeRemaining, setTimeRemaining] = useState<number>(timerLimit);
 
@@ -65,18 +76,40 @@ const Toolbar = ({
         >
           Time: {formatTime(timeRemaining)}
         </div>
-        <Button variant="warning" onClick={() => onPause?.()}>
-          {isRunning ? (
-            <Pause size={16} className="mr-2" />
-          ) : (
-            <Play size={16} className="mr-2" />
-          )}
-          {isRunning ? "Pause" : "Resume"}
-        </Button>
-        <Button variant="error" disabled={!isRunning} onClick={() => onEnd?.()}>
-          <Flag size={16} className="mr-2" />
-          Submit Early
-        </Button>
+        {isRunning || !isComplete ? (
+          <>
+            <Button
+              variant={isRunning ? "warning" : "success"}
+              onClick={() => onPause?.()}
+            >
+              {isRunning ? (
+                <Pause size={16} className="mr-2" />
+              ) : (
+                <Play size={16} className="mr-2" />
+              )}
+              {isRunning ? "Pause" : "Resume"}
+            </Button>
+            <Button
+              variant="error"
+              disabled={isComplete}
+              onClick={() => onEnd?.()}
+            >
+              <Flag size={16} className="mr-2" />
+              Submit Early
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button variant="outline" onClick={() => onRestart?.()}>
+              <RefreshCcw size={16} className="mr-2" />
+              Restart
+            </Button>
+            <Button variant="outline" onClick={() => onExit?.()}>
+              <LogOut size={16} className="mr-2" />
+              Exit
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );

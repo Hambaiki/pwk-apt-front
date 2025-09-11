@@ -2,8 +2,8 @@ import { Card } from "@/components/ui";
 
 export default function HowToCard() {
   return (
-    <Card size="lg" className="space-y-6 bg-background-secondary">
-      <ol className="list-decimal list-inside space-y-3 text-gray-700">
+    <Card variant="info" className="space-y-4">
+      <ol className="list-decimal list-inside space-y-3">
         <li>
           You will see two sequences side by side: <strong>Left</strong> and{" "}
           <strong>Right</strong>.
@@ -15,7 +15,7 @@ export default function HowToCard() {
         <li>
           Select one of the options from <strong>A</strong> to{" "}
           <strong>F</strong>:
-          <ul className="list-disc list-inside ml-5 text-gray-600 mt-1">
+          <ul className="list-disc list-inside ml-5 mt-1">
             <li>A: Both sequences are the same</li>
             <li>B: 1 difference</li>
             <li>C: 2 differences</li>
