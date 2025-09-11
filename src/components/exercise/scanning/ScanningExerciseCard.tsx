@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Modal } from "@/components/ui";
+import { Button, Card, Modal } from "@/components/ui";
 import {
   HeaderCard,
   HeaderCardTitle,
@@ -72,6 +72,10 @@ const ScanningExerciseCard = ({
     setScore(0);
   };
 
+  const exitExercise = () => {
+    router.push("/exercises/scanning");
+  };
+
   return (
     <>
       <HeaderCard>
@@ -135,6 +139,16 @@ const ScanningExerciseCard = ({
             {score < questions.length * 0.5 &&
               "💡 Don’t worry! Every mistake is a step toward learning."}
           </div>
+
+          {/* Call to Action */}
+          <div className="mt-6 flex justify-center gap-4">
+            <Button variant="outline" onClick={resetExercise}>
+              Retry
+            </Button>
+            <Button variant="primary" onClick={exitExercise}>
+              Exit
+            </Button>
+          </div>
         </Card>
       )}
 
@@ -154,9 +168,7 @@ const ScanningExerciseCard = ({
               onPause={() => setIsTimerActive((prev) => !prev)}
               onHelp={() => setIsViewingHelp(true)}
               onRestart={resetExercise}
-              onExit={() => {
-                router.push("/exercises/scanning");
-              }}
+              onExit={exitExercise}
             />
 
             <Card className="bg-background-primary">

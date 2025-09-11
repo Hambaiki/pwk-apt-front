@@ -10,6 +10,8 @@ import {
 import MainSection from "@/components/content/MainSection";
 import ShapeItem from "@/components/exercise/scanning/ShapeItem";
 
+import { generateSearchParams } from "@/libs/router";
+
 import { Config } from "@/types/exercises/scanning";
 
 import {
@@ -22,8 +24,6 @@ import { Play, Info, Cog, RefreshCcw } from "lucide-react";
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-
-import { generateSearchParams } from "@/libs/router";
 
 const ScanningExercisePage = () => {
   const router = useRouter();

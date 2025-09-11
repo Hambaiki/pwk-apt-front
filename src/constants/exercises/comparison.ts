@@ -12,6 +12,7 @@ import {
 import { Choice } from "@/types/exercises";
 import {
   ComparisonGeneratorOptions,
+  Config,
   GenerationOptions,
   GenerationType,
   MutationOptions,
@@ -122,4 +123,9 @@ export const defaultComparisonOptions: ComparisonGeneratorOptions & {
   generationTypes: Object.values(GenerationType),
   mutationTypes: Object.values(MutationType),
   timer: 300,
+};
+
+export const defaultConfig: Config = {
+  key: "default",
+  ...defaultComparisonOptions,
 };

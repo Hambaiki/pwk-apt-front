@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, Button } from "@/components/ui";
 import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
@@ -8,45 +7,27 @@ import {
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import HowToCard from "@/components/exercise/comparison/HowToCard";
+import MainSection from "@/components/content/MainSection";
+import ConfigurerForm from "@/components/exercise/comparison/ConfigurerForm";
 
-import { GenerationType, MutationType } from "@/types/exercises/comparison";
+import { generateSearchParams } from "@/libs/router";
 
-import { Info } from "lucide-react";
+import { Config } from "@/types/exercises/comparison";
+
+import { Cog, Info } from "lucide-react";
 
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import MainSection from "@/components/content/MainSection";
+import { Card } from "@/components/ui";
 
 export default function ComparisonExerciseMainPage() {
   const router = useRouter();
 
-  function handleStart(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    const generationTypes = Object.values(GenerationType);
-    const mutationTypes = Object.values(MutationType);
-
-    const formData = new FormData(e.currentTarget);
-
-    const configs = {
-      count: formData.get("count"),
-      length: formData.get("length"),
-      minMutation: formData.get("minMutation"),
-      maxMutation: formData.get("maxMutation"),
-      generationTypes: generationTypes.filter((type) =>
-        formData.getAll("generationTypes").includes(type)
-      ),
-      mutationTypes: mutationTypes.filter((type) =>
-        formData.getAll("mutationTypes").includes(type)
-      ),
-      timer: formData.get("timer"),
-    };
-
-    // const params = new URLSearchParams(searchParams);
-    // Object.entries(configs).forEach(([key, value]) => {
-    //   params.set(key, String(value));
-    // });
-    // router.push(`/exercises/comparison/questions?${params.toString()}`);
+  function handleStart(config: Config) {
+    const uniqueKey = Math.random().toString(36).substring(2, 10);
+    const searchParams = generateSearchParams({
+      config: JSON.stringify({ ...config, key: uniqueKey }),
+    });
+    router.push(`/exercises/comparison/questions?${searchParams.toString()}`);
   }
 
   return (
@@ -65,7 +46,7 @@ export default function ComparisonExerciseMainPage() {
         </HeaderCardDescription>
       </HeaderCard>
 
-      <div>
+      <div className="space-y-4">
         <h2 className="mb-4 flex items-center gap-2">
           <Info className="w-8 h-8" />
           Introduction
@@ -76,14 +57,22 @@ export default function ComparisonExerciseMainPage() {
           instructions carefully and select the correct option for each
           question.
         </p>
+        <HowToCard />
       </div>
 
-      <HowToCard />
-
-      <div className="mx-auto">
-        <Link href="/exercises/comparison/questions">
-          <Button>Start Exercise</Button>
-        </Link>
+      <div className="space-y-4">
+        <h2 className="flex items-center gap-2">
+          <Cog size={32} />
+          Exercise Configuration
+        </h2>
+        <p>Adjust the settings below to customize your exercise experience.</p>
+        <Card>
+          <ConfigurerForm
+            onSubmit={(configs) => {
+              handleStart({ key: "<unique_key>", ...configs });
+            }}
+          />
+        </Card>
       </div>
     </MainSection>
   );

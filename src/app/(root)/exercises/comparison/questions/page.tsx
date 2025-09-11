@@ -1,7 +1,7 @@
 "use client";
 
 import { ComparisonExerciseCard } from "@/components/exercise/comparison/ComparisionExerciseCard";
-import ConfigurerCard from "@/components/exercise/comparison/ConfigurerCard";
+import ConfigurerForm from "@/components/exercise/comparison/ConfigurerForm";
 import HowToCard from "@/components/exercise/comparison/HowToCard";
 import MainSection from "@/components/content/MainSection";
 import { Button, Card, Modal } from "@/components/ui";
@@ -10,6 +10,7 @@ import { ModalContent, ModalHeader } from "@/components/ui/Modal";
 import {
   comparisonAnswers,
   defaultComparisonOptions,
+  defaultConfig,
 } from "@/constants/exercises/comparison";
 import { generateComparisonExercise } from "@/libs/exercises/comparison";
 
@@ -17,20 +18,28 @@ import { Choice } from "@/types/exercises";
 import {
   Comparison,
   ComparisonGeneratorOptions,
+  Config,
 } from "@/types/exercises/comparison";
+
 import { CircleQuestionMark, Pause, Play } from "lucide-react";
 
 import { useState } from "react";
 
-export default function ComparisonExerciseQuestionPage() {
-  const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
+interface ComparisonExerciseQuestionPageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export default function ComparisonExerciseQuestionPage({
+  searchParams,
+}: ComparisonExerciseQuestionPageProps) {
+  const config = searchParams.config
+    ? (JSON.parse(searchParams.config as string) as Config)
+    : defaultConfig;
+
   const [isViewingHelp, setIsViewingHelp] = useState<boolean>(false);
 
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [questionIndex, setQuestionIndex] = useState<number>(0);
-  const [questionList, setQuestionList] = useState<
-    { question: Comparison; answer: Choice | undefined }[] | undefined
-  >();
 
   const handleStart = (
     configs: ComparisonGeneratorOptions & { timer: number }
@@ -40,25 +49,30 @@ export default function ComparisonExerciseQuestionPage() {
 
     const questions = generateComparisonExercise({ ...configs });
 
-    setQuestionList(questions.map((q) => ({ question: q, answer: undefined })));
+    return questions.map((q) => ({ question: q, answer: undefined }));
   };
 
   const handleEnd = () => {
     setIsComplete(true);
   };
 
+  const questionList: {
+    question: Comparison;
+    answer: undefined | Choice;
+  }[] = handleStart(config);
+
   return (
     <MainSection className="gap-6">
       <Card>
         <div className="flex gap-3">
-          <Button
+          {/* <Button
             variant="primary"
             disabled={questionList !== undefined}
             onClick={() => handleStart(defaultComparisonOptions)}
           >
             <Play width={16} height={16} className="mr-2" />
             Start
-          </Button>
+          </Button> */}
           <Button
             variant="error"
             disabled={isComplete}
@@ -73,15 +87,6 @@ export default function ComparisonExerciseQuestionPage() {
           </Button>
         </div>
       </Card>
-
-      <Modal isOpen={isConfigOpen} onClose={() => setIsConfigOpen(false)}>
-        <ModalContent>
-          <ModalHeader>
-            <h3 className="text-2xl font-semibold">Configure Exercise</h3>
-          </ModalHeader>
-          <ConfigurerCard onSubmit={handleStart} />
-        </ModalContent>
-      </Modal>
 
       {!isComplete && questionList && questionList.length > 0 && (
         <ComparisonExerciseCard
@@ -104,12 +109,12 @@ export default function ComparisonExerciseQuestionPage() {
             setQuestionIndex((prev) => Math.max(prev - 1, 0));
           }}
           onAnswer={(choice) => {
-            setQuestionList((prev) => {
-              if (!prev) return prev;
-              const newList = [...prev];
-              newList[questionIndex].answer = choice as Choice;
-              return newList;
-            });
+            // setQuestionList((prev) => {
+            //   if (!prev) return prev;
+            //   const newList = [...prev];
+            //   newList[questionIndex].answer = choice as Choice;
+            //   return newList;
+            // });
           }}
         />
       )}

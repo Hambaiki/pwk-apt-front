@@ -7,8 +7,8 @@ const optionButtonVariants = cva(
     variants: {
       variant: {
         default:
-          "border-secondary-200 hover:bg-primary-50 hover:border-primary-300",
-        selected: "bg-primary-50 border-primary-400",
+          "border-secondary-200 bg-white hover:bg-primary-50 hover:border-primary-300",
+        selected: "bg-primary-100 border-primary-400",
         correct: "bg-success-50 border-success-300 text-success-700",
         wrong: "bg-error-50 border-error-300 text-error-700",
       },

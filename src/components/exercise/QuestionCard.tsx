@@ -1,5 +1,7 @@
 import { ReactNode } from "react";
 
+import { Card } from "@/components/ui";
+
 interface QuestionCardProps {
   title: string;
   subtitle?: string;
@@ -18,7 +20,7 @@ export const QuestionCard = ({
   footer,
 }: QuestionCardProps) => {
   return (
-    <div className="bg-white rounded-xl p-4 space-y-4">
+    <Card className="space-y-4">
       {/* Header */}
       <div className="bg-primary-500 text-white p-4 rounded-lg mb-6">
         <div className="flex justify-between items-center">
@@ -47,6 +49,6 @@ export const QuestionCard = ({
 
       {/* Footer Actions */}
       {footer && <div className="flex gap-3">{footer}</div>}
-    </div>
+    </Card>
   );
 };

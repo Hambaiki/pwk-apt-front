@@ -10,11 +10,11 @@ import {
 
 import { useState } from "react";
 
-interface ConfigurerCardProps {
+interface ConfigurerFormProps {
   onSubmit: (configs: ComparisonGeneratorOptions & { timer: number }) => void;
 }
 
-export default function ConfigurerCard({ onSubmit }: ConfigurerCardProps) {
+export default function ConfigurerForm({ onSubmit }: ConfigurerFormProps) {
   const [configs, setConfigs] = useState<
     ComparisonGeneratorOptions & { timer: number }
   >(defaultComparisonOptions);
@@ -145,7 +145,7 @@ export default function ConfigurerCard({ onSubmit }: ConfigurerCardProps) {
           Reset
         </Button>
         <Button type="submit" variant="primary">
-          Apply
+          Start
         </Button>
       </div>
     </form>

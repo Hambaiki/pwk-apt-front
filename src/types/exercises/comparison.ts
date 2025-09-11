@@ -52,3 +52,8 @@ export interface ComparisonGeneratorOptions {
   generationTypes: GenerationType[];
   mutationTypes: MutationType[];
 }
+
+export interface Config extends ComparisonGeneratorOptions {
+  key: string;
+  timer: number;
+}
