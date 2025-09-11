@@ -1,27 +1,28 @@
-import { Button, Card, Checkbox, Input } from "@/components/ui";
+import { Button, Checkbox, Input } from "@/components/ui";
 
-import { defaultComparisonOptions } from "@/constants/exercises/comparison";
+import { defaultConfig } from "@/constants/exercises/comparison";
 
 import {
-  ComparisonGeneratorOptions,
+  Config,
   GenerationType,
   MutationType,
 } from "@/types/exercises/comparison";
 
+import { RefreshCcw, Play } from "lucide-react";
+
 import { useState } from "react";
 
 interface ConfigurerFormProps {
-  onSubmit: (configs: ComparisonGeneratorOptions & { timer: number }) => void;
+  onSubmit: (configs: Config) => void;
 }
 
 export default function ConfigurerForm({ onSubmit }: ConfigurerFormProps) {
-  const [configs, setConfigs] = useState<
-    ComparisonGeneratorOptions & { timer: number }
-  >(defaultComparisonOptions);
+  const [config, setConfig] = useState<Config>(defaultConfig);
 
   function handleStart(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    onSubmit(configs);
+    const uniqueKey = Math.random().toString(36).substring(2, 10);
+    onSubmit({ ...config, key: uniqueKey });
   }
 
   return (
@@ -29,7 +30,16 @@ export default function ConfigurerForm({ onSubmit }: ConfigurerFormProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <label className="flex flex-col">
           Number of Questions
-          <Input name="count" type="number" min={1} max={10} defaultValue={5} />
+          <Input
+            name="count"
+            type="number"
+            min={1}
+            max={10}
+            value={config.count}
+            onChange={(e) =>
+              setConfig({ ...config, count: Number(e.target.value) })
+            }
+          />
         </label>
 
         <label className="flex flex-col">
@@ -39,9 +49,9 @@ export default function ConfigurerForm({ onSubmit }: ConfigurerFormProps) {
             type="number"
             min={1}
             max={10}
-            value={configs.length}
+            value={config.length}
             onChange={(e) =>
-              setConfigs({ ...configs, length: Number(e.target.value) })
+              setConfig({ ...config, length: Number(e.target.value) })
             }
           />
         </label>
@@ -52,9 +62,9 @@ export default function ConfigurerForm({ onSubmit }: ConfigurerFormProps) {
             name="minMutation"
             type="number"
             min={0}
-            value={configs.minMutation}
+            value={config.minMutation}
             onChange={(e) =>
-              setConfigs({ ...configs, minMutation: Number(e.target.value) })
+              setConfig({ ...config, minMutation: Number(e.target.value) })
             }
           />
         </label>
@@ -65,9 +75,9 @@ export default function ConfigurerForm({ onSubmit }: ConfigurerFormProps) {
             name="maxMutation"
             type="number"
             min={0}
-            value={configs.maxMutation}
+            value={config.maxMutation}
             onChange={(e) =>
-              setConfigs({ ...configs, maxMutation: Number(e.target.value) })
+              setConfig({ ...config, maxMutation: Number(e.target.value) })
             }
           />
         </label>
@@ -81,10 +91,10 @@ export default function ConfigurerForm({ onSubmit }: ConfigurerFormProps) {
                 name="generationTypes"
                 value={type}
                 label={type}
-                checked={configs.generationTypes.includes(type)}
+                checked={config.generationTypes.includes(type)}
                 onChange={(e) => {
                   const isChecked = e.target.checked;
-                  setConfigs((prev) => ({
+                  setConfig((prev) => ({
                     ...prev,
                     generationTypes: isChecked
                       ? [...prev.generationTypes, type]
@@ -105,10 +115,10 @@ export default function ConfigurerForm({ onSubmit }: ConfigurerFormProps) {
                 name="mutationTypes"
                 value={type}
                 label={type}
-                checked={configs.mutationTypes.includes(type)}
+                checked={config.mutationTypes.includes(type)}
                 onChange={(e) => {
                   const isChecked = e.target.checked;
-                  setConfigs((prev) => ({
+                  setConfig((prev) => ({
                     ...prev,
                     mutationTypes: isChecked
                       ? [...prev.mutationTypes, type]
@@ -127,9 +137,9 @@ export default function ConfigurerForm({ onSubmit }: ConfigurerFormProps) {
             type="number"
             min={10}
             max={10_000}
-            value={configs.timer}
+            value={config.timer}
             onChange={(e) =>
-              setConfigs({ ...configs, timer: Number(e.target.value) })
+              setConfig({ ...config, timer: Number(e.target.value) })
             }
           />
         </label>
@@ -137,15 +147,13 @@ export default function ConfigurerForm({ onSubmit }: ConfigurerFormProps) {
 
       {/* Start Button */}
       <div className="flex justify-end gap-4 mt-6">
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={() => setConfigs(defaultComparisonOptions)}
-        >
-          Reset
+        <Button variant="secondary" onClick={() => setConfig(defaultConfig)}>
+          <RefreshCcw size={20} className="mr-2" />
+          Reset Configuration
         </Button>
         <Button type="submit" variant="primary">
-          Start
+          <Play size={20} className="mr-2" />
+          Start Exercise ({(config.timer / 60).toFixed(1)} minutes)
         </Button>
       </div>
     </form>

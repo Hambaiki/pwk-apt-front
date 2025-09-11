@@ -1,6 +1,6 @@
 "use client";
 
-import { ComparisonExerciseCard } from "@/components/exercise/comparison/ComparisionExerciseCard";
+import { ComparisonExerciseCard } from "@/components/exercise/comparison/ComparisonExerciseCard";
 import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   Button,
@@ -15,7 +15,7 @@ import MainSection from "@/components/content/MainSection";
 
 import { generateComparisonExercise } from "@/libs/exercises/comparison";
 
-import { Comparison } from "@/types/exercises/comparison";
+import { ComparisonItem } from "@/types/exercises/comparison";
 
 import { Eye, Copy, Palette, Type, Layers, Zap } from "lucide-react";
 
@@ -637,7 +637,7 @@ const comparisonAnswers = {
 const TestComparisonExercise = () => {
   const [questionIndex, setQuestionIndex] = useState<number>(0);
   const [questionList, setQuestionList] = useState<
-    { question: Comparison; answer: Choice | undefined }[] | undefined
+    { question: ComparisonItem; answer: Choice | undefined }[] | undefined
   >();
   const [complete, setComplete] = useState<boolean>(false);
 

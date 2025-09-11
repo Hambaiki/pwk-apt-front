@@ -1,17 +1,18 @@
-import { Comparison } from "@/types/exercises/comparison";
-
+import { Button } from "@/components/ui";
 import { OptionButton } from "../QuestionButton";
 import { QuestionCard } from "../QuestionCard";
-import { Button } from "@/components/ui";
+
+import { ComparisonItem, GenerationType } from "@/types/exercises/comparison";
+import { Choice } from "@/types/exercises";
 
 interface ComparisonExerciseCardProps {
-  exercise: Comparison;
+  exercise: ComparisonItem;
   selected?: string;
   progress?: number;
   hasNext?: boolean;
   hasPrevious?: boolean;
   isLast?: boolean;
-  onAnswer: (choice: string) => void;
+  onAnswer: (choice: Choice) => void;
   onNext?: () => void;
   onPrevious?: () => void;
 }
@@ -27,12 +28,12 @@ export const ComparisonExerciseCard = ({
   onNext,
   onPrevious,
 }: ComparisonExerciseCardProps) => {
-  const options = ["A", "B", "C", "D", "E", "F"];
+  const choices: Choice[] = Object.values(Choice);
 
   const convertBaseToString = (base: string[]) => {
     return base
       .filter(Boolean)
-      .join(exercise.generationType === "words" ? ", " : "");
+      .join(exercise.generationType === GenerationType.WORDS ? ", " : "");
   };
 
   return (
@@ -63,7 +64,7 @@ export const ComparisonExerciseCard = ({
 
       {/* Options */}
       <div className="space-y-2 mb-4">
-        {options.map((opt) => (
+        {choices.map((opt) => (
           <OptionButton
             key={opt}
             label={opt}

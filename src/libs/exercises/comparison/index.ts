@@ -1,7 +1,7 @@
 import { randomInt } from "@/utils/common";
 
 import {
-  Comparison,
+  ComparisonItem,
   GeneratedBase,
   GenerationOptions,
   GenerationResult,
@@ -56,7 +56,7 @@ export function generateComparisonExercise(
     };
   });
 
-  const mutatedBases: Comparison[] = generatedBases.map((item) => {
+  const mutatedBases: ComparisonItem[] = generatedBases.map((item) => {
     const { base } = item;
 
     const maxMutationCount: number = randomInt(minMutation, maxMutation);

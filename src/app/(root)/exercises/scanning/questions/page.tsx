@@ -1,10 +1,10 @@
 import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import MainSection from "@/components/content/MainSection";
+import ScanningExercise from "@/components/exercise/scanning/ScanningExercise";
 
 import { Config, ShapeGridItem } from "@/types/exercises/scanning";
 
 import { colors, defaultConfig, shapes } from "@/constants/exercises/scanning";
-import ScanningExerciseCard from "@/components/exercise/scanning/ScanningExerciseCard";
 
 interface ScanningExerciseQuestionPageProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -13,11 +13,16 @@ interface ScanningExerciseQuestionPageProps {
 const ScanningExerciseQuestionPage = ({
   searchParams,
 }: ScanningExerciseQuestionPageProps) => {
-  const config = searchParams.config
-    ? (JSON.parse(searchParams.config as string) as Config)
-    : defaultConfig;
+  const parseConfig = (param: string | string[] | undefined) => {
+    if (!param) return defaultConfig;
+    try {
+      return JSON.parse(param as string) as Config;
+    } catch {
+      return defaultConfig;
+    }
+  };
 
-  const generateItemsWithGrid = () => {
+  const generateItemsWithGrid = (config: Config) => {
     const newItems = [];
     const usedCombinations = new Set();
 
@@ -116,7 +121,8 @@ const ScanningExerciseQuestionPage = ({
     return selectedItems;
   };
 
-  const items: ShapeGridItem[] = generateItemsWithGrid();
+  const config: Config = parseConfig(searchParams.config);
+  const items: ShapeGridItem[] = generateItemsWithGrid(config);
   const questions: ShapeGridItem[] = generateQuestions(items);
 
   return (
@@ -127,11 +133,7 @@ const ScanningExerciseQuestionPage = ({
         <BreadcrumbItem label="Scanning" href="/exercises/scanning" />
       </Breadcrumb>
 
-      <ScanningExerciseCard
-        items={items}
-        questions={questions}
-        config={config}
-      />
+      <ScanningExercise items={items} questions={questions} config={config} />
     </MainSection>
   );
 };

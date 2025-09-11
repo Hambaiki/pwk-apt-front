@@ -116,8 +116,8 @@ export const comparisonAnswers = {
 export const defaultComparisonOptions: ComparisonGeneratorOptions & {
   timer: number;
 } = {
-  count: 5,
-  length: 5,
+  count: 10,
+  length: 10,
   minMutation: 0,
   maxMutation: 6,
   generationTypes: Object.values(GenerationType),

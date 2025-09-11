@@ -16,7 +16,7 @@ export interface ComparisonBase {
   base: string[];
 }
 
-export interface Comparison extends ComparisonBase {
+export interface ComparisonItem extends ComparisonBase {
   generationType: GenerationType;
   mutatedBase: string[];
   mutationCount: number;
@@ -24,7 +24,7 @@ export interface Comparison extends ComparisonBase {
 }
 
 export interface GeneratedBase
-  extends Omit<Comparison, "mutatedBase" | "mutationCount" | "mutations"> {}
+  extends Omit<ComparisonItem, "mutatedBase" | "mutationCount" | "mutations"> {}
 
 export interface GenerationOptions {
   length: number;

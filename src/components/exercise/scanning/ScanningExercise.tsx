@@ -20,17 +20,17 @@ import { defaultConfig } from "@/constants/exercises/scanning";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-interface ScanningExerciseCardProps {
+interface ScanningExerciseProps {
   items: ShapeGridItem[];
   questions: ShapeGridItem[];
   config?: Config;
 }
 
-const ScanningExerciseCard = ({
+const ScanningExercise = ({
   items,
   questions,
   config = defaultConfig,
-}: ScanningExerciseCardProps) => {
+}: ScanningExerciseProps) => {
   const router = useRouter();
 
   const [stage, setStage] = useState<Stage>(Stage.Questions); // 'reference', 'questions', 'results'
@@ -156,7 +156,7 @@ const ScanningExerciseCard = ({
         <section className="space-y-6">
           <Card className="space-y-4">
             <Toolbar
-              isRunning={isTimerActive}
+              isRunning={isTimerActive && stage === Stage.Questions}
               isComplete={stage === Stage.Results}
               timerLimit={config.timeLimit}
               onEnd={() => {
@@ -304,4 +304,4 @@ const ScanningExerciseCard = ({
   );
 };
 
-export default ScanningExerciseCard;
+export default ScanningExercise;

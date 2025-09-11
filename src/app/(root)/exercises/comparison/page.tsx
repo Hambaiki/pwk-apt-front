@@ -67,11 +67,7 @@ export default function ComparisonExerciseMainPage() {
         </h2>
         <p>Adjust the settings below to customize your exercise experience.</p>
         <Card>
-          <ConfigurerForm
-            onSubmit={(configs) => {
-              handleStart({ key: "<unique_key>", ...configs });
-            }}
-          />
+          <ConfigurerForm onSubmit={handleStart} />
         </Card>
       </div>
     </MainSection>

@@ -1,4 +1,5 @@
-import { Button, Card } from "@/components/ui";
+import { Button } from "@/components/ui";
+
 import { cn } from "@/libs/utils";
 
 import {
@@ -60,13 +61,13 @@ const Toolbar = ({
   }, [isRunning, timeRemaining]);
 
   return (
-    <div className={cn("flex items-center justify-between", className)}>
+    <div className={cn("flex flex-wrap items-center justify-between gap-3", className)}>
       <Button variant="outline" onClick={() => onHelp?.()}>
         <CircleQuestionMark size={16} className="mr-2" />
         How to
       </Button>
 
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         <div
           className={`flex items-center px-3 py-2 font-bold rounded-lg ${
             timeRemaining < 60
