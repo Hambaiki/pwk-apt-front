@@ -61,10 +61,15 @@ const Toolbar = ({
   }, [isRunning, timeRemaining]);
 
   return (
-    <div className={cn("flex flex-wrap items-center justify-between gap-3", className)}>
+    <div
+      className={cn(
+        "flex flex-wrap items-center justify-between gap-3",
+        className
+      )}
+    >
       <Button variant="outline" onClick={() => onHelp?.()}>
-        <CircleQuestionMark size={16} className="mr-2" />
-        How to
+        <CircleQuestionMark size={16} />
+        <span className="ml-2 hidden md:block">How to</span>
       </Button>
 
       <div className="flex flex-wrap gap-3">
@@ -83,31 +88,29 @@ const Toolbar = ({
               variant={isRunning ? "warning" : "success"}
               onClick={() => onPause?.()}
             >
-              {isRunning ? (
-                <Pause size={16} className="mr-2" />
-              ) : (
-                <Play size={16} className="mr-2" />
-              )}
-              {isRunning ? "Pause" : "Resume"}
+              {isRunning ? <Pause size={16} /> : <Play size={16} />}
+              <span className="ml-2 hidden md:block">
+                {isRunning ? "Pause" : "Resume"}
+              </span>
             </Button>
             <Button
               variant="error"
               disabled={isComplete}
               onClick={() => onEnd?.()}
             >
-              <Flag size={16} className="mr-2" />
-              Submit Early
+              <Flag size={16} />
+              <span className="ml-2 hidden md:block">Submit Early</span>
             </Button>
           </>
         ) : (
           <>
             <Button variant="outline" onClick={() => onRestart?.()}>
-              <RefreshCcw size={16} className="mr-2" />
-              Restart
+              <RefreshCcw size={16} />
+              <span className="ml-2 hidden md:block">Restart</span>
             </Button>
             <Button variant="outline" onClick={() => onExit?.()}>
-              <LogOut size={16} className="mr-2" />
-              Exit
+              <LogOut size={16} />
+              <span className="ml-2 hidden md:block">Exit</span>
             </Button>
           </>
         )}

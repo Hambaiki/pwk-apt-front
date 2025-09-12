@@ -17,9 +17,9 @@ interface ComparisonExerciseQuestionPageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default function ComparisonExerciseQuestionPage({
+const ComparisonExerciseQuestionPage = ({
   searchParams,
-}: ComparisonExerciseQuestionPageProps) {
+}: ComparisonExerciseQuestionPageProps) => {
   const config = searchParams.config
     ? (JSON.parse(searchParams.config as string) as Config)
     : defaultConfig;
@@ -45,4 +45,13 @@ export default function ComparisonExerciseQuestionPage({
       <ComparisonExercise items={items} config={config} />
     </MainSection>
   );
-}
+};
+
+export const metadata = {
+  title: "Comparison Exercise - Questions | PWK-APT",
+  description:
+    "Practice your comparison skills with this interactive exercise. Compare items and select the most appropriate choices quickly and accurately.",
+  keywords: ["comparison", "exercise", "items", "choices"],
+};
+
+export default ComparisonExerciseQuestionPage;

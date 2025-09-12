@@ -79,7 +79,7 @@ const ScanningExerciseQuestionPage = ({
         letter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
         color = colors[Math.floor(Math.random() * colors.length)];
         rotation = shouldRotate ? Math.floor(Math.random() * 46) : 0;
-        combination = `${shape.name}-${number}-${letter}`;
+        combination = `${shape.name}-${number}`;
       } while (usedCombinations.has(combination));
 
       usedCombinations.add(combination);
@@ -136,6 +136,41 @@ const ScanningExerciseQuestionPage = ({
       <ScanningExercise items={items} questions={questions} config={config} />
     </MainSection>
   );
+};
+
+export const metadata = {
+  title: "Scanning Exercise - Questions | PWK-APT",
+  description:
+    "Practice your scanning skills with this interactive exercise. Identify shapes, numbers, and letters quickly and accurately.",
+  keywords: [
+    "scanning",
+    "exercise",
+    "shapes",
+    "numbers",
+    "letters",
+    "practice",
+  ],
+  // authors: [{ name: "Pavarit P.", url: "https://pavarit.net" }],
+  // creator: "Pavarit P.",
+  // publisher: "Pavarit P.",
+  // openGraph: {
+  //   title: "Scanning Exercise",
+  //   description:
+  //     "Practice your scanning skills with this interactive exercise. Identify shapes, numbers, and letters quickly and accurately.",
+  //   url: "https://pwk-apt.vercel.app/exercises/scanning",
+  //   siteName: "PWK-APT",
+  //   images: [
+  //     {
+  //       url: "https://pwk-apt.vercel.app/og-image.png",
+  //       width: 1200,
+  //       height: 630,
+  //       alt: "PWK-APT",
+  //       type: "image/png",
+  //     },
+  //   ],
+  //   locale: "en_US",
+  //   type: "website",
+  // },
 };
 
 export default ScanningExerciseQuestionPage;

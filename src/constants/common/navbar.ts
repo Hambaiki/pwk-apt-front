@@ -12,14 +12,14 @@ export const navbarItems = [
     href: "/exercises",
     icon: File,
   },
-  // {
-  //   label: "About",
-  //   href: "/about",
-  //   icon: Info,
-  // },
   {
-    label: "Develop",
-    href: "/develop",
+    label: "About",
+    href: "/about",
     icon: Info,
   },
+  // {
+  //   label: "Develop",
+  //   href: "/develop",
+  //   icon: Info,
+  // },
 ];

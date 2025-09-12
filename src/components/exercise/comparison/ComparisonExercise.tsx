@@ -1,10 +1,12 @@
 "use client";
 
-import { Button, Card, Modal } from "@/components/ui";
+import { Card, Modal } from "@/components/ui";
 import { ModalContent, ModalHeader } from "@/components/ui/Modal";
 import { ComparisonExerciseCard } from "@/components/exercise/comparison/ComparisonExerciseCard";
 import HowToCard from "@/components/exercise/comparison/HowToCard";
+import Collapse from "@/components/content/Collapse";
 import Toolbar from "../Toolbar";
+import Score from "../Score";
 
 import {
   comparisonAnswers,
@@ -18,11 +20,10 @@ import {
   GenerationType,
 } from "@/types/exercises/comparison";
 
-import { CircleQuestionMark, Pause } from "lucide-react";
+import { cn } from "@/libs/utils";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { cn } from "@/libs/utils";
 
 interface ComparisonExerciseProps {
   items: ComparisonItem[];
@@ -42,9 +43,27 @@ const ComparisonExercise = ({
   const [questionIndex, setQuestionIndex] = useState<number>(0);
 
   const [answers, setAnswers] = useState<Record<number, Choice>>({});
+  const [correctAnswerCount, setCorrectAnswerCount] = useState<number>(0);
 
-  const handleEnd = () => {
+  const countCorrectAnswer = () => {
+    let correct = 0;
+    items.forEach((item, index) => {
+      const userAnswer = answers[index];
+      if (
+        userAnswer &&
+        comparisonAnswers[userAnswer]?.check(item.mutationCount)
+      ) {
+        correct += 1;
+      }
+    });
+    setCorrectAnswerCount(correct);
+  };
+
+  const endExercise = () => {
+    countCorrectAnswer();
     setIsComplete(true);
+    setIsTimerActive(false);
+    window.scrollTo({ behavior: "smooth", top: 0 });
   };
 
   const resetExercise = () => {
@@ -66,16 +85,23 @@ const ComparisonExercise = ({
             isRunning={isTimerActive && !isComplete}
             isComplete={isComplete}
             timerLimit={config.timer}
-            onEnd={() => {
-              setIsComplete(true);
-              setIsTimerActive(false);
-              window.scrollTo({ behavior: "smooth", top: 0 });
-            }}
+            onEnd={endExercise}
             onPause={() => setIsTimerActive((prev) => !prev)}
             onHelp={() => setIsViewingHelp(true)}
             onRestart={resetExercise}
             onExit={exitExercise}
           />
+
+          <Collapse isOpen={isComplete}>
+            <Score
+              className="mt-4"
+              answerCount={Object.keys(answers).length}
+              correctCount={correctAnswerCount}
+              totalCount={items.length}
+              score={correctAnswerCount}
+              maxScore={items.length}
+            />
+          </Collapse>
         </Card>
 
         {!isComplete && (
@@ -114,7 +140,7 @@ const ComparisonExercise = ({
           <Card className="space-y-4 rounded-2xl">
             {items.map((item, index) => {
               const question = item.mutations ? item : undefined;
-              const answer = answers[index];
+              const answer: Choice | undefined = answers[index];
               const correct = answer
                 ? comparisonAnswers[answer]?.check(question?.mutationCount ?? 0)
                 : false;
@@ -146,13 +172,19 @@ const ComparisonExercise = ({
                     </div>
 
                     <div>
-                      {correct ? (
-                        <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800">
-                          Correct
-                        </span>
+                      {answer ? (
+                        correct ? (
+                          <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800">
+                            Correct
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-800">
+                            Incorrect
+                          </span>
+                        )
                       ) : (
-                        <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-800">
-                          Incorrect
+                        <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-800">
+                          No Answer
                         </span>
                       )}
                     </div>

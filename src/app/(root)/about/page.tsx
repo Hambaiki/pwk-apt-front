@@ -2,12 +2,12 @@ import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import MainSection from "@/components/content/MainSection";
 import { Card } from "@/components/ui";
 
-export default function AboutPage() {
+const AboutPage = () => {
   return (
     <MainSection>
       <Breadcrumb className="mb-6">
         <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="Exercises" href="/exercises" />
+        <BreadcrumbItem label="About" href="/about" />
       </Breadcrumb>
 
       <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-primary-800 to-primary-600 shadow-medium">
@@ -27,4 +27,13 @@ export default function AboutPage() {
       </Card>
     </MainSection>
   );
-}
+};
+
+export const metadata = {
+  title: "About | PWK-APT",
+  description:
+    "Learn more about PWK-APT, a platform dedicated to helping you improve your aptitude skills through interactive exercises.",
+  keywords: ["about", "pwk-apt", "aptitude", "exercises"],
+};
+
+export default AboutPage;
