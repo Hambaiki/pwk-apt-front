@@ -94,148 +94,142 @@ const ScanningExercise = ({
         </HeaderCardDescription>
       </HeaderCard>
 
-      <section className="space-y-4">
-        <Card>
-          <Toolbar
-            isRunning={isTimerActive && stage === Stage.Questions}
-            isComplete={stage === Stage.Results}
-            timerLimit={config.timeLimit}
-            onEnd={endExercise}
-            onPause={() => setIsTimerActive((prev) => !prev)}
-            onHelp={() => setIsViewingHelp(true)}
-            onRestart={resetExercise}
-            onExit={exitExercise}
-          />
+      <section>
+        <Toolbar
+          isRunning={isTimerActive && stage === Stage.Questions}
+          isComplete={stage === Stage.Results}
+          timerLimit={config.timeLimit}
+          onEnd={endExercise}
+          onPause={() => setIsTimerActive((prev) => !prev)}
+          onHelp={() => setIsViewingHelp(true)}
+          onRestart={resetExercise}
+          onExit={exitExercise}
+        />
 
-          <Collapse isOpen={stage === Stage.Results}>
-            <Score
-              className="mt-4"
-              answerCount={Object.keys(answers).length}
-              correctCount={score}
-              totalCount={questions.length}
-              score={score}
-              maxScore={questions.length}
-            />
-          </Collapse>
+        <Collapse isOpen={stage === Stage.Results}>
+          <Score
+            className="mt-4"
+            answerCount={Object.keys(answers).length}
+            correctCount={score}
+            totalCount={questions.length}
+            score={score}
+            maxScore={questions.length}
+          />
+        </Collapse>
+
+        <Card className="mt-4 bg-background-primary">
+          <div
+            className={cn(
+              "pr-1 overflow-x-auto transition-all",
+              !isTimerActive && stage === Stage.Questions ? "blur" : ""
+            )}
+          >
+            <div className="relative w-[800px] h-[500px] mx-auto">
+              {items.map((item) => (
+                <div
+                  key={item.id}
+                  className="absolute flex items-center justify-center text-white font-bold text-sm"
+                  style={{
+                    left: `${item.x}%`,
+                    top: `${item.y}%`,
+                    transform: "translate(-50%, -50%)",
+                    rotate: `${item.rotation}deg`,
+                  }}
+                >
+                  <ShapeItem
+                    shape={item.shape.name}
+                    color={item.color}
+                    number={item.number}
+                    letter={item.letter}
+                    isMonotoneMode={config.isMonotoneMode}
+                    size={item.size}
+                    fontSize={Math.max(14, item.size / 6)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </Card>
 
-        <Card className="space-y-4">
-          <Card className="bg-background-primary">
-            <div
-              className={cn(
-                "pr-1 overflow-x-auto transition-all",
-                !isTimerActive && stage === Stage.Questions ? "blur" : ""
-              )}
-            >
-              <div className="relative w-[800px] h-[500px] mx-auto">
-                {items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="absolute flex items-center justify-center text-white font-bold text-sm"
-                    style={{
-                      left: `${item.x}%`,
-                      top: `${item.y}%`,
-                      transform: "translate(-50%, -50%)",
-                      rotate: `${item.rotation}deg`,
-                    }}
-                  >
+        <Card className="mt-4 bg-background-primary">
+          <div className="pr-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-96 overflow-y-auto">
+            {questions.map((question, index) => {
+              const userAnswer = answers[question.id] || "";
+              const isCorrect = userAnswer === question.letter;
+              const isSubmitted = stage === Stage.Results;
+
+              return (
+                <Card
+                  key={question.id}
+                  className={cn(
+                    `flex flex-col transition-all`,
+                    !isTimerActive && stage === Stage.Questions
+                      ? "blur pointer-events-none"
+                      : "",
+                    isSubmitted
+                      ? isCorrect
+                        ? "bg-green-50 border-green-300"
+                        : "bg-red-50 border-red-300"
+                      : ""
+                  )}
+                >
+                  <div className="text-center mb-3">
+                    <span className="text-sm font-semibold text-gray-600">
+                      Question {index + 1}
+                    </span>
+                  </div>
+                  <div className="flex-1 flex items-center justify-center mb-4">
                     <ShapeItem
-                      shape={item.shape.name}
-                      color={item.color}
-                      number={item.number}
-                      letter={item.letter}
+                      shape={question.shape.name}
+                      color={question.color}
+                      number={question.number}
                       isMonotoneMode={config.isMonotoneMode}
-                      size={item.size}
-                      fontSize={Math.max(14, item.size / 6)}
+                      fontSize={Math.max(14, question.size / 6)}
                     />
                   </div>
-                ))}
-              </div>
-            </div>
-          </Card>
+                  <div className="text-center">
+                    <p className="text-sm text-gray-600 mb-2">
+                      {question.shape.name.charAt(0).toUpperCase() +
+                        question.shape.name.slice(1)}{" "}
+                      with {question.number}
+                    </p>
+                    <input
+                      type="text"
+                      maxLength={1}
+                      disabled={stage === Stage.Results}
+                      value={answers[question.id] || ""}
+                      onChange={(e) =>
+                        handleAnswerChange(question.id, e.target.value)
+                      }
+                      className="w-12 h-12 text-center text-xl font-bold border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                      placeholder="?"
+                    />
+                  </div>
 
-          <Card className="bg-background-primary">
-            <div className="pr-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-96 overflow-y-auto">
-              {questions.map((question, index) => {
-                const userAnswer = answers[question.id] || "";
-                const isCorrect = userAnswer === question.letter;
-                const isSubmitted = stage === Stage.Results;
-
-                return (
-                  <Card
-                    key={question.id}
-                    className={cn(
-                      `flex flex-col transition-all`,
-                      !isTimerActive && stage === Stage.Questions
-                        ? "blur pointer-events-none"
-                        : "",
-                      isSubmitted
-                        ? isCorrect
-                          ? "bg-green-50 border-green-300"
-                          : "bg-red-50 border-red-300"
-                        : ""
-                    )}
-                  >
-                    <div className="text-center mb-3">
-                      <span className="text-sm font-semibold text-gray-600">
-                        Question {index + 1}
-                      </span>
-                    </div>
-                    <div className="flex-1 flex items-center justify-center mb-4">
-                      <ShapeItem
-                        shape={question.shape.name}
-                        color={question.color}
-                        number={question.number}
-                        isMonotoneMode={config.isMonotoneMode}
-                        fontSize={Math.max(14, question.size / 6)}
-                      />
-                    </div>
-                    <div className="text-center">
-                      <p className="text-sm text-gray-600 mb-2">
-                        {question.shape.name.charAt(0).toUpperCase() +
-                          question.shape.name.slice(1)}{" "}
-                        with {question.number}
+                  {stage === Stage.Results && (
+                    <Card variant="info" className="mt-4 text-sm">
+                      <p>
+                        <span className="font-semibold">Your answer: </span>
+                        <span
+                          className={
+                            isCorrect ? "text-green-600" : "text-red-600"
+                          }
+                        >
+                          {userAnswer || "No answer"}
+                        </span>
                       </p>
-                      <input
-                        type="text"
-                        maxLength={1}
-                        disabled={stage === Stage.Results}
-                        value={answers[question.id] || ""}
-                        onChange={(e) =>
-                          handleAnswerChange(question.id, e.target.value)
-                        }
-                        className="w-12 h-12 text-center text-xl font-bold border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
-                        placeholder="?"
-                      />
-                    </div>
-
-                    {stage === Stage.Results && (
-                      <Card variant="info" className="mt-4 text-sm">
-                        <p>
-                          <span className="font-semibold">Your answer: </span>
-                          <span
-                            className={
-                              isCorrect ? "text-green-600" : "text-red-600"
-                            }
-                          >
-                            {userAnswer || "No answer"}
-                          </span>
-                        </p>
-                        <p>
-                          <span className="font-semibold">
-                            Correct answer:{" "}
-                          </span>
-                          <span className="text-green-600">
-                            {question.letter}
-                          </span>
-                        </p>
-                      </Card>
-                    )}
-                  </Card>
-                );
-              })}
-            </div>
-          </Card>
+                      <p>
+                        <span className="font-semibold">Correct answer: </span>
+                        <span className="text-green-600">
+                          {question.letter}
+                        </span>
+                      </p>
+                    </Card>
+                  )}
+                </Card>
+              );
+            })}
+          </div>
         </Card>
       </section>
 

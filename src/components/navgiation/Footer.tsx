@@ -1,9 +1,16 @@
 import Link from "next/link";
+
 import Logo from "../common/Logo";
 
-export function Footer() {
+import { cn } from "@/libs/utils";
+
+interface FooterProps {
+  className?: string;
+}
+
+export function Footer({ className }: FooterProps) {
   return (
-    <footer className="w-full py-6 mt-12">
+    <footer className={cn(`w-full py-6 mt-12`, className)}>
       <div className="flex justify-evenly gap-8 text-sm">
         {/* Brand */}
         <div>

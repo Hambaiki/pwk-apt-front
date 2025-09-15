@@ -16,7 +16,7 @@ export function Breadcrumb({ children, className }: BreadcrumbProps) {
   return (
     <div
       className={cn(
-        "flex flex-row flex-wrap rounded-xl px-6 py-2 bg-background-secondary",
+        "flex flex-row flex-wrap bg-background-primary",
         className
       )}
     >
@@ -50,12 +50,12 @@ export function BreadcrumbItem({
   return (
     <Link
       href={href}
-      className={`transition-colors mr-2 ${
+      className={`flex items-center transition-colors mr-2 text-sm ${
         isLast ? "font-bold text-primary-500" : ""
       }`}
     >
       {label}
-      {!isLast && <ChevronRight className="inline ml-2" />}
+      {!isLast && <ChevronRight size={20} className="ml-2" />}
     </Link>
   );
 }

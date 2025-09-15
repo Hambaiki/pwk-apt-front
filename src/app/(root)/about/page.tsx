@@ -1,24 +1,28 @@
 import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import {
+  HeaderCard,
+  HeaderCardDescription,
+  HeaderCardTitle,
+} from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
 import { Card } from "@/components/ui";
 
 const AboutPage = () => {
   return (
     <MainSection>
-      <Breadcrumb className="mb-6">
+      <Breadcrumb>
         <BreadcrumbItem label="Home" href="/" />
         <BreadcrumbItem label="About" href="/about" />
       </Breadcrumb>
 
-      <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-primary-800 to-primary-600 shadow-medium">
-        <h1 className="mb-2 text-white">About Us</h1>
-        <p className="text-gray-100">
-          This platform is dedicated to helping you improve your aptitude
-          skills.
-        </p>
-      </Card>
+      <HeaderCard>
+        <HeaderCardTitle>About Us</HeaderCardTitle>
+        <HeaderCardDescription>
+          Learn more about our mission and values.
+        </HeaderCardDescription>
+      </HeaderCard>
 
-      <Card className="text-center p-10">
+      <Card className="text-center p-4 py-20">
         <p>
           <strong>Coming Soon...</strong>
           <br />

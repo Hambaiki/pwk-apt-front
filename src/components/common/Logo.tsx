@@ -7,9 +7,9 @@ export default function Logo({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div id="navbar" className={cn(`flex items-center`, className)}>
-      <Cog className="inline-block text-primary-500 h-8 w-8" />
-      <span className={cn(`ml-1 hidden sm:block text-3xl font-bold`)}>
-        AptEx
+      {/* <Cog className="inline-block text-primary-500 h-8 w-8" /> */}
+      <span className={cn(`text-2xl font-bold`)}>
+        PWK-APT
       </span>
     </div>
   );

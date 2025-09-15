@@ -40,12 +40,13 @@ const ScanningExercisePage = () => {
   };
 
   return (
-    <MainSection className="gap-6">
+    <MainSection>
       <Breadcrumb>
         <BreadcrumbItem label="Home" href="/" />
         <BreadcrumbItem label="Exercises" href="/exercises" />
         <BreadcrumbItem label="Scanning" href="/exercises/scanning" />
       </Breadcrumb>
+
       <section className="space-y-10">
         <HeaderCard>
           <HeaderCardTitle>Scanning Exercise</HeaderCardTitle>

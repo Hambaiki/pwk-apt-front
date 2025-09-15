@@ -11,7 +11,7 @@ import { exercises } from "@/constants/common/exercise";
 
 export default function ExercisesPage() {
   return (
-    <MainSection className="gap-6">
+    <MainSection>
       <Breadcrumb>
         <BreadcrumbItem label="Home" href="/" />
         <BreadcrumbItem label="Exercises" href="/exercises" />

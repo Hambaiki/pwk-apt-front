@@ -10,13 +10,13 @@ export default function MainLayout({
 }>) {
   return (
     <div className="flex flex-col w-full min-h-[100dvh]">
-      <header className="w-full mx-auto max-w-7xl">
-        <Navbar className="p-6 lg:py-12" />
+      <header className="sticky top-0 z-50 w-full border-b backdrop-blur">
+        <Navbar className="py-3 px-6" />
       </header>
 
       <div className="flex-1">{children}</div>
 
-      <Footer />
+      <Footer className="border-t bg-background-primary" />
 
       <ToastContainer
         position="top-right"

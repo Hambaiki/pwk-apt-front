@@ -18,8 +18,24 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <MainSection className="space-y-20">
+      <div className="py-12">
+        <h1 className="text-5xl">Start Sharpening Your Aptitude Skills</h1>
+        <p className="text-lg">
+          Refine your aptitude skills with interactive exercises and challenges.
+        </p>
+        <div className="flex gap-4 max-w-xl mt-4">
+          <Link href="/exercises">
+            <Button variant="primary">Start Practicing</Button>
+          </Link>
+
+          <Link href="/about">
+            <Button variant="secondary">About</Button>
+          </Link>
+        </div>
+      </div>
+
       {/* Hero Section */}
-      <HeaderCard className="p-20 rounded-xl bg-gradient-to-br from-primary-600 to-primary-400 shadow-medium">
+      {/* <HeaderCard className="p-20 rounded-xl bg-gradient-to-br from-primary-600 to-primary-400 shadow-medium">
         <HeaderCardTitle className="mb-2 text-white">
           Start Sharpening Your Aptitude Skills
         </HeaderCardTitle>
@@ -36,7 +52,7 @@ export default function HomePage() {
             <Button variant="secondary">About</Button>
           </Link>
         </div>
-      </HeaderCard>
+      </HeaderCard> */}
 
       {/* How It Works Section */}
       <div className="space-y-6">

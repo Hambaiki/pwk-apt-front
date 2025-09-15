@@ -31,7 +31,7 @@
 :root {
   --foreground-rgb: #000000;
   --background-start-rgb: #ffffff;
-  --background-end-rgb: #ffffff;
+  --background-end-rgb: #fafafa;
 }
 
 /* :root {

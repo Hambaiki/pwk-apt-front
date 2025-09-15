@@ -27,7 +27,7 @@ const ComparisonExerciseQuestionPage = ({
   const items: ComparisonItem[] = generateComparisonExercise(config);
 
   return (
-    <MainSection className="gap-6">
+    <MainSection>
       <Breadcrumb>
         <BreadcrumbItem label="Home" href="/" />
         <BreadcrumbItem label="Exercises" href="/exercises" />

@@ -21,7 +21,7 @@ const Score = ({
   return (
     <Card
       className={cn(
-        "p-10 rounded-lg bg-gradient-to-br from-primary-600 to-primary-400 shadow-medium text-center space-y-4",
+        "p-8 bg-gradient-to-br from-primary-600 to-primary-400 shadow-medium text-center space-y-4",
         className
       )}
       {...props}

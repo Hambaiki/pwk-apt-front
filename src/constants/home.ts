@@ -25,7 +25,7 @@ export const howItWorks: GenericCard[] = [
     icon: BarChart,
     title: "Track Growth",
     description:
-      "Review performance analytics to identify strengths and weaknesses.",
+      "Review your performance to identify strengths and weaknesses.",
   },
 ];
 
