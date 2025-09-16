@@ -16,7 +16,7 @@ export default function MainLayout({
 
       <div className="flex-1">{children}</div>
 
-      <Footer className="border-t bg-background-primary" />
+      <Footer className="py-6 mt-12 border-t bg-background-primary" />
 
       <ToastContainer
         position="top-right"

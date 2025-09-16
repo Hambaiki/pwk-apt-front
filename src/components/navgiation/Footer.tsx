@@ -10,7 +10,7 @@ interface FooterProps {
 
 export function Footer({ className }: FooterProps) {
   return (
-    <footer className={cn(`w-full py-6 mt-12`, className)}>
+    <footer className={cn(`flex flex-col w-full`, className)}>
       <div className="flex justify-evenly gap-8 text-sm">
         {/* Brand */}
         <div>

@@ -1,3 +1,8 @@
+import {
+  HeaderCard,
+  HeaderCardTitle,
+  HeaderCardDescription,
+} from "@/components/content/HeaderCard";
 import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import MainSection from "@/components/content/MainSection";
 import ScanningExercise from "@/components/exercise/scanning/ScanningExercise";
@@ -132,6 +137,13 @@ const ScanningExerciseQuestionPage = ({
         <BreadcrumbItem label="Exercises" href="/exercises" />
         <BreadcrumbItem label="Scanning" href="/exercises/scanning" />
       </Breadcrumb>
+
+      <HeaderCard>
+        <HeaderCardTitle>Scanning - Questions</HeaderCardTitle>
+        <HeaderCardDescription>
+          What letter is in each shape and number combination?
+        </HeaderCardDescription>
+      </HeaderCard>
 
       <ScanningExercise items={items} questions={questions} config={config} />
     </MainSection>

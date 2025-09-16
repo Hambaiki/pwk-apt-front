@@ -1,6 +1,12 @@
 import { Exercise } from "@/types/exercises";
 
-import { GitCompareArrows, CircleQuestionMark, Shapes } from "lucide-react";
+import {
+  GitCompareArrows,
+  CircleQuestionMark,
+  Shapes,
+  List,
+  Grid,
+} from "lucide-react";
 
 export const exercises: Exercise[] = [
   {
@@ -19,10 +25,17 @@ export const exercises: Exercise[] = [
     tag: "new",
   },
   {
-    title: "Coming Soon",
-    description: "This exercise is coming soon.",
-    href: "",
-    icon: CircleQuestionMark,
-    tag: "coming-soon",
+    title: "Short Term Memory - Sequence",
+    description: "Memorize and recall sequences of colors",
+    href: "/exercises/short-term-memory-sequence",
+    icon: List,
+    tag: "new",
+  },
+  {
+    title: "Grid Memory",
+    description: "Memorize and recall items in a grid",
+    href: "/exercises/grid-memory",
+    icon: Grid,
+    tag: "new",
   },
 ];

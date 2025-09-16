@@ -1,11 +1,6 @@
 "use client";
 
 import { Card, Modal } from "@/components/ui";
-import {
-  HeaderCard,
-  HeaderCardTitle,
-  HeaderCardDescription,
-} from "@/components/content/HeaderCard";
 import { ModalContent, ModalHeader } from "@/components/ui/Modal";
 import Toolbar from "@/components/exercise/Toolbar";
 import ShapeItem from "@/components/exercise/scanning/ShapeItem";
@@ -87,13 +82,6 @@ const ScanningExercise = ({
 
   return (
     <>
-      <HeaderCard>
-        <HeaderCardTitle>Scanning - Questions</HeaderCardTitle>
-        <HeaderCardDescription>
-          What letter is in each shape and number combination?
-        </HeaderCardDescription>
-      </HeaderCard>
-
       <section>
         <Toolbar
           isRunning={isTimerActive && stage === Stage.Questions}

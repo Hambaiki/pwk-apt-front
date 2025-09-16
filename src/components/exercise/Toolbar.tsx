@@ -44,6 +44,11 @@ const Toolbar = ({
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
+  // Reset timer if timerLimit changes
+  useEffect(() => {
+    setTimeRemaining(timerLimit);
+  }, [timerLimit]);
+
   // Timer effect
   useEffect(() => {
     let interval = null;
