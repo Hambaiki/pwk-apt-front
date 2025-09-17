@@ -1,14 +1,21 @@
 "use client";
 
-import { Card } from "@/components/ui";
+import { Button, Card, Modal } from "@/components/ui";
+import { ModalContent, ModalHeader } from "@/components/ui/Modal";
+import Collapse from "@/components/content/Collapse";
 import Toolbar from "@/components/exercise/Toolbar";
+import Score from "@/components/exercise/Score";
+import InputKeyboard from "@/components/exercise/grid-memory/InputKeyboard";
+import GridCell from "@/components/exercise/grid-memory/GridCell";
 
 import { letterPool, numberPool, symbolPool } from "@/constants/exercises/grid";
 
 import { Config, GridItem, InputType } from "@/types/exercises/grid";
 
-import { useState, useEffect, useCallback } from "react";
-import InputKeyboard from "./InputKeyboard";
+import { Trash } from "lucide-react";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 interface GridMemoryExerciseProps {
   config: Config;
@@ -16,11 +23,17 @@ interface GridMemoryExerciseProps {
 }
 
 const GridMemoryExercise = ({ config, grid }: GridMemoryExerciseProps) => {
-  const [gameState, setGameState] = useState("memorize"); // 'memorize', 'input', 'result'
+  const router = useRouter();
+
+  const [isViewingHelp, setIsViewingHelp] = useState<boolean>(false);
+
+  const [gameState, setGameState] = useState<"memorize" | "input" | "result">(
+    "memorize"
+  );
   const [userGrid, setUserGrid] = useState<GridItem[][]>([]);
   const [currentCell, setCurrentCell] = useState({ row: 0, col: 0 });
   const [isTimerActive, setIsTimerActive] = useState(true);
-  const [score, setScore] = useState(0);
+  const [correctCount, setCorrectCount] = useState(0);
 
   useEffect(() => {
     initializeUserGrid();
@@ -38,7 +51,7 @@ const GridMemoryExercise = ({ config, grid }: GridMemoryExerciseProps) => {
     setUserGrid(newUserGrid);
   };
 
-  const calculateScore = () => {
+  const calculateCorrectCount = () => {
     let correct = 0;
     for (let i = 0; i < 5; i++) {
       for (let j = 0; j < 5; j++) {
@@ -52,7 +65,7 @@ const GridMemoryExercise = ({ config, grid }: GridMemoryExerciseProps) => {
         }
       }
     }
-    setScore(Math.round((correct / 25) * 100));
+    setCorrectCount(correct);
   };
 
   const handleCellInput = (inputType: InputType, inputValue: string) => {
@@ -75,44 +88,12 @@ const GridMemoryExercise = ({ config, grid }: GridMemoryExerciseProps) => {
     }
   };
 
-  const renderCell = (
-    item: GridItem,
-    isUserInput = false,
-    isActive = false
-  ) => {
-    if (!item || item.type === "empty") {
-      return (
-        <div
-          className={`w-full h-full flex items-center justify-center ${
-            isActive ? "bg-blue-200" : ""
-          }`}
-        ></div>
-      );
-    }
-
-    let bgColor = isActive ? "bg-blue-200" : "bg-gray-50";
-
-    return (
-      <div
-        className={`w-full h-full flex items-center justify-center rounded ${bgColor} border ${
-          isActive ? "border-blue-400 border-2" : "border-gray-200"
-        }`}
-      >
-        {item.value}
-      </div>
-    );
-  };
-
   const resetExercise = () => {
     setGameState("memorize");
     initializeUserGrid();
     setCurrentCell({ row: 0, col: 0 });
-    setScore(0);
+    setCorrectCount(0);
     setIsTimerActive(true);
-  };
-
-  const exitExercise = () => {
-    // Implement exit logic, e.g., navigate back to exercises list
   };
 
   const endExercise = () => {
@@ -121,21 +102,16 @@ const GridMemoryExercise = ({ config, grid }: GridMemoryExerciseProps) => {
     } else if (gameState === "input") {
       setGameState("result");
       setIsTimerActive(false);
-      calculateScore();
+      calculateCorrectCount();
     }
+  };
+
+  const exitExercise = () => {
+    router.push("/exercises/grid-memory");
   };
 
   return (
     <>
-      {/* Header */}
-      <Card variant="info" className="text-center mb-6">
-        <div className="text-2xl font-bold text-blue-600">
-          {/* {gameState === "memorize" && `Memory Time: ${formatTime()}`}
-          {gameState === "input" && `Time: ${formatTime(timeLeft)}`} */}
-          {gameState === "result" && `Score: ${score}%`}
-        </div>
-      </Card>
-
       <Toolbar
         isRunning={
           isTimerActive && (gameState === "memorize" || gameState === "input")
@@ -146,12 +122,33 @@ const GridMemoryExercise = ({ config, grid }: GridMemoryExerciseProps) => {
         }
         onEnd={endExercise}
         onPause={() => setIsTimerActive((prev) => !prev)}
-        // onHelp={() => setIsViewingHelp(true)}
+        onHelp={() => setIsViewingHelp(true)}
         onRestart={resetExercise}
         onExit={exitExercise}
       />
 
-      <div className="grid lg:grid-cols-2 gap-8">
+      <Collapse isOpen={gameState === "result"}>
+        <Score
+          className="mt-4"
+          answerCount={
+            Object.keys(
+              userGrid.flatMap((row) => row).filter((cell) => cell.value !== "")
+            ).length
+          }
+          correctCount={correctCount}
+          totalCount={userGrid.flatMap((row) => row).length}
+          score={correctCount}
+          maxScore={userGrid.flatMap((row) => row).length}
+        />
+      </Collapse>
+
+      <div
+        className={`grid lg:grid-cols-2 gap-8 transition-all ${
+          !isTimerActive && gameState !== "result"
+            ? "blur pointer-events-none"
+            : ""
+        }`}
+      >
         {/* Grid Display */}
         <div className="space-y-4">
           <h3 className="text-xl font-semibold text-gray-700">
@@ -160,39 +157,51 @@ const GridMemoryExercise = ({ config, grid }: GridMemoryExerciseProps) => {
             {gameState === "result" && "Your Results:"}
           </h3>
 
-          <div className="grid grid-cols-5 gap-2 max-w-md mx-auto">
+          <div className="grid grid-cols-5 gap-2 mx-auto">
             {(gameState === "memorize" ? grid : userGrid).map((row, rowIndex) =>
               row.map((cell, colIndex) => (
-                <div
+                <GridCell
+                  item={cell}
                   key={`${rowIndex}-${colIndex}`}
-                  className="aspect-square border-2 border-gray-300 rounded cursor-pointer"
+                  isActive={
+                    gameState === "input" &&
+                    currentCell.row === rowIndex &&
+                    currentCell.col === colIndex
+                  }
                   onClick={() =>
                     gameState === "input" &&
                     setCurrentCell({ row: rowIndex, col: colIndex })
                   }
-                >
-                  {renderCell(
-                    cell,
-                    gameState === "input",
-                    gameState === "input" &&
-                      currentCell.row === rowIndex &&
-                      currentCell.col === colIndex
-                  )}
-                </div>
+                />
               ))
             )}
           </div>
         </div>
 
         {/* Input Panel */}
-        {gameState === "input" && (
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-gray-700">
-              Input Panel - Cell ({currentCell.row + 1}, {currentCell.col + 1})
-            </h3>
+        {(gameState === "input" || gameState === "memorize") && (
+          <div
+            className={`space-y-4 ${
+              gameState === "memorize" && "opacity-50 pointer-events-none"
+            }`}
+          >
+            <div className="flex justify-between items-center">
+              <h3 className="text-xl font-semibold text-gray-700">
+                Input Panel - Cell ({currentCell.row + 1}, {currentCell.col + 1}
+                )
+              </h3>
+              {/* Clear cell button */}
+              <Button
+                variant="outline"
+                onClick={() => handleCellInput(InputType.EMPTY, "")}
+              >
+                <Trash size={16} className="mr-2" />
+                Clear Cell
+              </Button>
+            </div>
             <InputKeyboard
-              letters={letterPool}
-              numbers={numberPool}
+              // letters={letterPool}
+              // numbers={numberPool}
               symbols={symbolPool}
               onInput={(type, value) => handleCellInput(type, value)}
             />
@@ -205,29 +214,35 @@ const GridMemoryExercise = ({ config, grid }: GridMemoryExerciseProps) => {
             <h3 className="text-xl font-semibold text-gray-700">
               Original Grid:
             </h3>
-            <div className="grid grid-cols-5 gap-2 max-w-md mx-auto">
+            <div className="grid grid-cols-5 gap-2 mx-auto">
               {grid.map((row, rowIndex) =>
                 row.map((cell, colIndex) => (
-                  <div
-                    key={`orig-${rowIndex}-${colIndex}`}
-                    className="aspect-square border-2 border-gray-300 rounded"
-                  >
-                    {renderCell(cell)}
-                  </div>
+                  <GridCell item={cell} key={`orig-${rowIndex}-${colIndex}`} />
                 ))
               )}
-            </div>
-            <div className="text-center mt-6">
-              <button
-                onClick={resetExercise}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full transition-colors duration-200"
-              >
-                Try Again
-              </button>
             </div>
           </div>
         )}
       </div>
+
+      <Modal isOpen={isViewingHelp} onClose={() => setIsViewingHelp(false)}>
+        <ModalContent>
+          <ModalHeader>
+            <h2 className="text-lg font-semibold">
+              How to Complete the Exercise
+            </h2>
+          </ModalHeader>
+          <Card variant="info">
+            <ol className="list-decimal list-inside space-y-2">
+              <li>Memorize the grid during the memory phase</li>
+              <li>Recall the characters after the memory phase</li>
+              <li>Input the characters in their correct positions</li>
+              <li>Submit your answers before time runs out</li>
+              <li>Review your performance and improve over time</li>
+            </ol>
+          </Card>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

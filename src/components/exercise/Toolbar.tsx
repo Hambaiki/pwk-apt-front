@@ -104,7 +104,7 @@ const Toolbar = ({
               onClick={() => onEnd?.()}
             >
               <Flag size={16} />
-              <span className="ml-2 hidden md:block">Submit Early</span>
+              <span className="ml-2 hidden md:block">End Early</span>
             </Button>
           </>
         ) : (

@@ -107,7 +107,8 @@ const ComparisonExercise = ({
         {!isComplete && (
           <div
             className={cn(
-              !isTimerActive ? "blur pointer-events-none transition-all" : ""
+              "transition-all",
+              !isTimerActive ? "blur pointer-events-none" : ""
             )}
           >
             <ComparisonExerciseCard

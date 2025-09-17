@@ -37,7 +37,6 @@ const GridMemoryExercisePage = ({
   const config: Config = parseConfig(searchParams.config);
 
   const generateGrid = (config: Config) => {
-    // const totalCells = 25;
     const items: GridItem[] = [];
 
     // Add letters
@@ -70,15 +69,19 @@ const GridMemoryExercisePage = ({
       });
     }
 
-    // Shuffle and fill grid
+    // Fill remaining cells with empties first
+    const totalCells = 25;
+    while (items.length < totalCells) {
+      items.push({ type: InputType.EMPTY, value: "" });
+    }
+
+    // Shuffle everything together
     const shuffled = [...items].sort(() => Math.random() - 0.5);
-    const newGrid = [];
+
+    // Build grid
+    const newGrid: GridItem[][] = [];
     for (let i = 0; i < 5; i++) {
-      const row = [];
-      for (let j = 0; j < 5; j++) {
-        row.push(shuffled[i * 5 + j] || { type: "empty", value: "" });
-      }
-      newGrid.push(row);
+      newGrid.push(shuffled.slice(i * 5, i * 5 + 5));
     }
 
     return newGrid;
@@ -92,13 +95,13 @@ const GridMemoryExercisePage = ({
         <BreadcrumbItem label="Home" href="/" />
         <BreadcrumbItem label="Exercises" href="/exercises" />
         <BreadcrumbItem
-          label="Short Term Memory - Grid"
+          label="Grid Memory"
           href="/exercises/grid-memory"
         />
       </Breadcrumb>
 
       <HeaderCard>
-        <HeaderCardTitle>Short Term Memory - Grid - Questions</HeaderCardTitle>
+        <HeaderCardTitle>Grid Memory - Questions</HeaderCardTitle>
         <HeaderCardDescription>
           Memorize the grid and fill in as many correct items as you can.
         </HeaderCardDescription>

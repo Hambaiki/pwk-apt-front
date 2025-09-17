@@ -65,7 +65,7 @@ const ShortTermMemoryGridPage = () => {
 
       <section className="space-y-10">
         <HeaderCard>
-          <HeaderCardTitle>Short Term Memory - Grid</HeaderCardTitle>
+          <HeaderCardTitle>Grid Memory</HeaderCardTitle>
           <HeaderCardDescription>
             Enhance your visual scanning and attention to detail with this
             engaging exercise.

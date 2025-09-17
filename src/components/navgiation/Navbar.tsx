@@ -23,7 +23,7 @@ export default function Navbar({ className }: NavbarProps) {
         <Logo />
       </Link>
 
-      <div className="flex flex-1 flex-row items-center justify-between">
+      <div className="flex flex-1 flex-row items-center gap-6 justify-between">
         <div className="flex flex-row items-center gap-2">
           {Object.values(navbarItems).map((item, index) => (
             <Link key={`navbar-item-${index}`} href={item.href}>

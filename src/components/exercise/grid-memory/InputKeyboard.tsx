@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui";
+import { Button, Card, Input } from "@/components/ui";
 
 import { InputType } from "@/types/exercises/grid";
 import { useState } from "react";
@@ -16,20 +16,36 @@ const InputKeyboard = ({
   symbols,
   onInput,
 }: InputKeyboardProps) => {
+  const [inputValue, setInputValue] = useState<string>("");
   const [inputType, setInputType] = useState<InputType | null>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!inputType || !inputValue) return;
+
+    onInput(inputType, inputValue);
+
+    setInputValue("");
+    setInputType(null);
+  };
 
   return (
     <div className="space-y-4">
       {/* Manual input */}
-      <div className="p-4 bg-gray-50 rounded-lg">
+      <Card>
         <h4 className="text-sm font-semibold text-gray-700 mb-3">
           Manual Input
         </h4>
-        <div>
-          <label>
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-2"
+        >
+          <label className="flex flex-col">
             Input Type
             <select
-              className="ml-2 p-2 border rounded"
+              value={inputType ?? ""}
+              className="mt-1 p-2 border rounded"
               onChange={(e) => {
                 const value = e.currentTarget.value;
                 if (value) {
@@ -40,28 +56,35 @@ const InputKeyboard = ({
               <option value="">Select input type</option>
               <option value="letter">Letter</option>
               <option value="number">Number</option>
-              <option value="symbol">Symbol</option>
+              {/* <option value="symbol">Symbol</option> */}
             </select>
           </label>
-        </div>
-        <div className="grid grid-cols-3 gap-2">
-          <input
-            type="text"
-            placeholder="Enter letter"
-            className="p-2 border rounded"
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                onInput(InputType.LETTER, e.currentTarget.value);
-                e.currentTarget.value = "";
-              }
-            }}
-          />
-        </div>
-      </div>
+          <label className="flex flex-col">
+            Value
+            <Input
+              value={inputValue}
+              type="text"
+              placeholder="Enter letter"
+              className="mt-1 p-2 border rounded"
+              onChange={(e) => {
+                const value = e.currentTarget.value;
+                setInputValue(value.slice(0, 3).toUpperCase()); // Limit to 3 characters
+              }}
+            />
+          </label>
+          <Button
+            type="submit"
+            disabled={!inputType || !inputValue}
+            className="col-span-2"
+          >
+            Submit
+          </Button>
+        </form>
+      </Card>
 
       {/* Letter input */}
       {letters && letters.length > 0 && (
-        <div className="p-4 bg-blue-50 rounded-lg">
+        <Card className="bg-blue-50">
           <h4 className="text-sm font-semibold text-blue-700 mb-3">
             Letter Combinations
           </h4>
@@ -76,12 +99,12 @@ const InputKeyboard = ({
               </Button>
             ))}
           </div>
-        </div>
+        </Card>
       )}
 
       {/* Number input */}
       {numbers && numbers.length > 0 && (
-        <div className="p-4 bg-green-50 rounded-lg">
+        <Card className="bg-green-50">
           <h4 className="text-sm font-semibold text-green-700 mb-3">
             Number Combinations
           </h4>
@@ -96,12 +119,12 @@ const InputKeyboard = ({
               </Button>
             ))}
           </div>
-        </div>
+        </Card>
       )}
 
       {/* Symbol Input */}
       {symbols && symbols.length > 0 && (
-        <div className="mt-4 p-4 bg-purple-50 rounded-lg">
+        <Card className="bg-purple-50">
           <h4 className="text-sm font-semibold text-purple-700 mb-3">
             Symbol Keyboard
           </h4>
@@ -110,17 +133,14 @@ const InputKeyboard = ({
               <Button
                 key={index}
                 onClick={() => onInput(InputType.SYMBOL, symbol)}
-                className="p-3 bg-white rounded border hover:bg-purple-100 transition-colors"
+                className="p-2 bg-white rounded border hover:bg-purple-100 transition-colors text-purple-600 font-semibold"
               >
                 {symbol}
               </Button>
             ))}
           </div>
-        </div>
+        </Card>
       )}
-
-      {/* Clear cell button */}
-      <Button onClick={() => onInput(InputType.EMPTY, "")}>Clear Cell</Button>
     </div>
   );
 };
