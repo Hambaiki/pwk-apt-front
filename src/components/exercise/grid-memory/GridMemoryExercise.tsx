@@ -163,10 +163,19 @@ const GridMemoryExercise = ({ config, grid }: GridMemoryExerciseProps) => {
                 <GridCell
                   item={cell}
                   key={`${rowIndex}-${colIndex}`}
-                  isActive={
+                  variant={
                     gameState === "input" &&
                     currentCell.row === rowIndex &&
                     currentCell.col === colIndex
+                      ? "active"
+                      : gameState === "result"
+                      ? userGrid[rowIndex][colIndex].type === InputType.EMPTY
+                        ? "unanswered"
+                        : userGrid[rowIndex][colIndex].value ===
+                          grid[rowIndex][colIndex].value
+                        ? "correct"
+                        : "incorrect"
+                      : "default"
                   }
                   onClick={() =>
                     gameState === "input" &&
