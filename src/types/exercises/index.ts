@@ -7,10 +7,16 @@ export enum Choice {
   F = "F",
 }
 
+export enum ExerciseTag {
+  New = "new",
+  UnderDevelopment = "under-development",
+  ComingSoon = "coming-soon",
+}
+
 export interface Exercise {
   title: string;
   description: string;
   href: string;
-  tag?: string;
+  tag?: ExerciseTag;
   icon: React.ElementType;
 }

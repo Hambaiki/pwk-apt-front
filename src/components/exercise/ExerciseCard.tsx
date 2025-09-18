@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui";
+import { exerciseTagMap } from "@/constants/common/exercise";
 
 import { Exercise } from "@/types/exercises";
 
@@ -9,6 +10,8 @@ interface ExerciseCardProps {
 }
 
 export default function ExerciseCard({ exercise }: ExerciseCardProps) {
+  const exerciseTag = exercise.tag ? exerciseTagMap[exercise.tag] : null;
+
   return (
     <Link
       href={exercise.href}
@@ -22,8 +25,15 @@ export default function ExerciseCard({ exercise }: ExerciseCardProps) {
           <exercise.icon className="group-hover:scale-110 transition-transform duration-300 w-32 h-32 text-white" />
 
           {exercise.tag && (
-            <div className="absolute top-3 right-3 px-2 py-1 bg-warning-500 text-xs font-semibold text-white rounded-full">
-              {exercise.tag.replace(/-/g, " ").toUpperCase()}
+            <div
+              style={{
+                backgroundColor: exerciseTag
+                  ? exerciseTag.color
+                  : "transparent",
+              }}
+              className="absolute top-3 right-3 px-2 py-1 text-xs font-semibold text-white rounded-full"
+            >
+              {exerciseTag ? exerciseTag.title : ""}
             </div>
           )}
         </div>

@@ -42,7 +42,7 @@ export const metadata = {
   title: "Read Back Memory | APT-PWK",
   description:
     "Test your ability to remember and repeat back a sequence of numbers and letters.",
-  keywords: ["about", "pwk-apt", "aptitude", "exercises"],
+  keywords: ["read-back", "pwk-apt", "aptitude", "exercises"],
 };
 
 export default ReadBackMemoryPage;
