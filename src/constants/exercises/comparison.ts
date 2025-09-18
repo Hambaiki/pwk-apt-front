@@ -19,7 +19,21 @@ import {
   MutationType,
 } from "@/types/exercises/comparison";
 
-export const comparionGenerators: Record<
+export const generatorHandlers = {
+  [GenerationType.WORDS]: generateWords,
+  [GenerationType.CHARS_MIXED]: generateMixed,
+  [GenerationType.CHARS_LETTERS_ONLY]: generateChars,
+  [GenerationType.CHARS_NUMBERS_ONLY]: generateNumbers,
+  [GenerationType.CHARS_SYMBOLS_ONLY]: generateSymbols,
+};
+
+export const mutationHandlers = {
+  [MutationType.INSERT]: mutateInsert,
+  [MutationType.DELETE]: mutateDelete,
+  [MutationType.REPLACE]: mutateReplace,
+};
+
+export const comparisonGenerators: Record<
   GenerationType,
   {
     title: string;

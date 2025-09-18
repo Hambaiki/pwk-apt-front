@@ -1,6 +1,11 @@
 import { randomInt } from "@/utils/common";
 
 import {
+  generatorHandlers,
+  mutationHandlers,
+} from "@/constants/exercises/comparison";
+
+import {
   ComparisonItem,
   GeneratedBase,
   GenerationOptions,
@@ -17,20 +22,6 @@ import { generate } from "random-words";
 /*  Pipeline for generating questions for comparision exercise
  *  TBD...
  */
-
-const generatorHandlers = {
-  [GenerationType.WORDS]: generateWords,
-  [GenerationType.CHARS_MIXED]: generateMixed,
-  [GenerationType.CHARS_LETTERS_ONLY]: generateChars,
-  [GenerationType.CHARS_NUMBERS_ONLY]: generateNumbers,
-  [GenerationType.CHARS_SYMBOLS_ONLY]: generateSymbols,
-};
-
-const mutationHandlers = {
-  [MutationType.INSERT]: mutateInsert,
-  [MutationType.DELETE]: mutateDelete,
-  [MutationType.REPLACE]: mutateReplace,
-};
 
 export function generateComparisonExercise(
   options: Partial<ComparisonGeneratorOptions> = {}
@@ -164,7 +155,7 @@ export function mutateInsert(options: MutationOptions): MutationResult {
   }
   mutatedBase.splice(
     index,
-    1,
+    0,
     toAdd.length > 0 ? toAdd[0] : mutatedBase[index]
   );
   return {
