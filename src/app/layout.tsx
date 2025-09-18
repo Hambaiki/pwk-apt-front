@@ -10,7 +10,7 @@ const noto = Noto_Sans_Thai({
 });
 
 export const metadata: Metadata = {
-  title: "PWK-APT - Practice Your Aptitude Skills",
+  title: "APT-PWK - Practice Your Aptitude Skills",
   description: "Sharpen your mind with interactive exercises.",
 };
 

@@ -48,7 +48,7 @@ const ComparisonExerciseQuestionPage = ({
 };
 
 export const metadata = {
-  title: "Comparison Exercise - Questions | PWK-APT",
+  title: "Comparison Exercise - Questions | APT-PWK",
   description:
     "Practice your comparison skills with this interactive exercise. Compare items and select the most appropriate choices quickly and accurately.",
   keywords: ["comparison", "exercise", "items", "choices"],

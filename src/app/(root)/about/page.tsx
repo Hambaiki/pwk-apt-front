@@ -34,9 +34,9 @@ const AboutPage = () => {
 };
 
 export const metadata = {
-  title: "About | PWK-APT",
+  title: "About | APT-PWK",
   description:
-    "Learn more about PWK-APT, a platform dedicated to helping you improve your aptitude skills through interactive exercises.",
+    "Learn more about APT-PWK, a platform dedicated to helping you improve your aptitude skills through interactive exercises.",
   keywords: ["about", "pwk-apt", "aptitude", "exercises"],
 };
 

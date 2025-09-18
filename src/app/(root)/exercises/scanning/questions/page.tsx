@@ -151,7 +151,7 @@ const ScanningExerciseQuestionPage = ({
 };
 
 export const metadata = {
-  title: "Scanning Exercise - Questions | PWK-APT",
+  title: "Scanning Exercise - Questions | APT-PWK",
   description:
     "Practice your scanning skills with this interactive exercise. Identify shapes, numbers, and letters quickly and accurately.",
   keywords: [
@@ -170,13 +170,13 @@ export const metadata = {
   //   description:
   //     "Practice your scanning skills with this interactive exercise. Identify shapes, numbers, and letters quickly and accurately.",
   //   url: "https://pwk-apt.vercel.app/exercises/scanning",
-  //   siteName: "PWK-APT",
+  //   siteName: "APT-PWK",
   //   images: [
   //     {
   //       url: "https://pwk-apt.vercel.app/og-image.png",
   //       width: 1200,
   //       height: 630,
-  //       alt: "PWK-APT",
+  //       alt: "APT-PWK",
   //       type: "image/png",
   //     },
   //   ],

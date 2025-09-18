@@ -9,7 +9,7 @@ export default function Logo({
     <div id="navbar" className={cn(`flex items-center`, className)}>
       {/* <Cog className="inline-block text-primary-500 h-8 w-8" /> */}
       <span className={cn(`text-2xl font-bold`)}>
-        PWK-APT
+        APT-PWK
       </span>
     </div>
   );
