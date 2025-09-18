@@ -165,37 +165,30 @@ const GridMemoryExercise = ({
 
           <div className="grid grid-cols-5 gap-2 mx-auto">
             {(gameState === "memorize" ? grid : userGrid).map((row, rowIndex) =>
-              row.map((cell, colIndex) => {
-                const userCell = userGrid[rowIndex][colIndex];
-                const gridCell = grid[rowIndex][colIndex];
-
-                const isActive =
-                  gameState === "input" &&
-                  currentCell.row === rowIndex &&
-                  currentCell.col === colIndex;
-
-                return (
-                  <GridCell
-                    item={cell}
-                    key={`${rowIndex}-${colIndex}`}
-                    variant={
-                      isActive
-                        ? "active"
-                        : gameState === "result"
-                        ? userCell.type === InputType.EMPTY
-                          ? "unanswered"
-                          : userCell.value === gridCell.value
-                          ? "correct"
-                          : "incorrect"
-                        : "default"
-                    }
-                    onClick={() =>
-                      gameState === "input" &&
-                      setCurrentCell({ row: rowIndex, col: colIndex })
-                    }
-                  />
-                );
-              })
+              row.map((cell, colIndex) => (
+                <GridCell
+                  item={cell}
+                  key={`${rowIndex}-${colIndex}`}
+                  variant={
+                    gameState === "input" &&
+                    currentCell.row === rowIndex &&
+                    currentCell.col === colIndex
+                      ? "active"
+                      : gameState === "result"
+                      ? userGrid[rowIndex][colIndex].type === InputType.EMPTY
+                        ? "unanswered"
+                        : userGrid[rowIndex][colIndex].value ===
+                          grid[rowIndex][colIndex].value
+                        ? "correct"
+                        : "incorrect"
+                      : "default"
+                  }
+                  onClick={() =>
+                    gameState === "input" &&
+                    setCurrentCell({ row: rowIndex, col: colIndex })
+                  }
+                />
+              ))
             )}
           </div>
         </div>
