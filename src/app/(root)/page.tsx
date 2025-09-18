@@ -91,9 +91,15 @@ export default function HomePage() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {exercises.map((exercise, index) => (
+          {exercises.slice(0, 6).map((exercise, index) => (
             <ExerciseCard key={index} exercise={exercise} />
           ))}
+        </div>
+
+        <div className="text-center">
+          <Link href="/exercises">
+            <Button variant="secondary">View All Exercises</Button>
+          </Link>
         </div>
       </div>
 

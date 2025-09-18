@@ -41,7 +41,7 @@ const defaultConfig: Config = {
   numberVariations: 8,
 };
 
-const ShortTermMemoryGridPage = () => {
+const GridMemoryPage = () => {
   const router = useRouter();
 
   // Configuration state
@@ -60,7 +60,7 @@ const ShortTermMemoryGridPage = () => {
       <Breadcrumb>
         <BreadcrumbItem label="Home" href="/" />
         <BreadcrumbItem label="Exercises" href="/exercises" />
-        <BreadcrumbItem label="Scanning" href="/exercises/grid-memory" />
+        <BreadcrumbItem label="Grid Memory" href="/exercises/grid-memory" />
       </Breadcrumb>
 
       <section className="space-y-10">
@@ -294,4 +294,4 @@ const ShortTermMemoryGridPage = () => {
   );
 };
 
-export default ShortTermMemoryGridPage;
+export default GridMemoryPage;

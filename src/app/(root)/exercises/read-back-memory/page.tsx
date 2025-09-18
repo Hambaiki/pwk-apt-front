@@ -7,18 +7,23 @@ import {
 import { Card } from "@/components/ui";
 import MainSection from "@/components/content/MainSection";
 
-const AboutPage = () => {
+const ReadBackMemoryPage = () => {
   return (
     <MainSection>
       <Breadcrumb>
         <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="About" href="/about" />
+        <BreadcrumbItem label="Exercise" href="/exercises" />
+        <BreadcrumbItem
+          label="Read Back Memory"
+          href="/exercises/read-back-memory"
+        />
       </Breadcrumb>
 
       <HeaderCard>
-        <HeaderCardTitle>About Us</HeaderCardTitle>
+        <HeaderCardTitle>Read Back Memory</HeaderCardTitle>
         <HeaderCardDescription>
-          Learn more about our mission and values.
+          Test your ability to remember and repeat back a sequence of numbers
+          and letters.
         </HeaderCardDescription>
       </HeaderCard>
 
@@ -34,10 +39,10 @@ const AboutPage = () => {
 };
 
 export const metadata = {
-  title: "About | APT-PWK",
+  title: "Read Back Memory | APT-PWK",
   description:
-    "Learn more about APT-PWK, a platform dedicated to helping you improve your aptitude skills through interactive exercises.",
+    "Test your ability to remember and repeat back a sequence of numbers and letters.",
   keywords: ["about", "pwk-apt", "aptitude", "exercises"],
 };
 
-export default AboutPage;
+export default ReadBackMemoryPage;

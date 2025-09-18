@@ -18,8 +18,14 @@ export default function ExerciseCard({ exercise }: ExerciseCardProps) {
         size="lg"
         className="group p-0 h-full overflow-hidden transition-shadow"
       >
-        <div className="flex items-center justify-center h-56 w-full bg-gradient-to-br from-primary-500 to-primary-400">
+        <div className="relative flex items-center justify-center h-56 w-full bg-gradient-to-br from-primary-500 to-primary-400">
           <exercise.icon className="group-hover:scale-110 transition-transform duration-300 w-32 h-32 text-white" />
+
+          {exercise.tag && (
+            <div className="absolute top-3 right-3 px-2 py-1 bg-warning-500 text-xs font-semibold text-white rounded-full">
+              {exercise.tag.replace(/-/g, " ").toUpperCase()}
+            </div>
+          )}
         </div>
 
         <div className="p-4">

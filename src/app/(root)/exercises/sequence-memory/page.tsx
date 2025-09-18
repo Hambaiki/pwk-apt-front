@@ -6,38 +6,36 @@ import {
 } from "@/components/content/HeaderCard";
 import { Card } from "@/components/ui";
 import MainSection from "@/components/content/MainSection";
+import SequenceMemoryExercise from "@/components/exercise/sequence-memory/SequenceMemoryExercise";
 
-const AboutPage = () => {
+const SequenceMemoryPage = () => {
   return (
     <MainSection>
       <Breadcrumb>
         <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="About" href="/about" />
+        <BreadcrumbItem label="Exercise" href="/exercises" />
+        <BreadcrumbItem
+          label="Sequence Memory"
+          href="/exercises/sequence-memory"
+        />
       </Breadcrumb>
 
       <HeaderCard>
-        <HeaderCardTitle>About Us</HeaderCardTitle>
+        <HeaderCardTitle>Sequence Memory</HeaderCardTitle>
         <HeaderCardDescription>
-          Learn more about our mission and values.
+          Test your ability to remember and recall sequences of colors.
         </HeaderCardDescription>
       </HeaderCard>
 
-      <Card className="text-center p-4 py-20">
-        <p>
-          <strong>Coming Soon...</strong>
-          <br />
-          Stay tuned for updates!
-        </p>
-      </Card>
+      <SequenceMemoryExercise />
     </MainSection>
   );
 };
 
 export const metadata = {
-  title: "About | APT-PWK",
-  description:
-    "Learn more about APT-PWK, a platform dedicated to helping you improve your aptitude skills through interactive exercises.",
+  title: "Sequence Memory | APT-PWK",
+  description: "Test your ability to remember and recall sequences of colors.",
   keywords: ["about", "pwk-apt", "aptitude", "exercises"],
 };
 
-export default AboutPage;
+export default SequenceMemoryPage;
