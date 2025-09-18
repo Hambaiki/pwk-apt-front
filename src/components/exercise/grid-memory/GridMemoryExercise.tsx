@@ -12,17 +12,24 @@ import { letterPool, numberPool, symbolPool } from "@/constants/exercises/grid";
 
 import { Config, GridItem, InputType } from "@/types/exercises/grid";
 
+import { cn } from "@/libs/utils";
+
 import { Trash } from "lucide-react";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-interface GridMemoryExerciseProps {
+interface GridMemoryExerciseProps extends React.HTMLAttributes<HTMLDivElement> {
   config: Config;
   grid: GridItem[][];
 }
 
-const GridMemoryExercise = ({ config, grid }: GridMemoryExerciseProps) => {
+const GridMemoryExercise = ({
+  config,
+  grid,
+  className,
+  ...props
+}: GridMemoryExerciseProps) => {
   const router = useRouter();
 
   const [isViewingHelp, setIsViewingHelp] = useState<boolean>(false);
@@ -111,7 +118,7 @@ const GridMemoryExercise = ({ config, grid }: GridMemoryExerciseProps) => {
   };
 
   return (
-    <>
+    <div {...props} className={cn("flex flex-col gap-y-4", className)}>
       <Toolbar
         isRunning={
           isTimerActive && (gameState === "memorize" || gameState === "input")
@@ -129,7 +136,6 @@ const GridMemoryExercise = ({ config, grid }: GridMemoryExerciseProps) => {
 
       <Collapse isOpen={gameState === "result"}>
         <Score
-          className="mt-4"
           answerCount={
             Object.keys(
               userGrid.flatMap((row) => row).filter((cell) => cell.value !== "")
@@ -159,30 +165,37 @@ const GridMemoryExercise = ({ config, grid }: GridMemoryExerciseProps) => {
 
           <div className="grid grid-cols-5 gap-2 mx-auto">
             {(gameState === "memorize" ? grid : userGrid).map((row, rowIndex) =>
-              row.map((cell, colIndex) => (
-                <GridCell
-                  item={cell}
-                  key={`${rowIndex}-${colIndex}`}
-                  variant={
-                    gameState === "input" &&
-                    currentCell.row === rowIndex &&
-                    currentCell.col === colIndex
-                      ? "active"
-                      : gameState === "result"
-                      ? userGrid[rowIndex][colIndex].type === InputType.EMPTY
-                        ? "unanswered"
-                        : userGrid[rowIndex][colIndex].value ===
-                          grid[rowIndex][colIndex].value
-                        ? "correct"
-                        : "incorrect"
-                      : "default"
-                  }
-                  onClick={() =>
-                    gameState === "input" &&
-                    setCurrentCell({ row: rowIndex, col: colIndex })
-                  }
-                />
-              ))
+              row.map((cell, colIndex) => {
+                const userCell = userGrid[rowIndex][colIndex];
+                const gridCell = grid[rowIndex][colIndex];
+
+                const isActive =
+                  gameState === "input" &&
+                  currentCell.row === rowIndex &&
+                  currentCell.col === colIndex;
+
+                return (
+                  <GridCell
+                    item={cell}
+                    key={`${rowIndex}-${colIndex}`}
+                    variant={
+                      isActive
+                        ? "active"
+                        : gameState === "result"
+                        ? userCell.type === InputType.EMPTY
+                          ? "unanswered"
+                          : userCell.value === gridCell.value
+                          ? "correct"
+                          : "incorrect"
+                        : "default"
+                    }
+                    onClick={() =>
+                      gameState === "input" &&
+                      setCurrentCell({ row: rowIndex, col: colIndex })
+                    }
+                  />
+                );
+              })
             )}
           </div>
         </div>
@@ -252,7 +265,7 @@ const GridMemoryExercise = ({ config, grid }: GridMemoryExerciseProps) => {
           </Card>
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 };
 

@@ -25,7 +25,7 @@ import { cn } from "@/libs/utils";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-interface ComparisonExerciseProps {
+interface ComparisonExerciseProps extends React.HTMLAttributes<HTMLDivElement> {
   items: ComparisonItem[];
   config?: Config;
 }
@@ -33,6 +33,8 @@ interface ComparisonExerciseProps {
 const ComparisonExercise = ({
   items,
   config = defaultConfig,
+  className,
+  ...props
 }: ComparisonExerciseProps) => {
   const router = useRouter();
 
@@ -78,7 +80,7 @@ const ComparisonExercise = ({
   };
 
   return (
-    <>
+    <div {...props} className={cn("flex flex-col gap-y-4", className)}>
       <Toolbar
         isRunning={isTimerActive && !isComplete}
         isComplete={isComplete}
@@ -92,7 +94,6 @@ const ComparisonExercise = ({
 
       <Collapse isOpen={isComplete}>
         <Score
-          className="mt-4"
           answerCount={Object.keys(answers).length}
           correctCount={correctAnswerCount}
           totalCount={items.length}
@@ -233,7 +234,7 @@ const ComparisonExercise = ({
           <HowToCard />
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 };
 
