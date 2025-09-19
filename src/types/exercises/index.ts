@@ -1,3 +1,5 @@
+import { GenericNavigationItem } from "@/types";
+
 export enum Choice {
   A = "A",
   B = "B",
@@ -13,10 +15,4 @@ export enum ExerciseTag {
   ComingSoon = "coming-soon",
 }
 
-export interface Exercise {
-  title: string;
-  description: string;
-  href: string;
-  tag?: ExerciseTag;
-  icon: React.ElementType;
-}
+export interface Exercise extends GenericNavigationItem<ExerciseTag> {}

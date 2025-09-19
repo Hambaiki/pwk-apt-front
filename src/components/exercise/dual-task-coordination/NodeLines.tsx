@@ -1,5 +1,8 @@
 "use client";
 
+import { Button, Card, Input } from "@/components/ui";
+import { randomInt } from "@/utils/common";
+
 import React, { useEffect, useState } from "react";
 
 type Node = { x: number; y: number };
@@ -32,9 +35,6 @@ const defaultConfig: Config = {
   svgPadding: 20,
 };
 
-const randInt = (min: number, max: number) =>
-  Math.floor(Math.random() * (max - min + 1)) + min;
-
 export default function NodeLines() {
   const [config, setConfig] = useState<Config>(defaultConfig);
 
@@ -66,7 +66,7 @@ export default function NodeLines() {
       nodes.push({ x: currentX, y: currentY });
 
       for (let i = 1; i < config.countPerLine; i++) {
-        const wig = randInt(-config.wiggle, config.wiggle);
+        const wig = randomInt(-config.wiggle, config.wiggle);
 
         if (config.orientation === "horizontal") {
           currentX += config.step; // advance horizontally
@@ -127,34 +127,9 @@ export default function NodeLines() {
   };
 
   return (
-    <div>
-      <style>{`
-        @media print {
-            @page {
-                size: A4 landscape;
-                margin: 0;
-            }
-            body * {
-                visibility: hidden;
-            }
-            #print-area, #print-area * {
-                visibility: visible;
-            }
-            #print-area {
-                position: absolute;
-                inset: 0;
-                width: 100vw;
-                height: 100vh;
-                }
-                #print-area svg {
-                width: 100%;
-                height: 100%;
-            }
-        }
-    `}</style>
-
-      <div className="no-print mb-4 flex flex-wrap gap-3 items-center">
-        <label>
+    <div className="flex flex-col gap-4">
+      <Card className="space-y-4">
+        <label className="flex flex-col">
           Orientation:
           <select
             value={config.orientation}
@@ -164,102 +139,87 @@ export default function NodeLines() {
                 e.target.value as "horizontal" | "vertical"
               )
             }
-            className="ml-2 border p-1"
+            className="border rounded px-2 py-1"
           >
             <option value="horizontal">Horizontal</option>
             <option value="vertical">Vertical</option>
           </select>
         </label>
 
-        <label>
-          Lines:
-          <input
-            type="number"
-            min={1}
-            value={config.lineCount}
-            onChange={(e) => handleChange("lineCount", Number(e.target.value))}
-            className="ml-2 w-20 border p-1"
-          />
-        </label>
+        <div className="flex flex-wrap gap-3 items-center">
+          <label className="flex flex-col">
+            Lines:
+            <Input
+              type="number"
+              min={1}
+              value={config.lineCount}
+              onChange={(e) =>
+                handleChange("lineCount", Number(e.target.value))
+              }
+            />
+          </label>
 
-        <label>
-          Nodes / line:
-          <input
-            type="number"
-            min={1}
-            value={config.countPerLine}
-            onChange={(e) =>
-              handleChange("countPerLine", Number(e.target.value))
-            }
-            className="ml-2 w-20 border p-1"
-          />
-        </label>
+          <label className="flex flex-col">
+            Nodes / line:
+            <Input
+              type="number"
+              min={1}
+              value={config.countPerLine}
+              onChange={(e) =>
+                handleChange("countPerLine", Number(e.target.value))
+              }
+            />
+          </label>
 
-        <label>
-          Step:
-          <input
-            type="number"
-            value={config.step}
-            onChange={(e) => handleChange("step", Number(e.target.value))}
-            className="ml-2 w-20 border p-1"
-          />
-        </label>
+          <label className="flex flex-col">
+            Step:
+            <Input
+              type="number"
+              value={config.step}
+              onChange={(e) => handleChange("step", Number(e.target.value))}
+            />
+          </label>
 
-        <label>
-          Line gap:
-          <input
-            type="number"
-            value={config.lineGap}
-            onChange={(e) => handleChange("lineGap", Number(e.target.value))}
-            className="ml-2 w-20 border p-1"
-          />
-        </label>
+          <label className="flex flex-col">
+            Line gap:
+            <Input
+              type="number"
+              value={config.lineGap}
+              onChange={(e) => handleChange("lineGap", Number(e.target.value))}
+            />
+          </label>
 
-        <label>
-          Wiggle:
-          <input
-            type="number"
-            value={config.wiggle}
-            onChange={(e) => handleChange("wiggle", Number(e.target.value))}
-            className="ml-2 w-20 border p-1"
-          />
-        </label>
+          <label className="flex flex-col">
+            Wiggle:
+            <Input
+              type="number"
+              value={config.wiggle}
+              onChange={(e) => handleChange("wiggle", Number(e.target.value))}
+            />
+          </label>
 
-        <label>
-          Node radius:
-          <input
-            type="number"
-            value={config.nodeRadius}
-            onChange={(e) => handleChange("nodeRadius", Number(e.target.value))}
-            className="ml-2 w-20 border p-1"
-          />
-        </label>
+          <label className="flex flex-col">
+            Node radius:
+            <Input
+              type="number"
+              value={config.nodeRadius}
+              onChange={(e) =>
+                handleChange("nodeRadius", Number(e.target.value))
+              }
+            />
+          </label>
+        </div>
 
-        <button
-          onClick={generateLines}
-          className="ml-2 px-3 py-1 bg-blue-600 text-white rounded"
-        >
-          Generate
-        </button>
-
-        <button
-          onClick={() => window.print()}
-          className="ml-2 px-3 py-1 bg-green-600 text-white rounded"
-        >
-          Print
-        </button>
-
-        <button
-          onClick={() => setConfig(defaultConfig)}
-          className="ml-2 px-3 py-1 bg-gray-300 rounded"
-        >
-          Reset
-        </button>
-      </div>
+        <div className="flex flex-wrap justify-end gap-3 items-center">
+          <Button variant="secondary" onClick={() => setConfig(defaultConfig)}>
+            Reset Configuration
+          </Button>
+          <Button onClick={generateLines}>Generate</Button>
+        </div>
+      </Card>
 
       <div className="flex flex-col items-center p-6 border rounded-xl bg-white overflow-auto">
         <svg
-          id="print-area"
           viewBox={`${vb.x} ${vb.y} ${vb.w} ${vb.h}`}
           width={vb.w}
           height={vb.h}

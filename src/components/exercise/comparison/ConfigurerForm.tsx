@@ -147,7 +147,11 @@ export default function ConfigurerForm({ onSubmit }: ConfigurerFormProps) {
 
       {/* Start Button */}
       <div className="flex justify-end gap-4 mt-6">
-        <Button variant="secondary" onClick={() => setConfig(defaultConfig)}>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => setConfig(defaultConfig)}
+        >
           <RefreshCcw size={20} className="mr-2" />
           Reset Configuration
         </Button>

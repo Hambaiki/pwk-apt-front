@@ -50,7 +50,7 @@ export function Footer({ className }: FooterProps) {
 
       {/* Bottom bar */}
       <div className="mt-8 pt-4 text-center text-xs text-text-secondary">
-        {new Date().getFullYear()} Aptitude Exercise. Powered by Next.js and
+        {new Date().getFullYear()} APT-PWK. Powered by Next.js and
         Tailwind CSS.
       </div>
     </footer>

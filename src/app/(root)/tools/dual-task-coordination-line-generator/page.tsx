@@ -1,5 +1,3 @@
-"use client";
-
 import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
@@ -9,45 +7,27 @@ import {
 import { Card } from "@/components/ui";
 import MainSection from "@/components/content/MainSection";
 import HowToCard from "@/components/exercise/dual-task-coordination/HowToCard";
-import ConfigurerForm from "@/components/exercise/dual-task-coordination/ConfigurerForm";
-
-import { Config } from "@/types/exercises/dual-task-coordination";
-
-import { generateSearchParams } from "@/libs/router";
+import NodeLines from "@/components/exercise/dual-task-coordination/NodeLines";
 
 import { Cog, Info } from "lucide-react";
 
-import { useRouter } from "next/navigation";
-
 const DualTaskCoordinationPage = () => {
-  const router = useRouter();
-
-  function handleStart(config: Config) {
-    const uniqueKey = Math.random().toString(36).substring(2, 10);
-    const searchParams = generateSearchParams({
-      config: JSON.stringify({ ...config, key: uniqueKey }),
-    });
-    router.push(
-      `/exercises/dual-task-coordination/questions?${searchParams.toString()}`
-    );
-  }
-
   return (
     <MainSection>
       <Breadcrumb>
         <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="Exercise" href="/exercises" />
+        <BreadcrumbItem label="Tools" href="/tools" />
         <BreadcrumbItem
           label="Dual Task Coordination"
-          href="/exercises/dual-task-coordination"
+          href="/tools/dual-task-coordination-line-generator"
         />
       </Breadcrumb>
 
       <HeaderCard>
-        <HeaderCardTitle>Dual Task Coordination</HeaderCardTitle>
+        <HeaderCardTitle>Dual Task Coordination Line Generator</HeaderCardTitle>
         <HeaderCardDescription>
-          Test your ability to manage and perform two tasks simultaneously.
-          Coordinate both hands while answering questions
+          Generate custom dual task coordination lines for practice and
+          training.
         </HeaderCardDescription>
       </HeaderCard>
 
@@ -57,22 +37,32 @@ const DualTaskCoordinationPage = () => {
           Introduction
         </h2>
         <p>
-          This exercise will help you improve your ability to manage and perform
-          two tasks simultaneously. Follow the instructions carefully and
-          coordinate both hands while answering questions.
+          This tool allows you to create personalized dual task coordination
+          lines. Customize the parameters to generate lines that suit your
+          training needs.
         </p>
-        <HowToCard />
       </div>
+
+      <Card variant="info" className="space-y-4">
+        <ol className="list-disc list-inside space-y-2">
+          <li>Adjust the configuration settings to your preference.</li>
+          <li>Click &quot;Generate Lines&quot; to create a new set of lines.</li>
+          <li>Use the SVG output for your dual task coordination exercises.</li>
+          <li>
+            Reset to default settings anytime using the &quot;Reset Configuration&quot;
+            button.
+          </li>
+        </ol>
+      </Card>
 
       <div className="space-y-4">
         <h2 className="flex items-center gap-2">
           <Cog size={32} />
-          Exercise Configuration
+          Configuration
         </h2>
-        <p>Adjust the settings below to customize your exercise experience.</p>
-        <Card>
-          <ConfigurerForm onSubmit={handleStart} />
-        </Card>
+        <p>Adjust the settings below for the line generator.</p>
+
+        <NodeLines />
       </div>
     </MainSection>
   );

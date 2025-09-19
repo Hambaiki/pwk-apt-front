@@ -11,9 +11,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { exercises } from "@/constants/common/exercise";
 import { benefits, howItWorks } from "@/constants/home";
 
-import { PenSquareIcon } from "lucide-react";
+import { Cog, PenSquareIcon } from "lucide-react";
 
 import Link from "next/link";
+import { ToolCard } from "@/components/tool/ToolCard";
+import { tools } from "@/constants/tools";
 
 export default function HomePage() {
   return (
@@ -84,7 +86,7 @@ export default function HomePage() {
       <div className="space-y-6">
         <div className="space-y-2">
           <h2 className="flex items-center gap-2">
-            <PenSquareIcon className="w-6 h-6" />
+            <PenSquareIcon size={30} />
             Exercises
           </h2>
           <p>Explore different areas to improve your skills.</p>
@@ -99,6 +101,29 @@ export default function HomePage() {
         <div className="text-center">
           <Link href="/exercises">
             <Button variant="secondary">View All Exercises</Button>
+          </Link>
+        </div>
+      </div>
+
+      {/* Tools Section */}
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h2 className="flex items-center gap-2">
+            <Cog size={30} />
+            Tools
+          </h2>
+          <p>Collection of tools to assist you in your learning journey.</p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {tools.slice(0, 6).map((tool, index) => (
+            <ToolCard key={index} tool={tool} />
+          ))}
+        </div>
+
+        <div className="text-center">
+          <Link href="/tools">
+            <Button variant="secondary">View All Tools </Button>
           </Link>
         </div>
       </div>

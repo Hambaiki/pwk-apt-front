@@ -6,9 +6,19 @@ import {
 } from "@/constants/exercises/dual-task-coordination/pool";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Play, Pause, RotateCcw, Settings } from "lucide-react";
+import { Play, Pause, RotateCcw, Settings, Hand } from "lucide-react";
+import { Config } from "@/types/exercises/dual-task-coordination";
+import { defaultConfig } from "@/constants/exercises/dual-task-coordination";
+import HowToCard from "./HowToCard";
+import { cn } from "@/libs/utils";
 
-const DualTaskCoordinationExercise = () => {
+interface DualTaskCoordinationExerciseProps {
+  config?: Config;
+}
+
+const DualTaskCoordinationExercise = ({
+  config = defaultConfig,
+}: DualTaskCoordinationExerciseProps) => {
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(300); // 5 minutes default
@@ -28,7 +38,6 @@ const DualTaskCoordinationExercise = () => {
   const [exerciseDuration, setExerciseDuration] = useState(300);
   const [totalQuestions, setTotalQuestions] = useState(20);
   const [questionTime, setQuestionTime] = useState(15);
-  const [showSettings, setShowSettings] = useState(false);
 
   const intervalRef: React.MutableRefObject<NodeJS.Timeout | null> =
     useRef(null);
@@ -366,63 +375,6 @@ const DualTaskCoordinationExercise = () => {
   return (
     <div className="">
       {/* Settings Panel */}
-      {showSettings && (
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <h3 className="text-lg font-semibold mb-4">Settings</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Exercise Duration (seconds)
-              </label>
-              <input
-                type="number"
-                value={exerciseDuration}
-                onChange={(e) => setExerciseDuration(Number(e.target.value))}
-                className="w-full p-2 border rounded"
-                min="60"
-                max="1800"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Total Questions
-              </label>
-              <input
-                type="number"
-                value={totalQuestions}
-                onChange={(e) => setTotalQuestions(Number(e.target.value))}
-                className="w-full p-2 border rounded"
-                min="5"
-                max="100"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Question Time Limit (seconds)
-              </label>
-              <input
-                type="number"
-                value={questionTime}
-                onChange={(e) => setQuestionTime(Number(e.target.value))}
-                className="w-full p-2 border rounded"
-                min="5"
-                max="60"
-              />
-            </div>
-            <div className="flex items-center">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={symbolMode}
-                  onChange={(e) => setSymbolMode(e.target.checked)}
-                  className="mr-2"
-                />
-                Symbol Target Mode
-              </label>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Status Bar */}
       <div className="grid grid-cols-4 gap-4 mb-6 text-center">
@@ -455,7 +407,7 @@ const DualTaskCoordinationExercise = () => {
         <h3 className="text-lg font-semibold mb-4 text-center">
           Hand Coordination
         </h3>
-        {renderNodes(
+        {/* {renderNodes(
           leftHandPosition,
           "left",
           activeHand === "left" && isRunning
@@ -464,18 +416,31 @@ const DualTaskCoordinationExercise = () => {
           rightHandPosition,
           "right",
           activeHand === "right" && isRunning
-        )}
+        )} */}
 
         <div className="text-center mt-4">
-          <div className="text-sm text-gray-600">
-            Active Hand:{" "}
-            <span
-              className={`font-bold ${
-                activeHand === "left" ? "text-blue-600" : "text-red-600"
-              }`}
-            >
-              {activeHand.toUpperCase()} HAND
-            </span>
+          Active Hand {/* Left hand */}
+          <div className="flex justify-center items-center space-x-12">
+            <div className="space-y-2">
+              <Hand
+                size={64}
+                className={cn(
+                  "transition-colors",
+                  activeHand === "left" ? "text-blue-500" : "text-blue-200"
+                )}
+              />
+              <p>Left Hand</p>
+            </div>
+            <div className="space-y-2">
+              <Hand
+                size={64}
+                className={cn(
+                  "transition-colors",
+                  activeHand === "right" ? "text-red-500" : "text-red-200"
+                )}
+              />
+              <p>Right Hand</p>
+            </div>
           </div>
         </div>
       </div>
@@ -523,32 +488,10 @@ const DualTaskCoordinationExercise = () => {
           <RotateCcw size={20} />
           <span>Reset</span>
         </button>
-
-        <button
-          onClick={() => setShowSettings(!showSettings)}
-          className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
-        >
-          <Settings size={20} />
-          <span>Settings</span>
-        </button>
       </div>
 
       {/* Instructions */}
-      <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg text-sm">
-        <h4 className="font-semibold mb-2">Instructions:</h4>
-        <ul className="space-y-1 text-gray-700">
-          <li>
-            • Follow the rhythm and alternate between left and right hand
-            movements
-          </li>
-          <li>• Answer questions verbally within the time limit</li>
-          <li>• In symbol mode, point to the target symbol with each hand</li>
-          <li>
-            • Exercise ends when time runs out or all questions are completed
-          </li>
-          <li>• Tempo will vary to increase difficulty</li>
-        </ul>
-      </div>
+      <HowToCard />
     </div>
   );
 };

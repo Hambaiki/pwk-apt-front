@@ -91,9 +91,9 @@ export function generateWords(
   options: Partial<GenerationOptions> = {}
 ): GenerationResult {
   const { length = 1 } = options;
-  const generatedWords = generate({ exactly: length, join: "," });
+  const generatedWords = generate(length);
   return {
-    base: generatedWords.split(","),
+    base: generatedWords instanceof Array ? generatedWords : [generatedWords],
     generationType: GenerationType.WORDS,
   };
 }
@@ -153,11 +153,7 @@ export function mutateInsert(options: MutationOptions): MutationResult {
     const candidates = generatorHandlers[generationType]().base;
     toAdd = candidates.length > 0 ? candidates[0] : undefined;
   }
-  mutatedBase.splice(
-    index,
-    0,
-    toAdd.length > 0 ? toAdd[0] : mutatedBase[index]
-  );
+  mutatedBase.splice(index, 0, toAdd ? toAdd : mutatedBase[index]);
   return {
     base: base,
     mutatedBase: mutatedBase,
@@ -191,4 +187,28 @@ export function mutateReplace(options: MutationOptions): MutationResult {
     mutatedBase: mutatedBase,
     mutationType: MutationType.REPLACE,
   };
+}
+
+function mergeMutations(mutations: MutationResult[]): MutationResult[] {
+  const merged: MutationResult[] = [];
+  for (let i = 0; i < mutations.length; i++) {
+    const curr = mutations[i];
+    const next = mutations[i + 1];
+
+    if (
+      curr.mutationType === MutationType.DELETE &&
+      next?.mutationType === MutationType.INSERT
+    ) {
+      // Merge into replace
+      merged.push({
+        base: curr.base,
+        mutatedBase: next.mutatedBase,
+        mutationType: MutationType.REPLACE,
+      });
+      i++; // skip next
+    } else {
+      merged.push(curr);
+    }
+  }
+  return merged;
 }

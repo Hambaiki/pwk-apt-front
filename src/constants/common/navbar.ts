@@ -21,6 +21,12 @@ export const navbarItems: Record<
     icon: File,
     check: (path: string) => path.startsWith("/exercises"),
   },
+  tools: {
+    label: "Tools",
+    href: "/tools",
+    icon: Info,
+    check: (path: string) => path.startsWith("/tools"),
+  },
 } as const;
 
 export const additionalNavbarItems: Record<

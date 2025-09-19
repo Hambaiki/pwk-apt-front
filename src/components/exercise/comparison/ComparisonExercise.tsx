@@ -205,7 +205,7 @@ const ComparisonExercise = ({
                           <code>
                             {isWords
                               ? mutation.mutatedBase.join(", ")
-                              : mutation.mutatedBase}
+                              : mutation.mutatedBase.join(" ")}
                           </code>
                         </li>
                       );
