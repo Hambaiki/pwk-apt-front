@@ -95,6 +95,10 @@ const GridMemoryExercisePage = ({
         <BreadcrumbItem label="Home" href="/" />
         <BreadcrumbItem label="Exercises" href="/exercises" />
         <BreadcrumbItem label="Grid Memory" href="/exercises/grid-memory" />
+        <BreadcrumbItem
+          label="Questions"
+          href="/exercises/grid-memory/questions"
+        />
       </Breadcrumb>
 
       <HeaderCard>

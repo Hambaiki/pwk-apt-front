@@ -32,6 +32,10 @@ const ComparisonExerciseQuestionPage = ({
         <BreadcrumbItem label="Home" href="/" />
         <BreadcrumbItem label="Exercises" href="/exercises" />
         <BreadcrumbItem label="Comparison" href="/exercises/comparison" />
+        <BreadcrumbItem
+          label="Questions"
+          href="/exercises/comparison/questions"
+        />
       </Breadcrumb>
 
       <HeaderCard>

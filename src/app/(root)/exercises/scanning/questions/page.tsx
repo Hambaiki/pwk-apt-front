@@ -136,6 +136,10 @@ const ScanningExerciseQuestionPage = ({
         <BreadcrumbItem label="Home" href="/" />
         <BreadcrumbItem label="Exercises" href="/exercises" />
         <BreadcrumbItem label="Scanning" href="/exercises/scanning" />
+        <BreadcrumbItem
+          label="Questions"
+          href="/exercises/scanning/questions"
+        />
       </Breadcrumb>
 
       <HeaderCard>

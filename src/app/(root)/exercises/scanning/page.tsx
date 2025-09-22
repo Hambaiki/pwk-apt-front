@@ -139,9 +139,9 @@ const ScanningExercisePage = () => {
           <Card className="space-y-4">
             <h3>Preferences</h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="flex flex-col text-sm font-medium text-gray-700">
                   Number of Items
                   <Input
                     type="number"
@@ -164,7 +164,7 @@ const ScanningExercisePage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="flex flex-col text-sm font-medium text-gray-700 mb-2">
                   Number of Questions
                   <Input
                     type="number"
@@ -187,7 +187,7 @@ const ScanningExercisePage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="flex flex-col text-sm font-medium text-gray-700 mb-2">
                   Time Limit (seconds)
                   <Input
                     type="number"
@@ -202,7 +202,7 @@ const ScanningExercisePage = () => {
                 </label>
               </div>
 
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="flex flex-col text-sm font-medium text-gray-700 mb-2">
                 Monotone Mode
                 <div className="flex items-center mt-2">
                   <Input
@@ -223,7 +223,7 @@ const ScanningExercisePage = () => {
                 </p>
               </label>
 
-              <div className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="flex flex-col text-sm font-medium text-gray-700 mb-2">
                 Shapes to Include
                 <div className="flex flex-wrap gap-3 mt-2">
                   {shapes.map((shape) => (

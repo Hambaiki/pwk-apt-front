@@ -11,6 +11,11 @@ import { Config } from "@/types/exercises/dual-task-coordination";
 import { defaultConfig } from "@/constants/exercises/dual-task-coordination";
 import HowToCard from "./HowToCard";
 import { cn } from "@/libs/utils";
+import { formatTime } from "@/libs/time";
+import { Button, Card } from "@/components/ui";
+import Toolbar from "../Toolbar";
+
+const baseTempo = 80; // BPM
 
 interface DualTaskCoordinationExerciseProps {
   config?: Config;
@@ -30,7 +35,7 @@ const DualTaskCoordinationExercise = ({
   const [leftDirection, setLeftDirection] = useState(1);
   const [rightDirection, setRightDirection] = useState(1);
   const [activeHand, setActiveHand] = useState("left"); // which hand moves next
-  const [tempo, setTempo] = useState(120); // BPM
+  const [tempo, setTempo] = useState(baseTempo); // BPM
   const [symbolMode, setSymbolMode] = useState(false);
   const [targetSymbols, setTargetSymbols] = useState({ left: "", right: "" });
 
@@ -294,9 +299,10 @@ const DualTaskCoordinationExercise = ({
   useEffect(() => {
     if (isRunning) {
       const tempoChange = setInterval(() => {
-        setTempo((prev) => {
+        setTempo(() => {
           const variation = Math.random() * 40 - 20; // ±20 BPM variation
-          const newTempo = Math.max(80, Math.min(160, prev + variation));
+          // const newTempo = Math.max(80, Math.min(160, prev + variation));
+          const newTempo = Math.max(60, Math.min(120, baseTempo + variation));
           return Math.round(newTempo);
         });
       }, 10000); // Change tempo every 10 seconds
@@ -313,97 +319,40 @@ const DualTaskCoordinationExercise = ({
           left: symbols[Math.floor(Math.random() * symbols.length)],
           right: symbols[Math.floor(Math.random() * symbols.length)],
         });
-      }, 15000); // Change symbols every 15 seconds
+      }, 30000); // Change symbols every 30 seconds
 
       return () => clearInterval(symbolChange);
     }
   }, [symbolMode, isRunning]);
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  const renderNodes = (
-    position: number,
-    hand: "left" | "right",
-    isActive: boolean
-  ) => {
-    return (
-      <div className="flex items-center space-x-4 mb-6">
-        <span
-          className={`text-sm font-medium w-12 ${
-            hand === "left" ? "text-blue-600" : "text-red-600"
-          }`}
-        >
-          {hand.toUpperCase()}
-        </span>
-        <div className="flex space-x-2">
-          {Array.from({ length: nodeCount }, (_, i) => (
-            <div
-              key={i}
-              className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-bold transition-all duration-150 ${
-                i === position && isActive
-                  ? hand === "left"
-                    ? "bg-blue-500 border-blue-600 text-white shadow-lg scale-110"
-                    : "bg-red-500 border-red-600 text-white shadow-lg scale-110"
-                  : i === position
-                  ? hand === "left"
-                    ? "bg-blue-200 border-blue-400 text-blue-800"
-                    : "bg-red-200 border-red-400 text-red-800"
-                  : "bg-gray-100 border-gray-300 text-gray-500"
-              }`}
-            >
-              {i + 1}
-            </div>
-          ))}
-        </div>
-        {symbolMode && (
-          <div
-            className={`ml-4 text-lg font-bold ${
-              hand === "left" ? "text-blue-600" : "text-red-600"
-            }`}
-          >
-            Target: {targetSymbols[hand]}
-          </div>
-        )}
-      </div>
-    );
-  };
 
   return (
     <div className="">
       {/* Settings Panel */}
 
       {/* Status Bar */}
-      <div className="grid grid-cols-4 gap-4 mb-6 text-center">
-        <div className="bg-blue-50 p-3 rounded-lg">
-          <div className="text-2xl font-bold text-blue-600">
-            {formatTime(timeRemaining)}
-          </div>
-          <div className="text-sm text-gray-600">Time Left</div>
+      <Toolbar timerLimit={timeRemaining} className="space-y-3 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+          <Card className="flex flex-col justify-center items-center bg-green-50 p-3 rounded-lg">
+            <div className="text-2xl font-bold text-green-600">
+              {questionsRemaining}
+            </div>
+            <div className="text-sm text-gray-600">Questions Left</div>
+          </Card>
+          <Card className="flex flex-col justify-center items-center bg-orange-50 p-3 rounded-lg">
+            <div className="text-2xl font-bold text-orange-600">
+              {formatTime(questionTimeLeft)}
+            </div>
+            <div className="text-sm text-gray-600">Question Time</div>
+          </Card>
+          <Card className="flex flex-col justify-center items-center bg-purple-50 p-3 rounded-lg">
+            <div className="text-2xl font-bold text-purple-600">{tempo}</div>
+            <div className="text-sm text-gray-600">BPM</div>
+          </Card>
         </div>
-        <div className="bg-green-50 p-3 rounded-lg">
-          <div className="text-2xl font-bold text-green-600">
-            {questionsRemaining}
-          </div>
-          <div className="text-sm text-gray-600">Questions Left</div>
-        </div>
-        <div className="bg-purple-50 p-3 rounded-lg">
-          <div className="text-2xl font-bold text-purple-600">{tempo}</div>
-          <div className="text-sm text-gray-600">BPM</div>
-        </div>
-        <div className="bg-orange-50 p-3 rounded-lg">
-          <div className="text-2xl font-bold text-orange-600">
-            {questionTimeLeft}
-          </div>
-          <div className="text-sm text-gray-600">Question Time</div>
-        </div>
-      </div>
+      </Toolbar>
 
       {/* Node Lines */}
-      <div className="bg-gray-50 p-6 rounded-lg mb-6">
+      <Card className="mb-6">
         <h3 className="text-lg font-semibold mb-4 text-center">
           Hand Coordination
         </h3>
@@ -443,7 +392,7 @@ const DualTaskCoordinationExercise = ({
             </div>
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Question Display */}
       {currentQuestion && (
@@ -464,30 +413,30 @@ const DualTaskCoordinationExercise = ({
       {/* Controls */}
       <div className="flex justify-center space-x-4 mb-6">
         {!isRunning ? (
-          <button
+          <Button
             onClick={startExercise}
             className="flex items-center space-x-2 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
           >
             <Play size={20} />
             <span>{isPaused ? "Resume" : "Start"}</span>
-          </button>
+          </Button>
         ) : (
-          <button
+          <Button
             onClick={pauseExercise}
             className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
           >
             <Pause size={20} />
             <span>Pause</span>
-          </button>
+          </Button>
         )}
 
-        <button
+        <Button
           onClick={resetExercise}
           className="flex items-center space-x-2 bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
         >
           <RotateCcw size={20} />
           <span>Reset</span>
-        </button>
+        </Button>
       </div>
 
       {/* Instructions */}

@@ -94,6 +94,69 @@ export default function NodeLines() {
     return { x: vbX, y: vbY, w: vbW, h: vbH };
   };
 
+  const handleGenerate = () => {
+    const newLines = generateLines();
+    if (newLines) {
+      setLines(newLines);
+      const newVb = computeViewBox(newLines);
+      setViewBox(newVb);
+    }
+  };
+
+  const handleChangeConfig = (
+    key: keyof Config,
+    value: string | number | string[] | Shape[]
+  ) => {
+    setConfig((prev) => ({ ...prev, [key]: value } as Config));
+  };
+
+  const handleDownloadImage = async () => {
+    if (!svgRef.current) return;
+
+    const serializer = new XMLSerializer();
+    const svgString = serializer.serializeToString(svgRef.current);
+
+    // Convert SVG string to a Blob
+    const svgBlob = new Blob([svgString], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+    const svgUrl = URL.createObjectURL(svgBlob);
+
+    const img = new Image();
+    img.onload = () => {
+      const scale = 3; // NOTE: change to 2, 3, 4 for higher resolution
+
+      // Use viewBox values instead of clientWidth/Height
+      const vb = svgRef.current!.viewBox.baseVal;
+      const width = vb.width * scale;
+      const height = vb.height * scale;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      // Draw scaled image
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Export as PNG
+      const pngUrl = canvas.toDataURL("image/png");
+
+      // Trigger download
+      const a = document.createElement("a");
+      a.href = pngUrl;
+      a.download = `node-lines-${Date.now()}.png`;
+      a.click();
+
+      // Cleanup
+      URL.revokeObjectURL(svgUrl);
+    };
+
+    img.src = svgUrl;
+  };
+
   const renderNodeShape = (
     shape: Shape,
     node: Node,
@@ -129,62 +192,6 @@ export default function NodeLines() {
     }
   };
 
-  const handleGenerate = () => {
-    const newLines = generateLines();
-    if (newLines) {
-      setLines(newLines);
-      const newVb = computeViewBox(newLines);
-      setViewBox(newVb);
-    }
-  };
-
-  const handleChangeConfig = (
-    key: keyof Config,
-    value: string | number | string[] | Shape[]
-  ) => {
-    setConfig((prev) => ({ ...prev, [key]: value } as Config));
-  };
-
-  const handleDownloadImage = async () => {
-    if (!svgRef.current) return;
-
-    const serializer = new XMLSerializer();
-    const svgString = serializer.serializeToString(svgRef.current);
-
-    // Convert SVG string to a Blob
-    const svgBlob = new Blob([svgString], {
-      type: "image/svg+xml;charset=utf-8",
-    });
-    const svgUrl = URL.createObjectURL(svgBlob);
-
-    const img = new Image();
-    img.onload = () => {
-      // Create a canvas same size as SVG
-      const canvas = document.createElement("canvas");
-      canvas.width = svgRef.current!.clientWidth;
-      canvas.height = svgRef.current!.clientHeight;
-
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      // Draw the image onto canvas
-      ctx.drawImage(img, 0, 0);
-
-      // Export as PNG
-      const pngUrl = canvas.toDataURL("image/png");
-
-      // Trigger download
-      const a = document.createElement("a");
-      a.href = pngUrl;
-      a.download = `node-lines-${Date.now()}.png`;
-      a.click();
-
-      // Cleanup
-      URL.revokeObjectURL(svgUrl);
-    };
-    img.src = svgUrl;
-  };
-
   return (
     <div className="flex flex-col gap-6">
       <Card className="space-y-4">
@@ -217,8 +224,8 @@ export default function NodeLines() {
                     handleChangeConfig(
                       "shapes",
                       e.target.checked
-                        ? [...config.shapes, shape] // add
-                        : config.shapes.filter((s) => s !== shape) // remove
+                        ? [...config.shapes, shape]
+                        : config.shapes.filter((s) => s !== shape)
                     );
                   }}
                 />

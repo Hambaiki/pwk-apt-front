@@ -18,6 +18,10 @@ const DualTaskCoordinationPage = () => {
           label="Dual Task Coordination"
           href="/exercises/dual-task-coordination"
         />
+        <BreadcrumbItem
+          label="Questions"
+          href="/exercises/dual-task-coordination/questions"
+        />
       </Breadcrumb>
 
       <HeaderCard>
