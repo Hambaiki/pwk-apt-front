@@ -2,12 +2,12 @@ import * as React from "react";
 import { cn } from "@/libs/utils";
 
 export interface SelectProps
-  extends React.SelectHTMLAttributes<HTMLSelectElement> {}
+  extends React.SelectHTMLAttributes<HTMLOptionElement> {}
 
-export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
+export const Option = React.forwardRef<HTMLOptionElement, SelectProps>(
   ({ className, children, ...props }, ref) => {
     return (
-      <select
+      <option
         ref={ref}
         className={cn(
           "flex w-full rounded-lg border border-secondary-300 bg-background-primary px-3 py-2 text-sm placeholder-text-tertiary text-text-primary",
@@ -20,9 +20,9 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         {...props}
       >
         {children}
-      </select>
+      </option>
     );
   }
 );
 
-Select.displayName = "Select";
+Option.displayName = "Option";

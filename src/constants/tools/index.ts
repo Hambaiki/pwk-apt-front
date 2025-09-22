@@ -12,7 +12,7 @@ export const tools: Tool[] = [
   },
   {
     title: "Coming Soon...",
-    description: "More exercises are on the way!",
+    description: "More tools are on the way!",
     href: "",
     icon: CircleQuestionMark,
     tag: ToolTag.ComingSoon,

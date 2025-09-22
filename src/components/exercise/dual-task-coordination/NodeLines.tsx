@@ -1,45 +1,25 @@
 "use client";
 
-import { Button, Card, Input } from "@/components/ui";
+import { Button, Card, Input, Option, Select } from "@/components/ui";
+
+import { defaultConfig, defaultViewBox } from "@/constants/tools/node-line";
+
 import { randomInt } from "@/utils/common";
 
-import React, { useEffect, useState } from "react";
+import { Color, Config, Node, Shape, ViewBox } from "@/types/tools/node-line";
 
-type Node = { x: number; y: number };
+import { Download, LineSquiggle } from "lucide-react";
 
-type Config = {
-  orientation: "horizontal" | "vertical";
-  lineCount: number;
-  countPerLine: number;
-  startX: number;
-  startY: number;
-  step: number;
-  lineGap: number;
-  wiggle: number; // max +/- wiggle
-  nodeRadius: number;
-  strokeWidth: number;
-  svgPadding: number;
-};
-
-const defaultConfig: Config = {
-  orientation: "vertical",
-  lineCount: 2,
-  countPerLine: 20,
-  startX: 80,
-  startY: 100,
-  step: 50,
-  lineGap: 200,
-  wiggle: 70,
-  nodeRadius: 8,
-  strokeWidth: 2,
-  svgPadding: 20,
-};
+import React, { useRef, useState } from "react";
 
 export default function NodeLines() {
+  const svgRef = useRef<SVGSVGElement>(null);
+
+  const [viewBox, setViewBox] = useState<ViewBox>(defaultViewBox);
   const [config, setConfig] = useState<Config>(defaultConfig);
+  const [lines, setLines] = useState<Node[][] | undefined>();
 
-  const [lines, setLines] = useState<Node[][]>([]);
-
+  // NOTE: Generate lines based on current config
   const generateLines = () => {
     if (config.countPerLine <= 0 || config.lineCount <= 0) {
       setLines([]);
@@ -84,12 +64,12 @@ export default function NodeLines() {
       newLines.push(nodes);
     }
 
-    setLines(newLines);
+    return newLines;
   };
 
-  // compute bounding box so SVG fits the content
-  const computeViewBox = () => {
-    if (!lines || lines.length === 0) return { x: 0, y: 0, w: 800, h: 500 };
+  // NOTE: compute bounding box so SVG fits the content
+  const computeViewBox = (lines: Node[][]) => {
+    if (!lines || lines.length === 0) return defaultViewBox;
 
     let minX = Infinity,
       minY = Infinity,
@@ -114,39 +94,178 @@ export default function NodeLines() {
     return { x: vbX, y: vbY, w: vbW, h: vbH };
   };
 
-  const vb = computeViewBox();
+  const renderNodeShape = (
+    shape: Shape,
+    node: Node,
+    radius: number,
+    key: number,
+    fill: string
+  ) => {
+    switch (shape) {
+      case "circle":
+        return (
+          <circle key={key} cx={node.x} cy={node.y} r={radius} fill={fill} />
+        );
+      case "square":
+        return (
+          <rect
+            key={key}
+            x={node.x - radius}
+            y={node.y - radius}
+            width={radius * 2}
+            height={radius * 2}
+            fill={fill}
+          />
+        );
+      case "triangle":
+        const points = [
+          `${node.x},${node.y - radius}`,
+          `${node.x - radius},${node.y + radius}`,
+          `${node.x + radius},${node.y + radius}`,
+        ].join(" ");
+        return <polygon key={key} points={points} fill={fill} />;
+      default:
+        return null;
+    }
+  };
 
-  useEffect(() => {
-    // generate an initial example on mount
-    generateLines();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleGenerate = () => {
+    const newLines = generateLines();
+    if (newLines) {
+      setLines(newLines);
+      const newVb = computeViewBox(newLines);
+      setViewBox(newVb);
+    }
+  };
 
-  const handleChange = (key: keyof Config, value: string | number) => {
+  const handleChangeConfig = (
+    key: keyof Config,
+    value: string | number | string[] | Shape[]
+  ) => {
     setConfig((prev) => ({ ...prev, [key]: value } as Config));
   };
 
+  const handleDownloadImage = async () => {
+    if (!svgRef.current) return;
+
+    const serializer = new XMLSerializer();
+    const svgString = serializer.serializeToString(svgRef.current);
+
+    // Convert SVG string to a Blob
+    const svgBlob = new Blob([svgString], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+    const svgUrl = URL.createObjectURL(svgBlob);
+
+    const img = new Image();
+    img.onload = () => {
+      // Create a canvas same size as SVG
+      const canvas = document.createElement("canvas");
+      canvas.width = svgRef.current!.clientWidth;
+      canvas.height = svgRef.current!.clientHeight;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      // Draw the image onto canvas
+      ctx.drawImage(img, 0, 0);
+
+      // Export as PNG
+      const pngUrl = canvas.toDataURL("image/png");
+
+      // Trigger download
+      const a = document.createElement("a");
+      a.href = pngUrl;
+      a.download = `node-lines-${Date.now()}.png`;
+      a.click();
+
+      // Cleanup
+      URL.revokeObjectURL(svgUrl);
+    };
+    img.src = svgUrl;
+  };
+
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <Card className="space-y-4">
         <label className="flex flex-col">
           Orientation:
-          <select
+          <Select
             value={config.orientation}
             onChange={(e) =>
-              handleChange(
+              handleChangeConfig(
                 "orientation",
                 e.target.value as "horizontal" | "vertical"
               )
             }
             className="border rounded px-2 py-1"
           >
-            <option value="horizontal">Horizontal</option>
-            <option value="vertical">Vertical</option>
-          </select>
+            <Option value="horizontal">Horizontal</Option>
+            <Option value="vertical">Vertical</Option>
+          </Select>
         </label>
 
-        <div className="flex flex-wrap gap-3 items-center">
+        <label className="flex flex-col gap-2">
+          Shapes:
+          <div className="flex gap-4">
+            {(["circle", "square", "triangle"] as Shape[]).map((shape) => (
+              <label key={shape} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={config.shapes.includes(shape)}
+                  onChange={(e) => {
+                    handleChangeConfig(
+                      "shapes",
+                      e.target.checked
+                        ? [...config.shapes, shape] // add
+                        : config.shapes.filter((s) => s !== shape) // remove
+                    );
+                  }}
+                />
+                {shape.charAt(0).toUpperCase() + shape.slice(1)}
+              </label>
+            ))}
+          </div>
+        </label>
+
+        <label className="flex flex-col gap-2">
+          Colors:
+          <div className="flex gap-4 flex-wrap">
+            {[
+              Color.Black,
+              Color.Red,
+              Color.Blue,
+              Color.Green,
+              Color.Orange,
+              Color.Purple,
+            ].map((color) => (
+              <label key={color} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={config.colors.includes(color)}
+                  onChange={(e) =>
+                    handleChangeConfig(
+                      "colors",
+                      e.target.checked
+                        ? [...config.colors, color] // add
+                        : config.colors.filter((c) => c !== color) // remove
+                    )
+                  }
+                />
+                <span
+                  className="font-bold"
+                  style={{
+                    color,
+                  }}
+                >
+                  {color}
+                </span>
+              </label>
+            ))}
+          </div>
+        </label>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
           <label className="flex flex-col">
             Lines:
             <Input
@@ -154,7 +273,7 @@ export default function NodeLines() {
               min={1}
               value={config.lineCount}
               onChange={(e) =>
-                handleChange("lineCount", Number(e.target.value))
+                handleChangeConfig("lineCount", Number(e.target.value))
               }
             />
           </label>
@@ -166,7 +285,7 @@ export default function NodeLines() {
               min={1}
               value={config.countPerLine}
               onChange={(e) =>
-                handleChange("countPerLine", Number(e.target.value))
+                handleChangeConfig("countPerLine", Number(e.target.value))
               }
             />
           </label>
@@ -176,7 +295,9 @@ export default function NodeLines() {
             <Input
               type="number"
               value={config.step}
-              onChange={(e) => handleChange("step", Number(e.target.value))}
+              onChange={(e) =>
+                handleChangeConfig("step", Number(e.target.value))
+              }
             />
           </label>
 
@@ -185,7 +306,9 @@ export default function NodeLines() {
             <Input
               type="number"
               value={config.lineGap}
-              onChange={(e) => handleChange("lineGap", Number(e.target.value))}
+              onChange={(e) =>
+                handleChangeConfig("lineGap", Number(e.target.value))
+              }
             />
           </label>
 
@@ -194,7 +317,9 @@ export default function NodeLines() {
             <Input
               type="number"
               value={config.wiggle}
-              onChange={(e) => handleChange("wiggle", Number(e.target.value))}
+              onChange={(e) =>
+                handleChangeConfig("wiggle", Number(e.target.value))
+              }
             />
           </label>
 
@@ -204,7 +329,7 @@ export default function NodeLines() {
               type="number"
               value={config.nodeRadius}
               onChange={(e) =>
-                handleChange("nodeRadius", Number(e.target.value))
+                handleChangeConfig("nodeRadius", Number(e.target.value))
               }
             />
           </label>
@@ -214,39 +339,77 @@ export default function NodeLines() {
           <Button variant="secondary" onClick={() => setConfig(defaultConfig)}>
             Reset Configuration
           </Button>
-          <Button onClick={generateLines}>Generate</Button>
+          <Button onClick={handleGenerate}>Generate</Button>
         </div>
       </Card>
 
-      <div className="flex flex-col items-center p-6 border rounded-xl bg-white overflow-auto">
-        <svg
-          viewBox={`${vb.x} ${vb.y} ${vb.w} ${vb.h}`}
-          width={vb.w}
-          height={vb.h}
-          className="bg-white"
-        >
-          {lines.map((nodes, lineIndex) => (
-            <g key={lineIndex}>
-              <polyline
-                points={nodes.map((n) => `${n.x},${n.y}`).join(" ")}
-                fill="none"
-                stroke="black"
-                strokeWidth={config.strokeWidth}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              {nodes.map((node, i) => (
-                <circle
-                  key={i}
-                  cx={node.x}
-                  cy={node.y}
-                  r={config.nodeRadius}
-                  fill="black"
-                />
-              ))}
-            </g>
-          ))}
-        </svg>
+      <div className="space-y-2">
+        <div className="flex justify-between items-center">
+          <h2>
+            <LineSquiggle size={32} className="inline mr-2" />
+            SVG Output
+          </h2>
+          <Button
+            disabled={!lines || lines.length === 0}
+            variant="outline"
+            onClick={handleDownloadImage}
+          >
+            <Download size={16} className="inline mr-2" />
+            Download
+          </Button>
+        </div>
+
+        <div className="flex flex-col items-center p-6 border rounded-xl bg-white overflow-auto">
+          <svg
+            ref={svgRef}
+            viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`}
+            width={viewBox.w}
+            height={viewBox.h}
+            className="bg-white"
+          >
+            {lines && lines.length > 0 ? (
+              lines.map((nodes, lineIndex) => (
+                <g key={lineIndex}>
+                  <polyline
+                    points={nodes.map((n) => `${n.x},${n.y}`).join(" ")}
+                    fill="none"
+                    stroke="black"
+                    strokeWidth={config.strokeWidth}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  {nodes.map((node, i) => {
+                    const shape =
+                      config.shapes.length > 0
+                        ? config.shapes[i % config.shapes.length]
+                        : Shape.Circle;
+                    const color =
+                      config.colors.length > 0
+                        ? config.colors[i % config.colors.length]
+                        : Color.Black;
+                    return renderNodeShape(
+                      shape,
+                      node,
+                      config.nodeRadius,
+                      i,
+                      color
+                    );
+                  })}
+                </g>
+              ))
+            ) : (
+              <text
+                x={viewBox.x + viewBox.w / 2}
+                y={viewBox.y + viewBox.h / 2}
+                textAnchor="middle"
+                fill="gray"
+                fontSize="16"
+              >
+                {`No lines generated. Click "Generate" to create lines.`}
+              </text>
+            )}
+          </svg>
+        </div>
       </div>
     </div>
   );

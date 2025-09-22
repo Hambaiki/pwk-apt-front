@@ -46,11 +46,13 @@ const DualTaskCoordinationPage = () => {
       <Card variant="info" className="space-y-4">
         <ol className="list-disc list-inside space-y-2">
           <li>Adjust the configuration settings to your preference.</li>
-          <li>Click &quot;Generate Lines&quot; to create a new set of lines.</li>
+          <li>
+            Click &quot;Generate Lines&quot; to create a new set of lines.
+          </li>
           <li>Use the SVG output for your dual task coordination exercises.</li>
           <li>
-            Reset to default settings anytime using the &quot;Reset Configuration&quot;
-            button.
+            Reset to default settings anytime using the &quot;Reset
+            Configuration&quot; button.
           </li>
         </ol>
       </Card>
@@ -68,11 +70,17 @@ const DualTaskCoordinationPage = () => {
   );
 };
 
-// export const metadata = {
-//   title: "Dual Task Coordination | APT-PWK",
-//   description:
-//     "Test your ability to manage and perform two tasks simultaneously.",
-//   keywords: ["dual-task", "pwk-apt", "aptitude", "exercises"],
-// };
+export const metadata = {
+  title: "Dual Task Coordination Line Generator | APT-PWK",
+  description:
+    "Generate custom dual task coordination lines for practice and training.",
+  keywords: [
+    "dual-task",
+    "pwk-apt",
+    "aptitude",
+    "coordination",
+    "line-generator",
+  ],
+};
 
 export default DualTaskCoordinationPage;
