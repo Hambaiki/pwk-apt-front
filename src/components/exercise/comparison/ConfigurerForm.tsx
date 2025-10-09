@@ -34,7 +34,7 @@ export default function ConfigurerForm({ onSubmit }: ConfigurerFormProps) {
             name="count"
             type="number"
             min={1}
-            max={10}
+            max={20}
             value={config.count}
             onChange={(e) =>
               setConfig({ ...config, count: Number(e.target.value) })

@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Modal } from "@/components/ui";
+import { Button, Card, Modal } from "@/components/ui";
 import { ModalContent, ModalHeader } from "@/components/ui/Modal";
 import { ComparisonExerciseCard } from "@/components/exercise/comparison/ComparisonExerciseCard";
 import HowToCard from "@/components/exercise/comparison/HowToCard";
@@ -24,6 +24,7 @@ import { cn } from "@/libs/utils";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import ComparisonExerciseTable from "./ComparisonExerciseTable";
 
 interface ComparisonExerciseProps extends React.HTMLAttributes<HTMLDivElement> {
   items: ComparisonItem[];
@@ -36,8 +37,11 @@ const ComparisonExercise = ({
   className,
   ...props
 }: ComparisonExerciseProps) => {
+  console.log(items);
+
   const router = useRouter();
 
+  const [isShowingPrintable, setIsShowingPrintable] = useState<boolean>(false);
   const [isViewingHelp, setIsViewingHelp] = useState<boolean>(false);
 
   const [isTimerActive, setIsTimerActive] = useState<boolean>(true);
@@ -234,6 +238,23 @@ const ComparisonExercise = ({
           <HowToCard />
         </ModalContent>
       </Modal>
+
+      <Modal
+        isOpen={isShowingPrintable}
+        onClose={() => setIsShowingPrintable(false)}
+        className="p-8"
+      >
+        <ModalContent className="overflow-y-auto max-h-[90vh] w-[90vw]">
+          <ModalHeader>
+            <h2 className="text-lg font-semibold">Printable Exercise</h2>
+          </ModalHeader>
+          <ComparisonExerciseTable exercises={items} />
+        </ModalContent>
+      </Modal>
+
+      <Button onClick={() => setIsShowingPrintable(true)}>
+        Show Printable
+      </Button>
     </div>
   );
 };
