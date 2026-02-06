@@ -10,6 +10,7 @@ import {
   Eye,
   Brain,
   Hand,
+  Plane,
 } from "lucide-react";
 
 export const exerciseTagMap: Record<
@@ -57,6 +58,14 @@ export const exercises: Exercise[] = [
     href: "/exercises/read-back-memory",
     icon: MessageSquareText,
     tag: ExerciseTag.UnderDevelopment,
+  },
+  {
+    title: "Flight Information Memory",
+    description:
+      "Read flight briefings and recall or calculate key flight details.",
+    href: "/exercises/flight-information",
+    icon: Plane,
+    tag: ExerciseTag.New,
   },
   {
     title: "Sequence Memory",

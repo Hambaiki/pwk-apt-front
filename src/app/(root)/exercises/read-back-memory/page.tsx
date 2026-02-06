@@ -4,8 +4,8 @@ import {
   HeaderCardDescription,
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
-import { Card } from "@/components/ui";
 import MainSection from "@/components/content/MainSection";
+import ReadBackMemoryExercise from "@/components/exercise/read-back-memory/ReadBackMemoryExercise";
 
 const ReadBackMemoryPage = () => {
   return (
@@ -27,13 +27,7 @@ const ReadBackMemoryPage = () => {
         </HeaderCardDescription>
       </HeaderCard>
 
-      <Card className="text-center p-4 py-20">
-        <p>
-          <strong>Coming Soon...</strong>
-          <br />
-          Stay tuned for updates!
-        </p>
-      </Card>
+      <ReadBackMemoryExercise />
     </MainSection>
   );
 };
