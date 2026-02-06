@@ -328,14 +328,17 @@ const ReadBackMemoryExercise = () => {
       {stage === "config" && (
         <Card className="space-y-4">
           <div className="space-y-2">
-            <h2 className="text-xl font-semibold">Configuration</h2>
+            <h2 className="text-xl font-semibold">
+              Read Back Memory – Configuration
+            </h2>
             <p className="text-sm text-muted-foreground">
-              Configure the test, then press <strong>Start</strong>. The first
-              sequence will automatically be played for you.
+              Adjust the difficulty of the exercise, then press{" "}
+              <strong>Start</strong>. The first sequence will automatically be
+              played for you.
             </p>
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="grid gap-4 md:grid-cols-2">
             <div className="flex flex-col space-y-1">
               <label className="text-sm font-medium">Number of questions</label>
               <Input
@@ -353,6 +356,9 @@ const ReadBackMemoryExercise = () => {
                   }))
                 }
               />
+              <p className="text-xs text-muted-foreground">
+                Total sequences you will practice in this run.
+              </p>
             </div>
             <div className="flex flex-col space-y-1">
               <label className="text-sm font-medium">Min length</label>
@@ -369,6 +375,9 @@ const ReadBackMemoryExercise = () => {
                   }));
                 }}
               />
+              <p className="text-xs text-muted-foreground">
+                Shortest length of each sequence (digits and letters combined).
+              </p>
             </div>
             <div className="flex flex-col space-y-1">
               <label className="text-sm font-medium">Max length</label>
@@ -385,6 +394,9 @@ const ReadBackMemoryExercise = () => {
                   }));
                 }}
               />
+              <p className="text-xs text-muted-foreground">
+                Longest length of each sequence. Increase for a harder test.
+              </p>
             </div>
           </div>
 
@@ -426,132 +438,150 @@ const ReadBackMemoryExercise = () => {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-muted-foreground">
-                Instruction for this item
-              </p>
-              <Badge variant="info" className="w-fit">
-                {RESPONSE_MODE_SHORT_LABEL[currentQuestion.mode]}
-              </Badge>
-              <p className="text-base">
-                {RESPONSE_MODE_LABEL[currentQuestion.mode]}
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              <p className="text-sm font-medium text-muted-foreground">
-                Sequence (played one by one)
-              </p>
-              {isSequenceVisible ? (
-                <div className="flex flex-wrap gap-2">
-                  {currentQuestion.sequence.map((char, index) => (
-                    <div
-                      key={`${currentQuestion.id}-${index}-${char}`}
-                      className={`flex h-10 w-10 items-center justify-center rounded-full border text-lg font-semibold transition-all ${
-                        playIndex === index
-                          ? "bg-primary-500 text-white border-primary scale-110 shadow-md"
-                          : "bg-muted text-foreground border-muted-foreground/20"
-                      }`}
-                    >
-                      {char}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm italic text-muted-foreground">
-                  Sequence hidden. Click <strong>Replay</strong> to see and hear
-                  it again, or <strong>Reveal answer</strong> to view the
-                  correct response.
-                </p>
-              )}
-
-              <div className="flex flex-wrap gap-3">
-                <Button
-                  onClick={playSequence}
-                  disabled={isPlaying}
-                  variant="primary"
-                >
-                  {isPlaying ? "Playing..." : "Play sequence"}
-                </Button>
-                <Button
-                  onClick={playSequence}
-                  variant="outline"
-                  disabled={isPlaying}
-                >
-                  Replay
-                </Button>
-                <Button variant="outline" onClick={handleRevealAnswer}>
-                  Reveal answer
-                </Button>
-              </div>
-
-              <p className="text-xs text-muted-foreground">
-                The sequence will be highlighted one character at a time and, if
-                supported by your browser, read aloud using synthesized speech.
-              </p>
-            </div>
-
-            <div className="flex flex-col space-y-2 pt-2">
-              <label className="text-sm font-medium text-muted-foreground">
-                Your answer
-              </label>
-              <Input
-                value={currentAnswer}
-                onChange={(e) =>
-                  setAnswers((prev) =>
-                    currentQuestion
-                      ? {
-                          ...prev,
-                          [currentQuestion.id]: e.target.value,
-                        }
-                      : prev
-                  )
-                }
-                placeholder="Type the sequence here, e.g. 3G9AD"
-                disabled={isPlaying}
+            <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+              <div
+                className="h-full rounded-full bg-primary transition-[width] duration-300"
+                style={{
+                  width:
+                    questions.length > 0
+                      ? `${((currentIndex + 1) / questions.length) * 100}%`
+                      : "0%",
+                }}
               />
+            </div>
 
-              <div className="flex flex-wrap gap-3">
-                <Button onClick={handleCheckAnswer} disabled={!currentAnswer}>
-                  Check answer
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() =>
-                    currentQuestion &&
-                    setAnswers((prev) => ({
-                      ...prev,
-                      [currentQuestion.id]: "",
-                    }))
-                  }
-                  disabled={!currentAnswer}
-                >
-                  Clear answer
-                </Button>
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-3">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Instruction for this item
+                  </p>
+                  <Badge variant="info" className="w-fit">
+                    {RESPONSE_MODE_SHORT_LABEL[currentQuestion.mode]}
+                  </Badge>
+                  <p className="text-base">
+                    {RESPONSE_MODE_LABEL[currentQuestion.mode]}
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Sequence (played one by one)
+                  </p>
+                  {isSequenceVisible ? (
+                    <div className="flex flex-wrap gap-2">
+                      {currentQuestion.sequence.map((char, index) => (
+                        <div
+                          key={`${currentQuestion.id}-${index}-${char}`}
+                          className={`flex h-10 w-10 items-center justify-center rounded-full border text-lg font-semibold transition-all ${
+                            playIndex === index
+                              ? "bg-primary-500 text-white border-primary scale-110 shadow-md"
+                              : "bg-muted text-foreground border-muted-foreground/20"
+                          }`}
+                        >
+                          {char}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm italic text-muted-foreground">
+                      Sequence hidden. Click <strong>Replay</strong> to see and
+                      hear it again, or <strong>Reveal answer</strong> to view
+                      the correct response.
+                    </p>
+                  )}
+
+                  <div className="flex flex-wrap gap-3">
+                    <Button
+                      onClick={playSequence}
+                      disabled={isPlaying}
+                      variant="primary"
+                    >
+                      {isPlaying ? "Playing..." : "Play sequence"}
+                    </Button>
+                    <Button
+                      onClick={playSequence}
+                      variant="outline"
+                      disabled={isPlaying}
+                    >
+                      Replay
+                    </Button>
+                    <Button variant="outline" onClick={handleRevealAnswer}>
+                      Reveal answer
+                    </Button>
+                  </div>
+
+                  <p className="text-xs text-muted-foreground">
+                    The sequence will be highlighted one character at a time
+                    and, if supported by your browser, read aloud using
+                    synthesized speech.
+                  </p>
+                </div>
               </div>
 
-              {isCurrentCorrect !== null && (
-                <div
-                  className={`mt-1 rounded-md border px-3 py-2 text-sm ${
-                    isCurrentCorrect
-                      ? "border-emerald-300 bg-emerald-50 text-emerald-800"
-                      : "border-red-300 bg-red-50 text-red-800"
-                  }`}
-                >
-                  {isCurrentCorrect ? (
-                    <span>Correct! Great job remembering this sequence.</span>
-                  ) : (
-                    <span>
-                      Not quite. The expected answer for this instruction is{" "}
-                      <code className="font-semibold">{expectedAnswer}</code>.
-                    </span>
-                  )}
-                </div>
-              )}
+              <div className="flex flex-col space-y-2 pt-2">
+                <label className="text-sm font-medium text-muted-foreground">
+                  Your answer
+                </label>
+                <Input
+                  value={currentAnswer}
+                  onChange={(e) =>
+                    setAnswers((prev) =>
+                      currentQuestion
+                        ? {
+                            ...prev,
+                            [currentQuestion.id]: e.target.value,
+                          }
+                        : prev
+                    )
+                  }
+                  placeholder="Type the sequence here, e.g. 3G9AD"
+                  disabled={isPlaying}
+                />
 
-              <p className="text-xs text-muted-foreground">
-                Your input is compared without spaces and is not case-sensitive.
-              </p>
+                <div className="flex flex-wrap gap-3">
+                  <Button onClick={handleCheckAnswer} disabled={!currentAnswer}>
+                    Check answer
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() =>
+                      currentQuestion &&
+                      setAnswers((prev) => ({
+                        ...prev,
+                        [currentQuestion.id]: "",
+                      }))
+                    }
+                    disabled={!currentAnswer}
+                  >
+                    Clear answer
+                  </Button>
+                </div>
+
+                {isCurrentCorrect !== null && (
+                  <div
+                    className={`mt-1 rounded-md border px-3 py-2 text-sm ${
+                      isCurrentCorrect
+                        ? "border-emerald-300 bg-emerald-50 text-emerald-800"
+                        : "border-red-300 bg-red-50 text-red-800"
+                    }`}
+                  >
+                    {isCurrentCorrect ? (
+                      <span>Correct! Great job remembering this sequence.</span>
+                    ) : (
+                      <span>
+                        Not quite. The expected answer for this instruction is{" "}
+                        <code className="font-semibold">{expectedAnswer}</code>.
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                <p className="text-xs text-muted-foreground">
+                  Your input is compared without spaces and is not
+                  case-sensitive.
+                </p>
+              </div>
             </div>
           </Card>
 

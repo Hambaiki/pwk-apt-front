@@ -50,14 +50,12 @@ export const exercises: Exercise[] = [
     description: "Memorize and recall items in a grid",
     href: "/exercises/grid-memory",
     icon: Grid,
-    tag: ExerciseTag.New,
   },
   {
     title: "Read Back Memory",
     description: "Memorize and repeat back sequences of numbers and letters",
     href: "/exercises/read-back-memory",
     icon: MessageSquareText,
-    tag: ExerciseTag.UnderDevelopment,
   },
   {
     title: "Flight Information Memory",
@@ -65,7 +63,6 @@ export const exercises: Exercise[] = [
       "Read flight briefings and recall or calculate key flight details.",
     href: "/exercises/flight-information",
     icon: Plane,
-    tag: ExerciseTag.New,
   },
   {
     title: "Sequence Memory",

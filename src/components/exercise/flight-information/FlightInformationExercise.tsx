@@ -847,134 +847,149 @@ const FlightInformationExercise = () => {
               </div>
             </div>
 
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Badge variant="info">
-                  {MODE_LABEL[currentScenario.mode]}
-                </Badge>
-                <p className="text-sm text-muted-foreground">
-                  Read the passage carefully once, then answer from
-                  memory.
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <div className="rounded-lg border border-secondary-200 bg-secondary-50 px-4 py-3 text-sm leading-relaxed">
-                  {buildPassage(currentScenario)}
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  <Button
-                    onClick={handlePlayPassage}
-                    disabled={isPlaying}
-                    variant="primary"
-                  >
-                    {isPlaying ? "Playing passage..." : "Play passage"}
-                  </Button>
-                  <Button
-                    onClick={handlePlayPassage}
-                    variant="outline"
-                    disabled={isPlaying}
-                  >
-                    Replay passage
-                  </Button>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  The passage will be read aloud using your browser&apos;s speech
-                  synthesis (if supported), similar to an ATC or briefing call.
-                </p>
-              </div>
+            <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+              <div
+                className="h-full rounded-full bg-primary transition-[width] duration-300"
+                style={{
+                  width:
+                    scenarios.length > 0
+                      ? `${((currentIndex + 1) / scenarios.length) * 100}%`
+                      : "0%",
+                }}
+              />
             </div>
 
-            <div className="space-y-4 pt-2">
-              <h3 className="text-base font-semibold">
-                Questions for this flight
-              </h3>
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Badge variant="info">
+                    {MODE_LABEL[currentScenario.mode]}
+                  </Badge>
+                  <p className="text-sm text-muted-foreground">
+                    Read the passage carefully once, then answer from
+                    memory.
+                  </p>
+                </div>
 
-              <div className="space-y-4">
-                {questionKeysForScenario(currentScenario).map((key) => {
-                  const configItem = QUESTION_CONFIG[key];
-                  const value = currentAnswers[key] ?? "";
-                  const isCorrect = currentResults[key];
-                  const showReveal = revealed[currentScenario.id];
-                  const expected = getExpectedAnswerText(
-                    currentScenario,
-                    key
-                  );
-
-                  return (
-                    <div
-                      key={key}
-                      className="flex flex-col space-y-1"
+                <div className="space-y-2">
+                  <div className="rounded-lg border border-secondary-200 bg-secondary-50 px-4 py-3 text-sm leading-relaxed">
+                    {buildPassage(currentScenario)}
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    <Button
+                      onClick={handlePlayPassage}
+                      disabled={isPlaying}
+                      variant="primary"
                     >
-                      <label className="text-sm font-medium">
-                        {configItem.label}
-                      </label>
-                      <Input
-                        value={value}
-                        placeholder={configItem.placeholder}
-                        onChange={(e) =>
-                          setAnswers((prev) => ({
-                            ...prev,
-                            [currentScenario.id]: {
-                              ...(prev[currentScenario.id] ?? {}),
-                              [key]: e.target.value,
-                            },
-                          }))
-                        }
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        {configItem.helper}
-                      </p>
-
-                      {isCorrect !== undefined && (
-                        <div
-                          className={`mt-1 inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${
-                            isCorrect
-                              ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                              : "bg-red-50 text-red-800 border border-red-200"
-                          }`}
-                        >
-                          {isCorrect
-                            ? "Correct"
-                            : "Not quite. Check again or reveal the answer."}
-                        </div>
-                      )}
-
-                      {showReveal && (
-                        <p className="text-xs text-muted-foreground">
-                          Correct answer:{" "}
-                          <code className="font-semibold">
-                            {expected}
-                          </code>
-                        </p>
-                      )}
-                    </div>
-                  );
-                })}
+                      {isPlaying ? "Playing passage..." : "Play passage"}
+                    </Button>
+                    <Button
+                      onClick={handlePlayPassage}
+                      variant="outline"
+                      disabled={isPlaying}
+                    >
+                      Replay passage
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    The passage will be read aloud using your browser&apos;s
+                    speech synthesis (if supported), similar to an ATC or
+                    briefing call.
+                  </p>
+                </div>
               </div>
 
-              <div className="flex flex-wrap gap-3 pt-1">
-                <Button onClick={handleCheckAnswers}>
-                  Check answers
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    currentScenario &&
-                    setAnswers((prev) => ({
-                      ...prev,
-                      [currentScenario.id]: {},
-                    }))
-                  }
-                >
-                  Clear answers
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={handleRevealAnswers}
-                >
-                  Reveal all answers
-                </Button>
+              <div className="space-y-4 pt-2">
+                <h3 className="text-base font-semibold">
+                  Questions for this flight
+                </h3>
+
+                <div className="space-y-4">
+                  {questionKeysForScenario(currentScenario).map((key) => {
+                    const configItem = QUESTION_CONFIG[key];
+                    const value = currentAnswers[key] ?? "";
+                    const isCorrect = currentResults[key];
+                    const showReveal = revealed[currentScenario.id];
+                    const expected = getExpectedAnswerText(
+                      currentScenario,
+                      key
+                    );
+
+                    return (
+                      <div
+                        key={key}
+                        className="flex flex-col space-y-1"
+                      >
+                        <label className="text-sm font-medium">
+                          {configItem.label}
+                        </label>
+                        <Input
+                          value={value}
+                          placeholder={configItem.placeholder}
+                          onChange={(e) =>
+                            setAnswers((prev) => ({
+                              ...prev,
+                              [currentScenario.id]: {
+                                ...(prev[currentScenario.id] ?? {}),
+                                [key]: e.target.value,
+                              },
+                            }))
+                          }
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          {configItem.helper}
+                        </p>
+
+                        {isCorrect !== undefined && (
+                          <div
+                            className={`mt-1 inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${
+                              isCorrect
+                                ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                                : "bg-red-50 text-red-800 border border-red-200"
+                            }`}
+                          >
+                            {isCorrect
+                              ? "Correct"
+                              : "Not quite. Check again or reveal the answer."}
+                          </div>
+                        )}
+
+                        {showReveal && (
+                          <p className="text-xs text-muted-foreground">
+                            Correct answer:{" "}
+                            <code className="font-semibold">
+                              {expected}
+                            </code>
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="flex flex-wrap gap-3 pt-1">
+                  <Button onClick={handleCheckAnswers}>
+                    Check answers
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() =>
+                      currentScenario &&
+                      setAnswers((prev) => ({
+                        ...prev,
+                        [currentScenario.id]: {},
+                      }))
+                    }
+                  >
+                    Clear answers
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleRevealAnswers}
+                  >
+                    Reveal all answers
+                  </Button>
+                </div>
               </div>
             </div>
           </Card>
