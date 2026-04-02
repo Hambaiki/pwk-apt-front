@@ -1,6 +1,6 @@
-import * as React from "react";
+import { cn } from "@/libs/utils/cn";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/libs/utils";
+import * as React from "react";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed",
@@ -32,11 +32,12 @@ const buttonVariants = cva(
       variant: "primary",
       size: "md",
     },
-  }
+  },
 );
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {}
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -48,7 +49,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       />
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

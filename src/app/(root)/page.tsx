@@ -1,21 +1,13 @@
-import ExerciseCard from "@/components/exercise/ExerciseCard";
 import MainSection from "@/components/content/MainSection";
-import {
-  HeaderCard,
-  HeaderCardDescription,
-  HeaderCardTitle,
-} from "@/components/content/HeaderCard";
+import ExerciseCard from "@/components/exercise/ExerciseCard";
+import { ToolCard } from "@/components/tool/ToolCard";
 import { Button } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-
-import { exercises } from "@/constants/common/exercise";
+import { exercises } from "@/constants/exercise";
 import { benefits, howItWorks } from "@/constants/home";
-
-import { Cog, PenSquareIcon } from "lucide-react";
-
-import Link from "next/link";
-import { ToolCard } from "@/components/tool/ToolCard";
 import { tools } from "@/constants/tools";
+import { Cog, PenSquareIcon } from "lucide-react";
+import Link from "next/link";
 
 export default function HomePage() {
   return (

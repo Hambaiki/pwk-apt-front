@@ -1,4 +1,4 @@
-import { cn } from "@/libs/utils";
+import { cn } from "@/libs/utils/cn";
 import { cva, VariantProps } from "class-variance-authority";
 
 const optionButtonVariants = cva(
@@ -16,7 +16,7 @@ const optionButtonVariants = cva(
     defaultVariants: {
       variant: "default",
     },
-  }
+  },
 );
 
 interface OptionButtonProps extends VariantProps<typeof optionButtonVariants> {

@@ -1,4 +1,4 @@
-import { cn } from "@/libs/utils";
+import { cn } from "@/libs/utils/cn";
 
 import { ChevronRight } from "lucide-react";
 
@@ -15,10 +15,7 @@ export function Breadcrumb({ children, className }: BreadcrumbProps) {
 
   return (
     <div
-      className={cn(
-        "flex flex-row flex-wrap bg-background-primary",
-        className
-      )}
+      className={cn("flex flex-row flex-wrap bg-background-primary", className)}
     >
       {childrenArray.map((child, index) => {
         if (isValidElement(child)) {
@@ -27,7 +24,7 @@ export function Breadcrumb({ children, className }: BreadcrumbProps) {
             child as React.ReactElement<BreadcrumbItemProps>,
             {
               isLast: isLast,
-            }
+            },
           );
         }
         return child;

@@ -1,23 +1,23 @@
 "use client";
 
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
   HeaderCardDescription,
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
-import HowToCard from "@/components/exercise/comparison/HowToCard";
 import MainSection from "@/components/content/MainSection";
-import ConfigurerForm from "@/components/exercise/comparison/ConfigurerForm";
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import ConfigurerForm from "@/features/comparison/components/ConfigurerForm";
+import HowToCard from "@/features/comparison/components/HowToCard";
 
 import { generateSearchParams } from "@/libs/router";
 
-import { Config } from "@/types/exercises/comparison";
+import { Config } from "@/features/comparison/types";
 
 import { Cog, Info } from "lucide-react";
 
-import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui";
+import { useRouter } from "next/navigation";
 
 export default function ComparisonExerciseMainPage() {
   const router = useRouter();

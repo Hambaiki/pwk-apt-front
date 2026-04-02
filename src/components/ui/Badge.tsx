@@ -1,4 +1,4 @@
-import { cn } from "@/libs/utils";
+import { cn } from "@/libs/utils/cn";
 import { cva, VariantProps } from "class-variance-authority";
 
 const badgeVariants = cva(
@@ -17,11 +17,12 @@ const badgeVariants = cva(
     defaultVariants: {
       variant: "primary",
     },
-  }
+  },
 );
 
 export interface BadgeProps
-  extends React.HTMLAttributes<HTMLSpanElement>,
+  extends
+    React.HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof badgeVariants> {}
 
 export function Badge({ children, variant, className }: BadgeProps) {

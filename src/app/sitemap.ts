@@ -1,5 +1,5 @@
-import { navbarItems, additionalNavbarItems } from "@/constants/common/navbar";
-import { exercises } from "@/constants/common/exercise";
+import { exercises } from "@/constants/exercise";
+import { additionalNavbarItems, navbarItems } from "@/constants/navbar";
 
 import { MetadataRoute } from "next";
 

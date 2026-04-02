@@ -1,11 +1,11 @@
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
   HeaderCardDescription,
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import ReadBackMemoryExercise from "@/components/exercise/read-back-memory/ReadBackMemoryExercise";
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import ReadBackMemoryExercise from "@/features/read-back-memory/ReadBackMemoryExercise";
 
 const ReadBackMemoryPage = () => {
   return (

@@ -1,11 +1,11 @@
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
   HeaderCardDescription,
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
-import { Card } from "@/components/ui";
 import MainSection from "@/components/content/MainSection";
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import { Card } from "@/components/ui";
 
 const AboutPage = () => {
   return (

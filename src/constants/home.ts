@@ -1,5 +1,4 @@
 import { GenericCard } from "@/types";
-
 import {
   AlertCircle,
   BarChart,

@@ -1,15 +1,13 @@
 import {
   HeaderCard,
-  HeaderCardTitle,
   HeaderCardDescription,
+  HeaderCardTitle,
 } from "@/components/content/HeaderCard";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import MainSection from "@/components/content/MainSection";
-import ScanningExercise from "@/components/exercise/scanning/ScanningExercise";
-
-import { Config, ShapeGridItem } from "@/types/exercises/scanning";
-
-import { colors, defaultConfig, shapes } from "@/constants/exercises/scanning";
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import ScanningExercise from "@/features/scanning/components/ScanningExercise";
+import { colors, defaultConfig, shapes } from "@/features/scanning/constants";
+import { Config, ShapeGridItem } from "@/features/scanning/types";
 
 interface ScanningExerciseQuestionPageProps {
   searchParams: { [key: string]: string | string[] | undefined };

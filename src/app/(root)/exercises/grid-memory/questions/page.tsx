@@ -1,22 +1,18 @@
 import {
   HeaderCard,
-  HeaderCardTitle,
   HeaderCardDescription,
+  HeaderCardTitle,
 } from "@/components/content/HeaderCard";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import MainSection from "@/components/content/MainSection";
-import GridMemoryExercise from "@/components/exercise/grid-memory/GridMemoryExercise";
-
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import GridMemoryExercise from "@/features/grid-memory/components/GridMemoryExercise";
 import {
   defaultConfig,
   letterPool,
   numberPool,
   symbolPool,
-} from "@/constants/exercises/grid";
-
-import { Config, GridItem, InputType } from "@/types/exercises/grid";
-
-import React from "react";
+} from "@/features/grid-memory/constants";
+import { Config, GridItem, InputType } from "@/features/grid-memory/types";
 
 interface GridMemoryExercisePageProps {
   searchParams: { [key: string]: string | string[] | undefined };

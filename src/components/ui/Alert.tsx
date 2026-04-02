@@ -1,4 +1,4 @@
-import { cn } from "@/libs/utils";
+import { cn } from "@/libs/utils/cn";
 import { cva, VariantProps } from "class-variance-authority";
 
 import { CheckCircle, Info, TriangleAlert, XCircle } from "lucide-react";
@@ -14,7 +14,7 @@ const alertVariants = cva(
         error: "bg-error-50 border-error-200 text-error-700",
       },
     },
-  }
+  },
 );
 
 const iconMap = {
@@ -33,7 +33,8 @@ const iconMap = {
 };
 
 export interface AlertProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof alertVariants> {
   title?: string;
   message: string;

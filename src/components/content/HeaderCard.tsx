@@ -1,5 +1,4 @@
-import { Card } from "@/components/ui";
-import { cn } from "@/libs/utils";
+import { cn } from "@/libs/utils/cn";
 
 interface HeaderCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
@@ -7,17 +6,6 @@ interface HeaderCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const HeaderCard = ({ children, className, ...props }: HeaderCardProps) => {
-  // return (
-  //   <Card
-  //     className={cn(
-  //       `p-20 rounded-2xl bg-gradient-to-br from-primary-800 to-primary-600`,
-  //       className
-  //     )}
-  //     {...props}
-  //   >
-  //     {children}
-  //   </Card>
-  // );
   return (
     <div className={cn(`py-6`, className)} {...props}>
       {children}
@@ -53,4 +41,4 @@ const HeaderCardDescription = ({
   return <p className={cn("text-gray-600", className)}>{children}</p>;
 };
 
-export { HeaderCard, HeaderCardTitle, HeaderCardDescription };
+export { HeaderCard, HeaderCardDescription, HeaderCardTitle };

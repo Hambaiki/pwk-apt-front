@@ -1,23 +1,17 @@
 "use client";
 
-import { Button, Card, Input } from "@/components/ui";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
-  HeaderCardTitle,
   HeaderCardDescription,
+  HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import ShapeItem from "@/components/exercise/scanning/ShapeItem";
-
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import { Button, Card, Input } from "@/components/ui";
 import { generateSearchParams } from "@/libs/router";
-
-import { sampleShapes, shapes } from "@/constants/exercises/scanning";
-
-import { Play, Info, Cog, RefreshCcw } from "lucide-react";
-
-import React, { useState } from "react";
+import { Cog, Info, Play, RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface Config {
   memoryTime: number; // in seconds
@@ -173,7 +167,7 @@ const GridMemoryPage = () => {
                           ...config,
                           letterCount: Math.min(
                             25,
-                            parseInt(e.target.value) || 0
+                            parseInt(e.target.value) || 0,
                           ),
                         })
                       }
@@ -190,7 +184,7 @@ const GridMemoryPage = () => {
                           ...config,
                           letterVariations: Math.min(
                             20,
-                            parseInt(e.target.value) || 0
+                            parseInt(e.target.value) || 0,
                           ),
                         })
                       }
@@ -207,7 +201,7 @@ const GridMemoryPage = () => {
                           ...config,
                           symbolCount: Math.min(
                             25,
-                            parseInt(e.target.value) || 0
+                            parseInt(e.target.value) || 0,
                           ),
                         })
                       }
@@ -224,7 +218,7 @@ const GridMemoryPage = () => {
                           ...config,
                           symbolVariations: Math.min(
                             21,
-                            parseInt(e.target.value) || 0
+                            parseInt(e.target.value) || 0,
                           ),
                         })
                       }
@@ -241,7 +235,7 @@ const GridMemoryPage = () => {
                           ...config,
                           numberCount: Math.min(
                             25,
-                            parseInt(e.target.value) || 0
+                            parseInt(e.target.value) || 0,
                           ),
                         })
                       }
@@ -258,7 +252,7 @@ const GridMemoryPage = () => {
                           ...config,
                           numberVariations: Math.min(
                             20,
-                            parseInt(e.target.value) || 0
+                            parseInt(e.target.value) || 0,
                           ),
                         })
                       }

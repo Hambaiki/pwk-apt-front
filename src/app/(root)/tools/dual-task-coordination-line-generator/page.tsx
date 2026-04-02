@@ -1,13 +1,12 @@
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
   HeaderCardDescription,
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
-import { Card } from "@/components/ui";
 import MainSection from "@/components/content/MainSection";
-import HowToCard from "@/components/exercise/dual-task-coordination/HowToCard";
-import NodeLines from "@/components/exercise/dual-task-coordination/NodeLines";
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import { Card } from "@/components/ui";
+import NodeLines from "@/features/dual-task-coordination/components/NodeLines";
 
 import { Cog, Info } from "lucide-react";
 

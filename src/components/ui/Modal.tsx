@@ -2,9 +2,9 @@
 
 import { X } from "lucide-react";
 
-import * as React from "react";
-import { cn } from "@/libs/utils";
+import { cn } from "@/libs/utils/cn";
 import { cva, VariantProps } from "class-variance-authority";
+import * as React from "react";
 
 const ModalContext = React.createContext<{
   isOpen: boolean;
@@ -23,11 +23,12 @@ const modalVariants = cva(
     defaultVariants: {
       isOpen: false,
     },
-  }
+  },
 );
 
 interface ModalProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof modalVariants> {
   onClose: () => void;
 }
@@ -119,7 +120,7 @@ const ModalContent = React.forwardRef<
       className={cn(
         "bg-background-primary p-6 m-6 rounded-2xl shadow-2xl transition-all ease-in-out duration-100",
         isOpen ? "scale-100" : "scale-95",
-        className
+        className,
       )}
       {...rest}
     >
@@ -129,4 +130,4 @@ const ModalContent = React.forwardRef<
 });
 ModalContent.displayName = "ModalContent";
 
-export { Modal, ModalHeader, ModalFooter, ModalContent };
+export { Modal, ModalContent, ModalFooter, ModalHeader };

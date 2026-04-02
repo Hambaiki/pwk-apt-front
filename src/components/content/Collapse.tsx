@@ -1,7 +1,6 @@
-import { cn } from "@/libs/utils";
-
-import React from "react";
+import { cn } from "@/libs/utils/cn";
 import { easeInOut, motion } from "framer-motion";
+import React from "react";
 
 interface CollapseProps {
   direction?: "horizontal" | "vertical";

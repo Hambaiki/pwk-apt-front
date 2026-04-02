@@ -1,6 +1,6 @@
-import * as React from "react";
-import { cn } from "@/libs/utils";
+import { cn } from "@/libs/utils/cn";
 import { cva, VariantProps } from "class-variance-authority";
+import * as React from "react";
 
 const cardVariants = cva("transition-colors border", {
   variants: {
@@ -24,7 +24,8 @@ const cardVariants = cva("transition-colors border", {
 });
 
 export interface CardProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof cardVariants> {}
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
@@ -36,7 +37,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     >
       {children}
     </div>
-  )
+  ),
 );
 Card.displayName = "Card";
 
@@ -60,7 +61,7 @@ const CardTitle = React.forwardRef<
     ref={ref}
     className={cn(
       "text-lg font-semibold leading-none tracking-tight",
-      className
+      className,
     )}
     {...props}
   />
@@ -91,4 +92,4 @@ const CardFooter = React.forwardRef<
 ));
 CardFooter.displayName = "CardFooter";
 
-export { Card, CardHeader, CardTitle, CardContent, CardFooter };
+export { Card, CardContent, CardFooter, CardHeader, CardTitle };

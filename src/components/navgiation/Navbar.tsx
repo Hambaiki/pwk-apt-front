@@ -3,10 +3,10 @@
 import Logo from "@/components/common/Logo";
 import { Button } from "@/components/ui";
 
-import { additionalNavbarItems, navbarItems } from "@/constants/common/navbar";
+import { additionalNavbarItems, navbarItems } from "@/constants/navbar";
 
-import Link from "next/link";
 import { clsx } from "clsx";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 interface NavbarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -40,10 +40,7 @@ export default function Navbar({ className }: NavbarProps) {
         <div className="flex flex-row items-center gap-2">
           {Object.values(additionalNavbarItems).map((item, index) => (
             <Link key={`navbar-item-${index}`} href={item.href}>
-              <Button
-                variant="outline"
-                className="text-sm transition-colors"
-              >
+              <Button variant="outline" className="text-sm transition-colors">
                 {item.label}
               </Button>
             </Link>

@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui";
 
-import { cn } from "@/libs/utils";
+import { cn } from "@/libs/utils/cn";
 
 interface ScoreProps extends React.HTMLAttributes<HTMLDivElement> {
   answerCount: number;
@@ -23,7 +23,7 @@ const Score = ({
     <Card
       className={cn(
         "p-6 flex flex-col gap-4 bg-gradient-to-br from-primary-600 to-primary-400 shadow-medium",
-        className
+        className,
       )}
       {...props}
     >

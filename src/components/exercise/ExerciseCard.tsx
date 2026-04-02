@@ -1,8 +1,6 @@
 import { Card } from "@/components/ui";
-import { exerciseTagMap } from "@/constants/common/exercise";
-
+import { exerciseTagMap } from "@/constants/exercise";
 import { Exercise } from "@/types/exercises";
-
 import Link from "next/link";
 
 interface ExerciseCardProps {

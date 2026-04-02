@@ -1,8 +1,7 @@
+import { cn } from "@/libs/utils/cn";
 import * as React from "react";
-import { cn } from "@/libs/utils";
 
-export interface SelectProps
-  extends React.SelectHTMLAttributes<HTMLSelectElement> {}
+export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {}
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, children, ...props }, ref) => {
@@ -15,14 +14,14 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           "focus:border-primary-500 focus focus:outline-none focus:ring-0 focus:ring-primary-400 focus:ring-offset-0",
           // Disabled state
           "disabled:cursor-not-allowed disabled:opacity-50",
-          className
+          className,
         )}
         {...props}
       >
         {children}
       </select>
     );
-  }
+  },
 );
 
 Select.displayName = "Select";

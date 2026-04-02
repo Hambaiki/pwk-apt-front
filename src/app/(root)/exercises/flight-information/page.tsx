@@ -1,11 +1,11 @@
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
   HeaderCardDescription,
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import FlightInformationExercise from "@/components/exercise/flight-information/FlightInformationExercise";
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import FlightInformationExercise from "@/features/flight-information/components/FlightInformationExercise";
 
 const FlightInformationPage = () => {
   return (
@@ -22,8 +22,8 @@ const FlightInformationPage = () => {
       <HeaderCard>
         <HeaderCardTitle>Flight Information Memory</HeaderCardTitle>
         <HeaderCardDescription>
-          Practice understanding and mentally calculating key details from
-          short flight briefings, including arrival times and flight durations.
+          Practice understanding and mentally calculating key details from short
+          flight briefings, including arrival times and flight durations.
         </HeaderCardDescription>
       </HeaderCard>
 
@@ -47,4 +47,3 @@ export const metadata = {
 };
 
 export default FlightInformationPage;
-

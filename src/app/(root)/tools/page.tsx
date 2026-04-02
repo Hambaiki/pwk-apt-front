@@ -1,16 +1,12 @@
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
   HeaderCardDescription,
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import { Card } from "@/components/ui/Card";
-
-import { tools } from "@/constants/tools";
-
-import Link from "next/link";
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import ToolCard from "@/components/tool/ToolCard";
+import { tools } from "@/constants/tools";
 
 export default function ToolsPage() {
   return (

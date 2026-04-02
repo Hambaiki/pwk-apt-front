@@ -1,22 +1,18 @@
 "use client";
 
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
   HeaderCardDescription,
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
-import { Card } from "@/components/ui";
 import MainSection from "@/components/content/MainSection";
-import HowToCard from "@/components/exercise/dual-task-coordination/HowToCard";
-import ConfigurerForm from "@/components/exercise/dual-task-coordination/ConfigurerForm";
-
-import { Config } from "@/types/exercises/dual-task-coordination";
-
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import { Card } from "@/components/ui";
+import ConfigurerForm from "@/features/dual-task-coordination/components/ConfigurerForm";
+import HowToCard from "@/features/dual-task-coordination/components/HowToCard";
+import { Config } from "@/features/dual-task-coordination/types";
 import { generateSearchParams } from "@/libs/router";
-
 import { Cog, Info } from "lucide-react";
-
 import { useRouter } from "next/navigation";
 
 const DualTaskCoordinationPage = () => {
@@ -28,7 +24,7 @@ const DualTaskCoordinationPage = () => {
       config: JSON.stringify({ ...config, key: uniqueKey }),
     });
     router.push(
-      `/exercises/dual-task-coordination/questions?${searchParams.toString()}`
+      `/exercises/dual-task-coordination/questions?${searchParams.toString()}`,
     );
   }
 

@@ -1,21 +1,17 @@
 "use client";
 
+import Collapse from "@/components/content/Collapse";
+import Score from "@/components/exercise/Score";
+import Toolbar from "@/components/exercise/Toolbar";
 import { Card, Modal } from "@/components/ui";
 import { ModalContent, ModalHeader } from "@/components/ui/Modal";
-import Toolbar from "@/components/exercise/Toolbar";
-import ShapeItem from "@/components/exercise/scanning/ShapeItem";
-import HowToCard from "@/components/exercise/scanning/HowToCard";
-import Collapse from "@/components/content/Collapse";
-import Score from "../Score";
-
-import { cn } from "@/libs/utils";
-
-import { Config, ShapeGridItem, Stage } from "@/types/exercises/scanning";
-
-import { defaultConfig } from "@/constants/exercises/scanning";
-
-import React, { useState } from "react";
+import HowToCard from "@/features/scanning/components/HowToCard";
+import ShapeItem from "@/features/scanning/components/ShapeItem";
+import { defaultConfig } from "@/features/scanning/constants";
+import { Config, ShapeGridItem, Stage } from "@/features/scanning/types";
+import { cn } from "@/libs/utils/cn";
 import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 
 interface ScanningExerciseProps extends React.HTMLAttributes<HTMLDivElement> {
   items: ShapeGridItem[];
@@ -109,7 +105,7 @@ const ScanningExercise = ({
         <div
           className={cn(
             "pr-1 overflow-x-auto transition-all",
-            !isTimerActive && stage === Stage.Questions ? "blur" : ""
+            !isTimerActive && stage === Stage.Questions ? "blur" : "",
           )}
         >
           <div className="relative w-[800px] h-[500px] mx-auto">
@@ -158,7 +154,7 @@ const ScanningExercise = ({
                     ? isCorrect
                       ? "bg-green-50 border-green-300"
                       : "bg-red-50 border-red-300"
-                    : ""
+                    : "",
                 )}
               >
                 <div className="text-center mb-3">

@@ -1,12 +1,11 @@
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
   HeaderCardDescription,
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
-import { Card } from "@/components/ui";
 import MainSection from "@/components/content/MainSection";
-import DualTaskCoordinationExercise from "@/components/exercise/dual-task-coordination/DualTaskCoordinationExercise";
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import DualTaskCoordinationExercise from "@/features/dual-task-coordination/components/DualTaskCoordinationExercise";
 
 const DualTaskCoordinationPage = () => {
   return (

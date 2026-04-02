@@ -1,29 +1,24 @@
 "use client";
 
-import { Button, Card, Input } from "@/components/ui";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
-  HeaderCardTitle,
   HeaderCardDescription,
+  HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import ShapeItem from "@/components/exercise/scanning/ShapeItem";
-
-import { generateSearchParams } from "@/libs/router";
-
-import { Config } from "@/types/exercises/scanning";
-
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import { Button, Card, Input } from "@/components/ui";
+import ShapeItem from "@/features/scanning/components/ShapeItem";
 import {
   defaultConfig,
   sampleShapes,
   shapes,
-} from "@/constants/exercises/scanning";
-
-import { Play, Info, Cog, RefreshCcw } from "lucide-react";
-
-import React, { useState } from "react";
+} from "@/features/scanning/constants";
+import { Config } from "@/features/scanning/types";
+import { generateSearchParams } from "@/libs/router";
+import { Cog, Info, Play, RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const ScanningExercisePage = () => {
   const router = useRouter();

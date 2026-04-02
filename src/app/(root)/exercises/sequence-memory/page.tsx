@@ -1,12 +1,11 @@
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
   HeaderCardDescription,
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
-import { Card } from "@/components/ui";
 import MainSection from "@/components/content/MainSection";
-import SequenceMemoryExercise from "@/components/exercise/sequence-memory/SequenceMemoryExercise";
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import SequenceMemoryExercise from "@/features/sequence-memory/components/SequenceMemoryExercise";
 
 const SequenceMemoryPage = () => {
   return (

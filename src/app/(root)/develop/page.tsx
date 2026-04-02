@@ -1,24 +1,20 @@
 "use client";
 
-import { ComparisonExerciseCard } from "@/components/exercise/comparison/ComparisonExerciseCard";
+import MainSection from "@/components/content/MainSection";
 import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
+  Alert,
+  Badge,
   Button,
+  Card,
   Input,
   Select,
   TextArea,
-  Badge,
-  Card,
-  Alert,
 } from "@/components/ui";
-import MainSection from "@/components/content/MainSection";
-
-import { generateComparisonExercise } from "@/libs/exercises/comparison";
-
-import { ComparisonItem } from "@/types/exercises/comparison";
-
-import { Eye, Copy, Palette, Type, Layers, Zap } from "lucide-react";
-
+import { ComparisonExerciseCard } from "@/features/comparison/components/ComparisonExerciseCard";
+import { ComparisonItem } from "@/features/comparison/types";
+import { generateComparisonExercise } from "@/features/comparison/utils/generator";
+import { Copy, Eye, Layers, Palette, Type, Zap } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -283,7 +279,7 @@ const ColorPalette = ({
         </span>
         <br />
         {text}
-      </div>
+      </div>,
     );
   };
 
@@ -692,7 +688,7 @@ const TestComparisonExercise = () => {
               return;
             }
             setQuestionIndex((prev) =>
-              Math.min(prev + 1, questionList.length - 1)
+              Math.min(prev + 1, questionList.length - 1),
             );
           }}
           onPrevious={() => {

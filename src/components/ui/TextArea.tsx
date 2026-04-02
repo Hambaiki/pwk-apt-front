@@ -1,8 +1,7 @@
+import { cn } from "@/libs/utils/cn";
 import * as React from "react";
-import { cn } from "@/libs/utils";
 
-export interface TextAreaProps
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
+export interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
 
 export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ className, ...props }, ref) => {
@@ -13,13 +12,13 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           // Focus state
           "focus:border-primary-500 focus focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0",
           // Disabled state
-          "disabled:cursor-not-allowed disabled:opacity-50"
+          "disabled:cursor-not-allowed disabled:opacity-50",
         )}
         ref={ref}
         {...props}
       />
     );
-  }
+  },
 );
 
 TextArea.displayName = "TextArea";

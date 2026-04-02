@@ -1,17 +1,14 @@
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
   HeaderCardDescription,
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import ComparisonExercise from "@/components/exercise/comparison/ComparisonExercise";
-
-import { defaultConfig } from "@/constants/exercises/comparison";
-
-import { ComparisonItem, Config } from "@/types/exercises/comparison";
-
-import { generateComparisonExercise } from "@/libs/exercises/comparison";
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import ComparisonExercise from "@/features/comparison/components/ComparisonExercise";
+import { defaultConfig } from "@/features/comparison/constants";
+import { ComparisonItem, Config } from "@/features/comparison/types";
+import { generateComparisonExercise } from "@/features/comparison/utils/generator";
 
 interface ComparisonExerciseQuestionPageProps {
   searchParams: { [key: string]: string | string[] | undefined };

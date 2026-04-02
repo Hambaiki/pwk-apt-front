@@ -1,6 +1,6 @@
 export const formatTime = (
   seconds: number,
-  options?: { shorten?: boolean }
+  options?: { shorten?: boolean },
 ) => {
   try {
     const { shorten = false } = options || {};

@@ -1,6 +1,5 @@
 import { Footer } from "@/components/navgiation/Footer";
 import Navbar from "@/components/navgiation/Navbar";
-
 import { Slide, ToastContainer } from "react-toastify";
 
 export default function MainLayout({

@@ -1,5 +1,5 @@
 export const generateSearchParams = (
-  params: Record<string, string | number | boolean | undefined>
+  params: Record<string, string | number | boolean | undefined>,
 ) => {
   const searchParams = new URLSearchParams();
   for (const key in params) {

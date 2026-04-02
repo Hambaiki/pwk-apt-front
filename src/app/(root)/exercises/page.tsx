@@ -1,4 +1,3 @@
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   HeaderCard,
   HeaderCardDescription,
@@ -6,8 +5,8 @@ import {
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
 import ExerciseCard from "@/components/exercise/ExerciseCard";
-
-import { exercises } from "@/constants/common/exercise";
+import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
+import { exercises } from "@/constants/exercise";
 
 export default function ExercisesPage() {
   return (
