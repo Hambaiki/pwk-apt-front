@@ -9,7 +9,7 @@ const cardVariants = cva("transition-colors border", {
       outlined: "bg-background-secondary",
       shadowed: "shadow-strong bg-background-primary",
       borderless: "bg-background-primary border-0",
-      info: "bg-primary-50 border-info-200 text-info-700",
+      info: "bg-brand-50 border-info-200 text-info-700",
     },
     size: {
       sm: "p-2 rounded-lg",

@@ -474,7 +474,7 @@ const ReadBackMemoryExercise = () => {
                           key={`${currentQuestion.id}-${index}-${char}`}
                           className={`flex h-10 w-10 items-center justify-center rounded-full border text-lg font-semibold transition-all ${
                             playIndex === index
-                              ? "bg-primary-500 text-white border-primary scale-110 shadow-md"
+                              ? "bg-brand-500 text-white border-primary scale-110 shadow-md"
                               : "bg-muted text-foreground border-muted-foreground/20"
                           }`}
                         >

@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui";
 import { exerciseTagMap } from "@/constants/exercise";
-import { Exercise } from "@/types/exercises";
+import { Exercise } from "@/types/exercies";
 import Link from "next/link";
 
 interface ExerciseCardProps {
@@ -19,7 +19,7 @@ export const ExerciseCard = ({ exercise }: ExerciseCardProps) => {
         size="lg"
         className="group p-0 h-full overflow-hidden transition-shadow"
       >
-        <div className="relative flex items-center justify-center h-56 w-full bg-gradient-to-br from-primary-500 to-primary-400">
+        <div className="relative flex items-center justify-center h-56 w-full bg-gradient-to-br from-brand-500 to-brand-400">
           <exercise.icon className="group-hover:scale-110 transition-transform duration-300 w-32 h-32 text-white" />
 
           {exercise.tag && (

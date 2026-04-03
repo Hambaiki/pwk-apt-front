@@ -1,7 +1,7 @@
 import { OptionButton } from "@/components/exercise/QuestionButton";
 import { QuestionCard } from "@/components/exercise/QuestionCard";
 import { Button } from "@/components/ui";
-import { Choice } from "@/types/exercises";
+import { Choice } from "@/types/exercies";
 import { ComparisonItem, GenerationType } from "../types";
 
 interface ComparisonExerciseCardProps {

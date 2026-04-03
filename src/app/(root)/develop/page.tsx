@@ -28,7 +28,7 @@ export default function ColorShowcasePage() {
 
       {/* Header */}
       <div className="space-y-6">
-        <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-primary-800 to-primary-600 shadow-medium">
+        <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-brand-800 to-brand-600 shadow-medium">
           <h1 className="mb-2 text-white">
             Aptitude Exercise App - Design System
           </h1>
@@ -92,14 +92,14 @@ const UsageGuide = () => (
     <div className="text-info-700 space-y-2 text-sm">
       <p>• Click any color swatch to copy its Tailwind class name</p>
       <p>
-        • Use <code className="bg-info-100 px-1 rounded">bg-primary-500</code>{" "}
+        • Use <code className="bg-info-100 px-1 rounded">bg-brand-500</code>{" "}
         for backgrounds,{" "}
-        <code className="bg-info-100 px-1 rounded">text-primary-500</code> for
+        <code className="bg-info-100 px-1 rounded">text-brand-500</code> for
         text
       </p>
       <p>
         • Combine with hover states:{" "}
-        <code className="bg-info-100 px-1 rounded">hover:bg-primary-600</code>
+        <code className="bg-info-100 px-1 rounded">hover:bg-brand-600</code>
       </p>
       <p>
         • All colors include 50-900 shade variations for maximum flexibility
@@ -320,10 +320,10 @@ const ComponentExamples = () => (
       {/* Primary Buttons */}
       <div className="space-y-3">
         <h4 className="font-medium text-gray-700">Primary Buttons</h4>
-        <button className="w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+        <button className="w-full bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg transition-colors">
           Start Exercise
         </button>
-        <button className="w-full bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors">
+        <button className="w-full bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg transition-colors">
           Submit Answer
         </button>
       </div>
@@ -414,7 +414,7 @@ const AnimationExamples = () => (
     </h3>
 
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div className="bg-primary-50 p-6 rounded-lg animate-fade-in">
+      <div className="bg-brand-50 p-6 rounded-lg animate-fade-in">
         <h4 className="font-medium mb-2">Fade In</h4>
         <p className="text-sm text-gray-600">animate-fade-in</p>
       </div>
@@ -439,16 +439,16 @@ const ExerciseUIPreview = () => (
 
     <div className="bg-background-secondary rounded-lg p-6 border border-secondary-200">
       {/* Mock header */}
-      <div className="bg-primary-500 text-white p-4 rounded-lg mb-6">
+      <div className="bg-brand-500 text-white p-4 rounded-lg mb-6">
         <div className="flex justify-between items-center">
           <h4 className="text-lg text-white font-semibold">
             Mathematical Reasoning
           </h4>
-          <div className="bg-primary-600 px-3 py-1 rounded text-sm">
+          <div className="bg-brand-600 px-3 py-1 rounded text-sm">
             Question 5/20
           </div>
         </div>
-        <div className="bg-primary-400 h-2 rounded-full mt-3">
+        <div className="bg-brand-400 h-2 rounded-full mt-3">
           <div className="bg-white h-full w-1/4 rounded-full"></div>
         </div>
       </div>
@@ -459,13 +459,13 @@ const ExerciseUIPreview = () => (
           If a train travels 120 km in 2 hours, what is its average speed?
         </h5>
         <div className="space-y-2">
-          <button className="w-full text-left p-3 border border-secondary-200 rounded hover:bg-primary-50 hover:border-primary-300 transition-colors">
+          <button className="w-full text-left p-3 border border-secondary-200 rounded hover:bg-brand-50 hover:border-brand-300 transition-colors">
             A) 50 km/h
           </button>
-          <button className="w-full text-left p-3 border border-secondary-200 rounded hover:bg-primary-50 hover:border-primary-300 transition-colors">
+          <button className="w-full text-left p-3 border border-secondary-200 rounded hover:bg-brand-50 hover:border-brand-300 transition-colors">
             B) 60 km/h
           </button>
-          <button className="w-full text-left p-3 border border-secondary-200 rounded hover:bg-primary-50 hover:border-primary-300 transition-colors">
+          <button className="w-full text-left p-3 border border-secondary-200 rounded hover:bg-brand-50 hover:border-brand-300 transition-colors">
             C) 70 km/h
           </button>
         </div>
@@ -478,7 +478,7 @@ const ExerciseUIPreview = () => (
 
       {/* Action buttons */}
       <div className="flex gap-3">
-        <button className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+        <button className="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg transition-colors">
           Next Question
         </button>
         <button className="bg-secondary-100 hover:bg-secondary-200 text-secondary-700 px-4 py-2 rounded-lg transition-colors">

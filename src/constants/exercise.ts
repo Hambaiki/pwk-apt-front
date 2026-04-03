@@ -1,4 +1,4 @@
-import { Exercise, ExerciseTag } from "@/types/exercises";
+import { Exercise, ExerciseTag } from "@/types/exercies";
 
 import {
   CircleQuestionMark,

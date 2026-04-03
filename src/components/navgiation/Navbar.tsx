@@ -2,9 +2,7 @@
 
 import Logo from "@/components/common/Logo";
 import { Button } from "@/components/ui";
-
-import { additionalNavbarItems, navbarItems } from "@/constants/navbar";
-
+import { ADDITIONAL_NAV_ITEMS, NAV_ITEMS } from "@/constants/navbar";
 import { clsx } from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -25,7 +23,7 @@ export default function Navbar({ className }: NavbarProps) {
 
       <div className="flex flex-1 flex-row items-center gap-6 justify-between">
         <div className="flex flex-row items-center gap-2">
-          {Object.values(navbarItems).map((item, index) => (
+          {Object.values(NAV_ITEMS).map((item, index) => (
             <Link key={`navbar-item-${index}`} href={item.href}>
               <Button
                 variant={item.check(pathname) ? "primary" : "ghost"}
@@ -38,7 +36,7 @@ export default function Navbar({ className }: NavbarProps) {
         </div>
 
         <div className="flex flex-row items-center gap-2">
-          {Object.values(additionalNavbarItems).map((item, index) => (
+          {Object.values(ADDITIONAL_NAV_ITEMS).map((item, index) => (
             <Link key={`navbar-item-${index}`} href={item.href}>
               <Button variant="outline" className="text-sm transition-colors">
                 {item.label}

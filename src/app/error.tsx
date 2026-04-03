@@ -9,7 +9,7 @@ export default function Error() {
       </p>
       <button
         onClick={() => window.location.reload()}
-        className="text-center text-primary-500"
+        className="text-center text-brand-500"
       >
         Refresh
       </button>

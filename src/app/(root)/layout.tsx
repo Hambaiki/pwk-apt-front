@@ -1,5 +1,4 @@
-import { Footer } from "@/components/navgiation/Footer";
-import Navbar from "@/components/navgiation/Navbar";
+import { AppMainLayout } from "@/components/navgiation/AppMainLayout";
 import { Slide, ToastContainer } from "react-toastify";
 
 export default function MainLayout({
@@ -8,15 +7,8 @@ export default function MainLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex flex-col w-full min-h-[100dvh]">
-      <header className="sticky top-0 z-50 w-full border-b backdrop-blur">
-        <Navbar className="py-3 px-6" />
-      </header>
-
-      <div className="flex-1">{children}</div>
-
-      <Footer className="py-6 mt-12 border-t bg-background-primary" />
-
+    <AppMainLayout>
+      {children}
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -30,6 +22,6 @@ export default function MainLayout({
         theme="light"
         transition={Slide}
       />
-    </div>
+    </AppMainLayout>
   );
 }

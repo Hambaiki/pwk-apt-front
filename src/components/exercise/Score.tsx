@@ -22,7 +22,7 @@ const Score = ({
   return (
     <Card
       className={cn(
-        "p-6 flex flex-col gap-4 bg-gradient-to-br from-primary-600 to-primary-400 shadow-medium",
+        "p-6 flex flex-col gap-4 bg-gradient-to-br from-brand-600 to-brand-400 shadow-medium",
         className,
       )}
       {...props}

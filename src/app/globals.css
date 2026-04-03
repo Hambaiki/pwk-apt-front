@@ -60,25 +60,25 @@ body {
 
 @layer base {
   h1 {
-    @apply text-3xl font-bold text-text-primary leading-tight tracking-tight;
+    @apply text-3xl font-bold text-neutral-800 leading-tight tracking-tight;
   }
   h2 {
-    @apply text-2xl font-semibold text-text-primary leading-snug tracking-tight;
+    @apply text-2xl font-semibold text-neutral-700 leading-snug tracking-tight;
   }
   h3 {
-    @apply text-xl font-semibold text-text-primary leading-snug;
+    @apply text-xl font-semibold text-neutral-600 leading-snug;
   }
   h4 {
-    @apply text-lg font-medium text-text-secondary leading-normal;
+    @apply text-lg font-medium text-neutral-500 leading-normal;
   }
   p {
-    @apply text-sm text-text-secondary leading-relaxed;
+    @apply text-sm text-neutral-500 leading-relaxed;
   }
   small {
-    @apply text-xs text-text-tertiary;
+    @apply text-xs text-neutral-500;
   }
   label {
-    @apply text-sm text-text-secondary leading-normal;
+    @apply text-sm text-neutral-500 leading-normal;
   }
   code {
     @apply font-mono text-sm bg-info-100 rounded px-1.5 py-0.5;

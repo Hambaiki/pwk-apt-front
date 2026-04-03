@@ -7,13 +7,7 @@ interface MainSectionProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const MainSection = ({ children, className, ...props }: MainSectionProps) => {
   return (
-    <main
-      className={cn(
-        `flex flex-col px-6 py-10 gap-6 max-w-6xl mx-auto`,
-        className,
-      )}
-      {...props}
-    >
+    <main className={cn(`flex flex-col p-6 mx-auto`, className)} {...props}>
       {children}
     </main>
   );

@@ -48,7 +48,7 @@ export function BreadcrumbItem({
     <Link
       href={href}
       className={`flex items-center transition-colors mr-2 text-sm ${
-        isLast ? "font-bold text-primary-500" : ""
+        isLast ? "font-bold text-brand-500" : ""
       }`}
     >
       {label}

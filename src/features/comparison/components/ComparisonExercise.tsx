@@ -6,7 +6,7 @@ import Toolbar from "@/components/exercise/Toolbar";
 import { Button, Card, Modal } from "@/components/ui";
 import { ModalContent, ModalHeader } from "@/components/ui/Modal";
 import { cn } from "@/libs/utils/cn";
-import { Choice } from "@/types/exercises";
+import { Choice } from "@/types/exercies";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { comparisonAnswers, defaultConfig } from "../constants";

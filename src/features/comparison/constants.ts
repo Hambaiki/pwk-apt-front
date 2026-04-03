@@ -17,7 +17,7 @@ import {
   MutationOptions,
   MutationType,
 } from "@/features/comparison/types";
-import { Choice } from "@/types/exercises";
+import { Choice } from "@/types/exercies";
 
 export const generatorHandlers = {
   [GenerationType.WORDS]: generateWords,

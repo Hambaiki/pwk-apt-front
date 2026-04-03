@@ -1,5 +1,5 @@
 import { exercises } from "@/constants/exercise";
-import { additionalNavbarItems, navbarItems } from "@/constants/navbar";
+import { ADDITIONAL_NAV_ITEMS, NAV_ITEMS } from "@/constants/navbar";
 
 import { MetadataRoute } from "next";
 
@@ -8,12 +8,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     process.env.NEXT_PUBLIC_BASE_URL || "https://aptitude.pavarit.net";
 
   // Static routes
-  const routes = Object.values(navbarItems).map((item) => ({
+  const routes = Object.values(NAV_ITEMS).map((item) => ({
     url: `${baseUrl}${item.href}`,
     lastModified: new Date().toISOString(),
   }));
 
-  const additionalRoutes = Object.values(additionalNavbarItems).map((item) => ({
+  const additionalRoutes = Object.values(ADDITIONAL_NAV_ITEMS).map((item) => ({
     url: `${baseUrl}${item.href}`,
     lastModified: new Date().toISOString(),
   }));

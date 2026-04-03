@@ -1,27 +1,9 @@
-import {
-  HeaderCard,
-  HeaderCardDescription,
-  HeaderCardTitle,
-} from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import { Card } from "@/components/ui";
 
 const AboutPage = () => {
   return (
     <MainSection>
-      <Breadcrumb>
-        <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="About" href="/about" />
-      </Breadcrumb>
-
-      <HeaderCard>
-        <HeaderCardTitle>About Us</HeaderCardTitle>
-        <HeaderCardDescription>
-          Learn more about our mission and values.
-        </HeaderCardDescription>
-      </HeaderCard>
-
       <Card className="text-center p-4 py-20">
         <p>
           <strong>Coming Soon...</strong>

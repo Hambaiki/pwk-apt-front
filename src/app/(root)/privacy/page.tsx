@@ -10,7 +10,7 @@ export default function PrivacyPolicyPage() {
         <BreadcrumbItem label="Privacy Policy" href="/privacy" />
       </Breadcrumb>
 
-      <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-primary-800 to-primary-600 shadow-medium">
+      <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-brand-800 to-brand-600 shadow-medium">
         <h1 className="mb-2 text-white">Privacy Policy</h1>
         <p className="text-gray-100 mt-1">
           <strong>Effective Date: </strong>
@@ -88,7 +88,7 @@ export default function PrivacyPolicyPage() {
         <h2>7. Contact Us</h2>
         <p>
           If you have questions about this Privacy Policy, contact us at:{" "}
-          <a href="mailto:-" className="text-primary-600 underline">
+          <a href="mailto:-" className="text-brand-600 underline">
             -
           </a>
         </p>

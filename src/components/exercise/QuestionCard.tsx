@@ -22,17 +22,17 @@ export const QuestionCard = ({
   return (
     <Card className="space-y-4">
       {/* Header */}
-      <div className="bg-primary-500 text-white p-4 rounded-lg mb-6">
+      <div className="bg-brand-500 text-white p-4 rounded-lg mb-6">
         <div className="flex justify-between items-center">
           <h4 className="text-white text-lg font-semibold">{title}</h4>
           {progressLabel && (
-            <div className="bg-primary-600 px-3 py-1 rounded text-sm">
+            <div className="bg-brand-600 px-3 py-1 rounded text-sm">
               {progressLabel}
             </div>
           )}
         </div>
         {progress !== undefined && (
-          <div className="bg-primary-400 h-2 rounded-full mt-3">
+          <div className="bg-brand-400 h-2 rounded-full mt-3">
             <div
               className="bg-white h-full rounded-full transition-all ease-in-out"
               style={{ width: `${progress * 100}%` }}
@@ -40,7 +40,7 @@ export const QuestionCard = ({
           </div>
         )}
         {subtitle && (
-          <p className="text-sm mt-2 text-primary-100">{subtitle}</p>
+          <p className="text-sm mt-2 text-brand-100">{subtitle}</p>
         )}
       </div>
 
