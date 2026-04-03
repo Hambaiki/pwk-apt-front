@@ -4,18 +4,12 @@ import {
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import ToolCard from "@/components/tool/ToolCard";
 import { tools } from "@/constants/tools";
 
 export default function ToolsPage() {
   return (
     <MainSection>
-      <Breadcrumb>
-        <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="Tools" href="/tools" />
-      </Breadcrumb>
-
       <HeaderCard>
         <HeaderCardTitle className="mb-2">Tools</HeaderCardTitle>
         <HeaderCardDescription>

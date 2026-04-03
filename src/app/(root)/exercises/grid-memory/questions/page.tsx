@@ -4,7 +4,6 @@ import {
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import GridMemoryExercise from "@/features/grid-memory/components/GridMemoryExercise";
 import {
   defaultConfig,
@@ -87,16 +86,6 @@ const GridMemoryExercisePage = ({
 
   return (
     <MainSection>
-      <Breadcrumb>
-        <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="Exercises" href="/exercises" />
-        <BreadcrumbItem label="Grid Memory" href="/exercises/grid-memory" />
-        <BreadcrumbItem
-          label="Questions"
-          href="/exercises/grid-memory/questions"
-        />
-      </Breadcrumb>
-
       <HeaderCard>
         <HeaderCardTitle>Grid Memory - Questions</HeaderCardTitle>
         <HeaderCardDescription>

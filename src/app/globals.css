@@ -32,6 +32,28 @@
   --foreground-rgb: #000000;
   --background-start-rgb: #ffffff;
   --background-end-rgb: #fafafa;
+
+  --color-primary-50: 243 246 248;
+  --color-primary-100: 231 237 242;
+  --color-primary-200: 195 210 221;
+  --color-primary-300: 159 183 201;
+  --color-primary-400: 86 128 161;
+  --color-primary-500: 14 74 120;
+  --color-primary-600: 13 67 108;
+  --color-primary-700: 8 44 72;
+  --color-primary-800: 6 33 54;
+  --color-primary-900: 4 22 36;
+
+  --color-neutral-50: 249 249 249;
+  --color-neutral-100: 243 243 243;
+  --color-neutral-200: 226 226 226;
+  --color-neutral-300: 208 208 208;
+  --color-neutral-400: 173 173 173;
+  --color-neutral-500: 138 138 138;
+  --color-neutral-600: 124 124 124;
+  --color-neutral-700: 83 83 83;
+  --color-neutral-800: 62 62 62;
+  --color-neutral-900: 41 41 41;
 }
 
 /* :root {
@@ -60,25 +82,25 @@ body {
 
 @layer base {
   h1 {
-    @apply text-3xl font-bold text-neutral-800 leading-tight tracking-tight;
+    @apply text-3xl font-bold text-neutral-900 leading-tight tracking-tight;
   }
   h2 {
-    @apply text-2xl font-semibold text-neutral-700 leading-snug tracking-tight;
+    @apply text-2xl font-semibold text-neutral-900 leading-snug tracking-tight;
   }
   h3 {
-    @apply text-xl font-semibold text-neutral-600 leading-snug;
+    @apply text-xl font-semibold text-neutral-800 leading-snug;
   }
   h4 {
-    @apply text-lg font-medium text-neutral-500 leading-normal;
+    @apply text-lg font-medium text-neutral-700 leading-normal;
   }
   p {
-    @apply text-sm text-neutral-500 leading-relaxed;
+    @apply text-sm text-neutral-700 leading-relaxed;
   }
   small {
-    @apply text-xs text-neutral-500;
+    @apply text-xs text-neutral-700;
   }
   label {
-    @apply text-sm text-neutral-500 leading-normal;
+    @apply text-sm text-neutral-700 leading-normal;
   }
   code {
     @apply font-mono text-sm bg-info-100 rounded px-1.5 py-0.5;

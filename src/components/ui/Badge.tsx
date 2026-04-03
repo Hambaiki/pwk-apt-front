@@ -7,10 +7,10 @@ const badgeVariants = cva(
     variants: {
       variant: {
         primary: "bg-brand-100 text-brand-700",
-        secondary: "bg-secondary-100 text-secondary-700",
+        secondary: "bg-brand-100 text-brand-700",
         success: "bg-success-100 text-success-700",
         warning: "bg-warning-100 text-warning-700",
-        error: "bg-error-100 text-error-700",
+        error: "bg-danger-100 text-danger-700",
         info: "bg-info-100 text-info-700",
       },
     },

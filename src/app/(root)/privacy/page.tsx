@@ -1,15 +1,9 @@
 import MainSection from "@/components/content/MainSection";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import { Card } from "@/components/ui";
 
 export default function PrivacyPolicyPage() {
   return (
     <MainSection>
-      <Breadcrumb className="mb-4">
-        <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="Privacy Policy" href="/privacy" />
-      </Breadcrumb>
-
       <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-brand-800 to-brand-600 shadow-medium">
         <h1 className="mb-2 text-white">Privacy Policy</h1>
         <p className="text-gray-100 mt-1">

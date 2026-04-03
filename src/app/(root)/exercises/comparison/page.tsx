@@ -6,7 +6,6 @@ import {
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import ConfigurerForm from "@/features/comparison/components/ConfigurerForm";
 import HowToCard from "@/features/comparison/components/HowToCard";
 
@@ -32,12 +31,6 @@ export default function ComparisonExerciseMainPage() {
 
   return (
     <MainSection>
-      <Breadcrumb>
-        <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="Exercises" href="/exercises" />
-        <BreadcrumbItem label="Comparison" href="/exercises/comparison" />
-      </Breadcrumb>
-
       {/* Header */}
       <HeaderCard>
         <HeaderCardTitle className="mb-2">Comparison Exercise</HeaderCardTitle>

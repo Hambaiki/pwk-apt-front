@@ -6,7 +6,6 @@ import {
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import { Button, Card, Input } from "@/components/ui";
 import { generateSearchParams } from "@/libs/router";
 import { Cog, Info, Play, RefreshCcw } from "lucide-react";
@@ -51,12 +50,6 @@ const GridMemoryPage = () => {
 
   return (
     <MainSection>
-      <Breadcrumb>
-        <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="Exercises" href="/exercises" />
-        <BreadcrumbItem label="Grid Memory" href="/exercises/grid-memory" />
-      </Breadcrumb>
-
       <section className="space-y-10">
         <HeaderCard>
           <HeaderCardTitle>Grid Memory</HeaderCardTitle>
@@ -264,7 +257,7 @@ const GridMemoryPage = () => {
 
             <div className="flex gap-4 justify-end mb-4">
               <Button
-                variant="secondary"
+                variant="outline"
                 onClick={() => setConfig(defaultConfig)}
               >
                 <RefreshCcw size={20} className="mr-2" />

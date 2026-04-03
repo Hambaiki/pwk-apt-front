@@ -6,7 +6,6 @@ import {
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import { Card } from "@/components/ui";
 import ConfigurerForm from "@/features/dual-task-coordination/components/ConfigurerForm";
 import HowToCard from "@/features/dual-task-coordination/components/HowToCard";
@@ -30,15 +29,6 @@ const DualTaskCoordinationPage = () => {
 
   return (
     <MainSection>
-      <Breadcrumb>
-        <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="Exercise" href="/exercises" />
-        <BreadcrumbItem
-          label="Dual Task Coordination"
-          href="/exercises/dual-task-coordination"
-        />
-      </Breadcrumb>
-
       <HeaderCard>
         <HeaderCardTitle>Dual Task Coordination</HeaderCardTitle>
         <HeaderCardDescription>

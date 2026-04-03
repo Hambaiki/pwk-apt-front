@@ -778,7 +778,7 @@ const FlightInformationExercise = () => {
 
           <div className="flex justify-end gap-3">
             <Button
-              variant="secondary"
+              variant="outline"
               onClick={() => setConfig(defaultConfig)}
             >
               Reset config
@@ -846,7 +846,7 @@ const FlightInformationExercise = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <div className="rounded-lg border border-secondary-200 bg-secondary-50 px-4 py-3 text-sm leading-relaxed">
+                  <div className="rounded-lg border border-brand-200 bg-brand-50 px-4 py-3 text-sm leading-relaxed">
                     {buildPassage(currentScenario)}
                   </div>
                   <div className="flex flex-wrap gap-3">
@@ -1057,7 +1057,7 @@ const FlightInformationExercise = () => {
                       return (
                         <div
                           key={key}
-                          className="rounded-md border border-secondary-200 bg-background-primary px-3 py-2 text-xs md:text-sm"
+                          className="rounded-md border border-brand-200 bg-background-primary px-3 py-2 text-xs md:text-sm"
                         >
                           <p className="font-medium">{configItem.label}</p>
                           <p className="mt-1">
@@ -1084,7 +1084,7 @@ const FlightInformationExercise = () => {
           </div>
 
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="secondary" onClick={handleReset}>
+            <Button variant="outline" onClick={handleReset}>
               Back to configuration
             </Button>
           </div>

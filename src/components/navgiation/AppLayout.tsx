@@ -11,6 +11,7 @@ import { ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";
+import { Logo } from "../content/Logo";
 import { Button } from "../ui";
 
 interface AppSidebarLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -67,7 +68,7 @@ export function AppSidebarLayout({
         )}
       >
         <Link href="/" className="flex items-center gap-2">
-          {/* <Logo variant="icon" size="sm" /> */}
+          <Logo variant="icon" size="sm" />
           <div
             className={cn(
               "overflow-hidden whitespace-nowrap text-lg font-black uppercase tracking-widest md:max-w-40 md:opacity-100",
@@ -76,7 +77,7 @@ export function AppSidebarLayout({
                 "md:max-w-0 md:opacity-0 xl:max-w-40 xl:opacity-100",
             )}
           >
-            {/* <Logo variant="text-dark" className="h-auto w-20" /> */}
+            <Logo variant="text-dark" className="h-auto w-20" />
           </div>
 
           <p
@@ -168,7 +169,7 @@ export function AppSidebarLayout({
                     className={cn(
                       "flex items-center gap-3 rounded-md px-3 py-3 font-medium text-sm text-neutral-700",
                       "hover:bg-neutral-600/10 active:bg-brand-600/20",
-                      active && "bg-brand-600 hover:bg-brand-600 text-white",
+                      active && "bg-brand-500 hover:bg-brand-600 text-white",
                       "transition-colors duration-200 ease-out",
                     )}
                   >
@@ -331,9 +332,7 @@ export function AppSidebarLayout({
           )}
         </header>
 
-        <main className={cn("flex-1 flex flex-col overflow-y-auto p-4 lg:p-6")}>
-          {children}
-        </main>
+        {children}
       </div>
     </div>
   );

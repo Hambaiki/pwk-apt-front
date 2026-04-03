@@ -11,7 +11,7 @@ const alertVariants = cva(
         info: "bg-info-50 border-info-200 text-info-700",
         success: "bg-success-50 border-success-200 text-success-700",
         warning: "bg-warning-50 border-warning-200 text-warning-700",
-        error: "bg-error-50 border-error-200 text-error-700",
+        error: "bg-danger-50 border-danger-200 text-danger-700",
       },
     },
   },
@@ -28,7 +28,7 @@ const iconMap = {
     icon: <TriangleAlert className="h-5 w-5 text-warning-500" />,
   },
   error: {
-    icon: <XCircle className="h-5 w-5 text-error-500" />,
+    icon: <XCircle className="h-5 w-5 text-danger-500" />,
   },
 };
 

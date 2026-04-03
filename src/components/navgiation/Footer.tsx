@@ -1,8 +1,6 @@
-import Link from "next/link";
-
-import Logo from "../common/Logo";
-
 import { cn } from "@/libs/utils/cn";
+import Link from "next/link";
+import { Logo } from "../content/Logo";
 
 interface FooterProps {
   className?: string;

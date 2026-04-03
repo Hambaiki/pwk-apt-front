@@ -7,6 +7,7 @@ type LogoVariant =
   | "full-dark"
   | "text-light"
   | "text-dark";
+
 type LogoSize = "xs" | "sm" | "md" | "lg" | "xl" | number;
 
 interface LogoProps {
@@ -56,7 +57,7 @@ export function Logo({
   if (variant === "icon") {
     return (
       <Image
-        src="/logo/cho-huai-pos.svg"
+        src="/logo/pwk-apt-logo.svg"
         alt={alt}
         width={h}
         height={h}
@@ -69,7 +70,7 @@ export function Logo({
   if (variant === "full-light") {
     return (
       <Image
-        src="/logo/cho-huai-pos-full-light.svg"
+        src="/logo/pwk-apt-logo-full-light.svg"
         alt={alt}
         width={Math.round(h * TEXT_LOGO_ASPECT)}
         height={h}
@@ -82,7 +83,7 @@ export function Logo({
   if (variant === "full-dark") {
     return (
       <Image
-        src="/logo/cho-huai-pos-full-dark.svg"
+        src="/logo/pwk-apt-logo-full-dark.svg"
         alt={alt}
         width={Math.round(h * TEXT_LOGO_ASPECT)}
         height={h}
@@ -95,7 +96,7 @@ export function Logo({
   if (variant === "text-light") {
     return (
       <Image
-        src="/logo/cho-huai-pos-text-light.svg"
+        src="/logo/pwk-apt-logo-text-light.svg"
         alt={alt}
         width={Math.round(h * TEXT_LOGO_ASPECT)}
         height={h}
@@ -108,7 +109,7 @@ export function Logo({
   if (variant === "text-dark") {
     return (
       <Image
-        src="/logo/cho-huai-pos-text-dark.svg"
+        src="/logo/pwk-apt-logo-text-dark.svg"
         alt={alt}
         width={Math.round(h * TEXT_LOGO_ASPECT)}
         height={h}

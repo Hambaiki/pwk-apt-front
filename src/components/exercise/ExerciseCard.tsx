@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui";
 import { exerciseTagMap } from "@/constants/exercise";
+import { cn } from "@/libs/utils/cn";
 import { Exercise } from "@/types/exercies";
 import Link from "next/link";
 
@@ -13,7 +14,7 @@ export const ExerciseCard = ({ exercise }: ExerciseCardProps) => {
   return (
     <Link
       href={exercise.href}
-      className={exercise.href ? "" : "pointer-events-none opacity-50"}
+      className={cn(exercise.href ? "" : "pointer-events-none opacity-50")}
     >
       <Card
         size="lg"

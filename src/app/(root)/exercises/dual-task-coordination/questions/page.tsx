@@ -4,25 +4,11 @@ import {
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import DualTaskCoordinationExercise from "@/features/dual-task-coordination/components/DualTaskCoordinationExercise";
 
 const DualTaskCoordinationPage = () => {
   return (
     <MainSection>
-      <Breadcrumb>
-        <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="Exercise" href="/exercises" />
-        <BreadcrumbItem
-          label="Dual Task Coordination"
-          href="/exercises/dual-task-coordination"
-        />
-        <BreadcrumbItem
-          label="Questions"
-          href="/exercises/dual-task-coordination/questions"
-        />
-      </Breadcrumb>
-
       <HeaderCard>
         <HeaderCardTitle>Dual Task Coordination</HeaderCardTitle>
         <HeaderCardDescription>

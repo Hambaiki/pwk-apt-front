@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui";
+import { cn } from "@/libs/utils/cn";
 // import { exerciseTagMap } from "@/constants/common/exercise";
 
 import { Tool } from "@/types/tools";
@@ -10,12 +11,10 @@ interface ToolCardProps {
 }
 
 export const ToolCard = ({ tool }: ToolCardProps) => {
-  // const exerciseTag = exercise.tag ? exerciseTagMap[exercise.tag] : null;
-
   return (
     <Link
       href={tool.href}
-      className={tool.href ? "" : "pointer-events-none opacity-50"}
+      className={cn(tool.href ? "" : "pointer-events-none opacity-50")}
     >
       <Card
         size="lg"
@@ -23,19 +22,6 @@ export const ToolCard = ({ tool }: ToolCardProps) => {
       >
         <div className="relative flex items-center justify-center h-56 w-full bg-gradient-to-br from-brand-500 to-brand-400">
           <tool.icon className="group-hover:scale-110 transition-transform duration-300 w-32 h-32 text-white" />
-
-          {/* {exercise.tag && (
-            <div
-              style={{
-                backgroundColor: exerciseTag
-                  ? exerciseTag.color
-                  : "transparent",
-              }}
-              className="absolute top-3 right-3 px-2 py-1 text-xs font-semibold text-white rounded-full"
-            >
-              {exerciseTag ? exerciseTag.title : ""}
-            </div>
-          )} */}
         </div>
 
         <div className="p-4">

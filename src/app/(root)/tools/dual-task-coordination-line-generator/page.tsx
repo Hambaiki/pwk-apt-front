@@ -4,7 +4,6 @@ import {
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import { Card } from "@/components/ui";
 import NodeLines from "@/features/dual-task-coordination/components/NodeLines";
 
@@ -13,15 +12,6 @@ import { Cog, Info } from "lucide-react";
 const DualTaskCoordinationPage = () => {
   return (
     <MainSection>
-      <Breadcrumb>
-        <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="Tools" href="/tools" />
-        <BreadcrumbItem
-          label="Dual Task Coordination"
-          href="/tools/dual-task-coordination-line-generator"
-        />
-      </Breadcrumb>
-
       <HeaderCard>
         <HeaderCardTitle>Dual Task Coordination Line Generator</HeaderCardTitle>
         <HeaderCardDescription>

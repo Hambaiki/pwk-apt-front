@@ -1,6 +1,6 @@
 "use client";
 
-import Logo from "@/components/common/Logo";
+import { Logo } from "@/components/content/Logo";
 import { Button } from "@/components/ui";
 import { ADDITIONAL_NAV_ITEMS, NAV_ITEMS } from "@/constants/navbar";
 import { clsx } from "clsx";

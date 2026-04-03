@@ -401,7 +401,7 @@ const ReadBackMemoryExercise = () => {
 
           <div className="flex justify-end gap-3">
             <Button
-              variant="secondary"
+              variant="outline"
               onClick={() => setConfig(defaultConfig)}
             >
               Reset config
@@ -543,7 +543,7 @@ const ReadBackMemoryExercise = () => {
                     Check answer
                   </Button>
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     onClick={() =>
                       currentQuestion &&
                       setAnswers((prev) => ({
@@ -682,7 +682,7 @@ const ReadBackMemoryExercise = () => {
           </div>
 
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="secondary" onClick={handleReset}>
+            <Button variant="outline" onClick={handleReset}>
               Back to configuration
             </Button>
           </div>

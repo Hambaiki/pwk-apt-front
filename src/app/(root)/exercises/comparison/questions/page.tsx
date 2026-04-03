@@ -4,7 +4,6 @@ import {
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import ComparisonExercise from "@/features/comparison/components/ComparisonExercise";
 import { defaultConfig } from "@/features/comparison/constants";
 import { ComparisonItem, Config } from "@/features/comparison/types";
@@ -25,16 +24,6 @@ const ComparisonExerciseQuestionPage = ({
 
   return (
     <MainSection>
-      <Breadcrumb>
-        <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="Exercises" href="/exercises" />
-        <BreadcrumbItem label="Comparison" href="/exercises/comparison" />
-        <BreadcrumbItem
-          label="Questions"
-          href="/exercises/comparison/questions"
-        />
-      </Breadcrumb>
-
       <HeaderCard>
         <HeaderCardTitle>Comparison - Questions</HeaderCardTitle>
         <HeaderCardDescription>

@@ -5,8 +5,8 @@ import * as React from "react";
 const cardVariants = cva("transition-colors border", {
   variants: {
     variant: {
-      default: "bg-background-primary",
-      outlined: "bg-background-secondary",
+      default: "bg-surface",
+      outlined: "bg-transparent",
       shadowed: "shadow-strong bg-background-primary",
       borderless: "bg-background-primary border-0",
       info: "bg-brand-50 border-info-200 text-info-700",

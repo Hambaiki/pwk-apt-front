@@ -101,7 +101,7 @@ const Toolbar = ({
               )}
               {onEnd && (
                 <Button
-                  variant="error"
+                  variant="destructive"
                   disabled={isComplete}
                   onClick={() => onEnd?.()}
                 >

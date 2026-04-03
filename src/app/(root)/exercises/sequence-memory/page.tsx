@@ -4,21 +4,11 @@ import {
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import SequenceMemoryExercise from "@/features/sequence-memory/components/SequenceMemoryExercise";
 
 const SequenceMemoryPage = () => {
   return (
     <MainSection>
-      <Breadcrumb>
-        <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="Exercise" href="/exercises" />
-        <BreadcrumbItem
-          label="Sequence Memory"
-          href="/exercises/sequence-memory"
-        />
-      </Breadcrumb>
-
       <HeaderCard>
         <HeaderCardTitle>Sequence Memory</HeaderCardTitle>
         <HeaderCardDescription>

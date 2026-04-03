@@ -6,7 +6,6 @@ import {
   HeaderCardTitle,
 } from "@/components/content/HeaderCard";
 import MainSection from "@/components/content/MainSection";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import { Button, Card, Input } from "@/components/ui";
 import ShapeItem from "@/features/scanning/components/ShapeItem";
 import {
@@ -36,12 +35,6 @@ const ScanningExercisePage = () => {
 
   return (
     <MainSection>
-      <Breadcrumb>
-        <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="Exercises" href="/exercises" />
-        <BreadcrumbItem label="Scanning" href="/exercises/scanning" />
-      </Breadcrumb>
-
       <section className="space-y-10">
         <HeaderCard>
           <HeaderCardTitle>Scanning Exercise</HeaderCardTitle>
@@ -248,7 +241,7 @@ const ScanningExercisePage = () => {
 
             <div className="flex gap-4 justify-end mb-4">
               <Button
-                variant="secondary"
+                variant="outline"
                 onClick={() => setConfig(defaultConfig)}
               >
                 <RefreshCcw size={20} className="mr-2" />

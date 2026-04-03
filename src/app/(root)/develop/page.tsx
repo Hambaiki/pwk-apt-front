@@ -1,7 +1,6 @@
 "use client";
 
 import MainSection from "@/components/content/MainSection";
-import { Breadcrumb, BreadcrumbItem } from "@/components/navgiation/Breadcrumb";
 import {
   Alert,
   Badge,
@@ -21,11 +20,6 @@ import { toast } from "react-toastify";
 export default function ColorShowcasePage() {
   return (
     <MainSection>
-      <Breadcrumb className="mb-6">
-        <BreadcrumbItem label="Home" href="/" />
-        <BreadcrumbItem label="Develop" href="/develop" />
-      </Breadcrumb>
-
       {/* Header */}
       <div className="space-y-6">
         <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-brand-800 to-brand-600 shadow-medium">
@@ -92,8 +86,8 @@ const UsageGuide = () => (
     <div className="text-info-700 space-y-2 text-sm">
       <p>• Click any color swatch to copy its Tailwind class name</p>
       <p>
-        • Use <code className="bg-info-100 px-1 rounded">bg-brand-500</code>{" "}
-        for backgrounds,{" "}
+        • Use <code className="bg-info-100 px-1 rounded">bg-brand-500</code> for
+        backgrounds,{" "}
         <code className="bg-info-100 px-1 rounded">text-brand-500</code> for
         text
       </p>
@@ -499,10 +493,10 @@ const ElementExample = () => {
         <h3 className="text-xl font-semibold mb-4">Buttons</h3>
         <div className="flex flex-wrap gap-4">
           <Button variant="primary">Primary</Button>
-          <Button variant="secondary">Secondary</Button>
+          <Button variant="outline">Secondary</Button>
           <Button variant="success">Success</Button>
           <Button variant="warning">Warning</Button>
-          <Button variant="error">Error</Button>
+          <Button variant="destructive">Destructive</Button>
           <Button variant="outline">Outline</Button>
           <Button variant="ghost">Ghost</Button>
         </div>

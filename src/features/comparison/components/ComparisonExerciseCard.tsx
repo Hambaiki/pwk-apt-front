@@ -51,12 +51,12 @@ export const ComparisonExerciseCard = ({
       <div className="grid grid-cols-2 gap-4 mb-6">
         {/* Left side */}
         <div className="p-4 rounded bg-background-tertiary">
-          <h6 className="text-sm font-medium text-secondary-600 mb-2">Left</h6>
+          <h6 className="text-sm font-medium text-brand-600 mb-2">Left</h6>
           {convertBaseToString(exercise.base)}
         </div>
         {/* Right side */}
         <div className="p-4 rounded bg-background-tertiary">
-          <h6 className="text-sm font-medium text-secondary-600 mb-2">Right</h6>
+          <h6 className="text-sm font-medium text-brand-600 mb-2">Right</h6>
           {convertBaseToString(exercise.mutatedBase)}
         </div>
       </div>

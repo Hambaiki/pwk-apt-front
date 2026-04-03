@@ -141,7 +141,7 @@ export default function ConfigurerForm({ onSubmit }: ConfigurerFormProps) {
       <div className="flex justify-end gap-4 mt-6">
         <Button
           type="button"
-          variant="secondary"
+          variant="outline"
           onClick={() => setConfig(defaultConfig)}
         >
           <RefreshCcw size={20} className="mr-2" />

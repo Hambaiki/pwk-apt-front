@@ -347,7 +347,7 @@ export default function NodeLines() {
         </div>
 
         <div className="flex flex-wrap justify-end gap-3 items-center">
-          <Button variant="secondary" onClick={() => setConfig(defaultConfig)}>
+          <Button variant="outline" onClick={() => setConfig(defaultConfig)}>
             Reset Configuration
           </Button>
           <Button onClick={handleGenerate}>Generate</Button>
