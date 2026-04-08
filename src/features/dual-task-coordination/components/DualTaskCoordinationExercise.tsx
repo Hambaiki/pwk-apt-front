@@ -1,6 +1,6 @@
 "use client";
 
-import Toolbar from "@/components/exercise/Toolbar";
+import ExerciseSessionControls from "@/components/exercise/ExerciseSessionControls";
 import { Button, Card } from "@/components/ui";
 import { defaultConfig } from "@/features/dual-task-coordination/constants";
 import {
@@ -8,13 +8,19 @@ import {
   triviaQuestions,
 } from "@/features/dual-task-coordination/constants/pool";
 import { Config } from "@/features/dual-task-coordination/types";
+import {
+  createResultId,
+  saveExerciseResult,
+} from "@/libs/exercise-result-store";
 import { formatTime } from "@/libs/time";
 import { cn } from "@/libs/utils/cn";
 import { Hand, Pause, Play, RotateCcw } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import HowToCard from "./HowToCard";
 
 const baseTempo = 80; // BPM
+const symbols = ["●", "▲", "■", "◆", "★", "♣", "♠", "♥"];
 
 interface DualTaskCoordinationExerciseProps {
   config?: Config;
@@ -23,25 +29,30 @@ interface DualTaskCoordinationExerciseProps {
 const DualTaskCoordinationExercise = ({
   config = defaultConfig,
 }: DualTaskCoordinationExerciseProps) => {
+  const router = useRouter();
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(300); // 5 minutes default
-  const [questionsRemaining, setQuestionsRemaining] = useState(20);
+  const [timeRemaining, setTimeRemaining] = useState(config.exerciseDuration);
+  const [questionsRemaining, setQuestionsRemaining] = useState(
+    config.totalQuestions,
+  );
   const [currentQuestion, setCurrentQuestion] = useState("");
-  const [questionTimeLeft, setQuestionTimeLeft] = useState(15);
+  const [questionTimeLeft, setQuestionTimeLeft] = useState(config.questionTime);
   const [leftHandPosition, setLeftHandPosition] = useState(0);
   const [rightHandPosition, setRightHandPosition] = useState(0);
   const [leftDirection, setLeftDirection] = useState(1);
   const [rightDirection, setRightDirection] = useState(1);
   const [activeHand, setActiveHand] = useState("left"); // which hand moves next
   const [tempo, setTempo] = useState(baseTempo); // BPM
-  const [symbolMode, setSymbolMode] = useState(false);
+  const [symbolMode, setSymbolMode] = useState(config.symbolMode);
   const [targetSymbols, setTargetSymbols] = useState({ left: "", right: "" });
 
   // Settings
-  const [exerciseDuration, setExerciseDuration] = useState(300);
-  const [totalQuestions, setTotalQuestions] = useState(20);
-  const [questionTime, setQuestionTime] = useState(15);
+  const [exerciseDuration, setExerciseDuration] = useState(
+    config.exerciseDuration,
+  );
+  const [totalQuestions, setTotalQuestions] = useState(config.totalQuestions);
+  const [questionTime, setQuestionTime] = useState(config.questionTime);
 
   const intervalRef: React.MutableRefObject<NodeJS.Timeout | null> =
     useRef(null);
@@ -49,9 +60,19 @@ const DualTaskCoordinationExercise = ({
     useRef(null);
   const audioContextRef: React.MutableRefObject<AudioContext | null> =
     useRef(null);
+  const hasNavigatedToEndRef = useRef(false);
 
   const nodeCount = 8;
-  const symbols = ["●", "▲", "■", "◆", "★", "♣", "♠", "♥"];
+
+  useEffect(() => {
+    setExerciseDuration(config.exerciseDuration);
+    setTotalQuestions(config.totalQuestions);
+    setQuestionTime(config.questionTime);
+    setSymbolMode(config.symbolMode);
+    setTimeRemaining(config.exerciseDuration);
+    setQuestionsRemaining(config.totalQuestions);
+    setQuestionTimeLeft(config.questionTime);
+  }, [config]);
 
   const speak = (text: string) => {
     if ("speechSynthesis" in window) {
@@ -188,6 +209,7 @@ const DualTaskCoordinationExercise = ({
 
   // Start exercise
   const startExercise = () => {
+    hasNavigatedToEndRef.current = false;
     if (isPaused) {
       setIsPaused(false);
     } else {
@@ -217,6 +239,7 @@ const DualTaskCoordinationExercise = ({
   };
 
   const resetExercise = () => {
+    hasNavigatedToEndRef.current = false;
     setIsRunning(false);
     setIsPaused(false);
     setTimeRemaining(exerciseDuration);
@@ -324,12 +347,45 @@ const DualTaskCoordinationExercise = ({
     }
   }, [symbolMode, isRunning]);
 
+  const isCompleted =
+    !isRunning &&
+    !isPaused &&
+    (timeRemaining === 0 || questionsRemaining === 0);
+
+  useEffect(() => {
+    if (!isCompleted || hasNavigatedToEndRef.current) return;
+
+    hasNavigatedToEndRef.current = true;
+    const completed = Math.max(0, totalQuestions - questionsRemaining);
+    const resultId = createResultId();
+    saveExerciseResult("dual-task-coordination", resultId, {
+      completedQuestions: completed,
+      totalQuestions,
+      durationSec: exerciseDuration,
+      symbolMode,
+    });
+    router.push(
+      `/dual-task-coordination/end?score=${completed}&total=${totalQuestions}&attempted=${completed}&resultId=${resultId}`,
+    );
+  }, [
+    isCompleted,
+    totalQuestions,
+    questionsRemaining,
+    router,
+    exerciseDuration,
+    symbolMode,
+  ]);
+
   return (
     <div className="">
       {/* Settings Panel */}
 
       {/* Status Bar */}
-      <Toolbar timerLimit={timeRemaining} className="space-y-3 mb-6">
+      <ExerciseSessionControls
+        timeRemaining={timeRemaining}
+        isRunning={isRunning}
+        className="mb-6"
+      >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
           <Card className="flex flex-col justify-center items-center bg-green-50 p-3 rounded-lg">
             <div className="text-2xl font-bold text-green-600">
@@ -348,7 +404,7 @@ const DualTaskCoordinationExercise = ({
             <div className="text-sm text-gray-600">BPM</div>
           </Card>
         </div>
-      </Toolbar>
+      </ExerciseSessionControls>
 
       {/* Node Lines */}
       <Card className="mb-6">

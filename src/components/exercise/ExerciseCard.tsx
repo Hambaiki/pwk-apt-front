@@ -20,7 +20,7 @@ export const ExerciseCard = ({ exercise }: ExerciseCardProps) => {
         size="lg"
         className="group p-0 h-full overflow-hidden transition-shadow"
       >
-        <div className="relative flex items-center justify-center h-56 w-full bg-gradient-to-br from-brand-500 to-brand-400">
+        <div className="relative flex items-center justify-center h-56 w-full bg-linear-to-br from-brand-500 to-brand-400">
           <exercise.icon className="group-hover:scale-110 transition-transform duration-300 w-32 h-32 text-white" />
 
           {exercise.tag && (
@@ -39,7 +39,7 @@ export const ExerciseCard = ({ exercise }: ExerciseCardProps) => {
 
         <div className="p-4">
           <h2 className="text-xl font-semibold mb-2">{exercise.title}</h2>
-          <p className="text-gray-700 mb-3">{exercise.description}</p>
+          <p className="text-neutral-700 mb-3">{exercise.description}</p>
         </div>
       </Card>
     </Link>

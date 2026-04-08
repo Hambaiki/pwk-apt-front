@@ -10,8 +10,17 @@ const config: Config = {
     extend: {
       colors: {
         // Theme tokens
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: {
+          DEFAULT: "rgb(var(--background) / <alpha-value>)",
+          primary: "rgb(var(--background-primary) / <alpha-value>)",
+        },
+        foreground: "rgb(var(--foreground) / <alpha-value>)",
+        text: {
+          primary: "rgb(var(--text-primary) / <alpha-value>)",
+          secondary: "rgb(var(--text-secondary) / <alpha-value>)",
+          tertiary: "rgb(var(--text-tertiary) / <alpha-value>)",
+          inverse: "rgb(var(--text-inverse) / <alpha-value>)",
+        },
 
         // Brand
         brand: {
@@ -135,6 +144,10 @@ const config: Config = {
         "fade-in": "fadeIn 0.5s ease-in-out",
         "slide-up": "slideUp 0.15s ease-out",
         "bounce-subtle": "bounceSubtle 0.6s ease-in-out",
+        "drawer-right-in": "drawerRightIn 0.2s ease-out",
+        "drawer-right-out": "drawerRightOut 0.2s ease-in",
+        "drawer-left-in": "drawerLeftIn 0.2s ease-out",
+        "drawer-left-out": "drawerLeftOut 0.2s ease-in",
       },
       keyframes: {
         fadeIn: {
@@ -148,6 +161,22 @@ const config: Config = {
         bounceSubtle: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-5px)" },
+        },
+        drawerRightIn: {
+          "0%": { transform: "translateX(100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
+        drawerRightOut: {
+          "0%": { transform: "translateX(0)", opacity: "1" },
+          "100%": { transform: "translateX(100%)", opacity: "0" },
+        },
+        drawerLeftIn: {
+          "0%": { transform: "translateX(-100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
+        drawerLeftOut: {
+          "0%": { transform: "translateX(0)", opacity: "1" },
+          "100%": { transform: "translateX(-100%)", opacity: "0" },
         },
       },
       backgroundImage: {

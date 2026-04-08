@@ -1,10 +1,11 @@
+import ExerciseQuestionContentCard from "@/components/exercise/ExerciseQuestionContentCard";
 import { OptionButton } from "@/components/exercise/QuestionButton";
-import { QuestionCard } from "@/components/exercise/QuestionCard";
 import { Button } from "@/components/ui";
 import { Choice } from "@/types/exercies";
 import { ComparisonItem, GenerationType } from "../types";
 
 interface ComparisonExerciseCardProps {
+  questionNumber?: number;
   exercise: ComparisonItem;
   selected?: string;
   progress?: number;
@@ -17,6 +18,7 @@ interface ComparisonExerciseCardProps {
 }
 
 export const ComparisonExerciseCard = ({
+  questionNumber,
   exercise,
   selected,
   progress,
@@ -36,26 +38,25 @@ export const ComparisonExerciseCard = ({
   };
 
   return (
-    <QuestionCard
-      title="Comparison Exercise"
-      progressLabel="Progress"
-      progress={progress}
+    <ExerciseQuestionContentCard
+      questionLabel={`Question ${questionNumber ?? 1}`}
+      title="If both sides match select A, then B for 1 mistake, C for 2, D for 3, E for 4, and F for 5+ mistakes."
     >
       {/* Question */}
-      <h5 className="text-text-primary font-medium mb-3">
-        If the left and the right are the same, select A. If 1 mistake, select
-        B. If 2 mistakes, select C. If 3 mistakes, select D. If 4 mistakes,
-        select E, If 5 or more mistakes, select F.
-      </h5>
+      {progress !== undefined && (
+        <div className="inline-flex rounded-full border border-info-200 bg-info-50 px-2.5 py-1 text-xs font-medium text-info-700">
+          Progress: {Math.round(progress * 100)}%
+        </div>
+      )}
 
       <div className="grid grid-cols-2 gap-4 mb-6">
         {/* Left side */}
-        <div className="p-4 rounded bg-background-tertiary">
+        <div className="p-4 rounded-md bg-surface-muted">
           <h6 className="text-sm font-medium text-brand-600 mb-2">Left</h6>
           {convertBaseToString(exercise.base)}
         </div>
         {/* Right side */}
-        <div className="p-4 rounded bg-background-tertiary">
+        <div className="p-4 rounded-md bg-surface-muted">
           <h6 className="text-sm font-medium text-brand-600 mb-2">Right</h6>
           {convertBaseToString(exercise.mutatedBase)}
         </div>
@@ -74,18 +75,24 @@ export const ComparisonExerciseCard = ({
       </div>
 
       {/* Action buttons */}
-      <div className="flex justify-end gap-3">
-        <Button variant="outline" disabled={!hasPrevious} onClick={onPrevious}>
-          Previous Question
-        </Button>
-        {isLast ? (
-          <Button onClick={onNext}>Finish</Button>
-        ) : (
-          <Button variant="primary" disabled={!hasNext} onClick={onNext}>
-            Next Question
+      {(onNext || onPrevious) && (
+        <div className="flex justify-end gap-3 pt-1">
+          <Button
+            variant="outline"
+            disabled={!hasPrevious}
+            onClick={onPrevious}
+          >
+            Previous Question
           </Button>
-        )}
-      </div>
-    </QuestionCard>
+          {isLast ? (
+            <Button onClick={onNext}>Finish</Button>
+          ) : (
+            <Button variant="primary" disabled={!hasNext} onClick={onNext}>
+              Next Question
+            </Button>
+          )}
+        </div>
+      )}
+    </ExerciseQuestionContentCard>
   );
 };

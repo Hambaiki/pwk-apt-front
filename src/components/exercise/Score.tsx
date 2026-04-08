@@ -19,10 +19,22 @@ const Score = ({
   className,
   ...props
 }: ScoreProps) => {
+  let feedbackMessage = "";
+
+  if (score === maxScore) {
+    feedbackMessage = "Perfect score! You nailed every question.";
+  } else if (score >= maxScore * 0.8) {
+    feedbackMessage = "Great job! You're almost perfect.";
+  } else if (score >= maxScore * 0.5) {
+    feedbackMessage = "Good effort! Keep practicing to improve even more.";
+  } else {
+    feedbackMessage = "Don't worry. Every mistake is a step toward learning.";
+  }
+
   return (
     <Card
       className={cn(
-        "p-6 flex flex-col gap-4 bg-gradient-to-br from-brand-600 to-brand-400 shadow-medium",
+        "p-6 flex flex-col gap-4 bg-linear-to-br from-brand-600 to-brand-400 shadow-medium",
         className,
       )}
       {...props}
@@ -31,16 +43,16 @@ const Score = ({
 
       {/* Score summary */}
       <div className="space-y-2">
-        <p className="text-gray-100 text-lg">
+        <p className="text-neutral-100 text-lg">
           You answered <span className="font-semibold">{correctCount}</span> out
           of <span className="font-semibold">{totalCount}</span> questions
           correctly.
         </p>
 
         <Card className="p-3">
-          <div className="h-4 w-full bg-gray-200 rounded-full overflow-hidden">
+          <div className="h-4 w-full bg-neutral-200 rounded-full overflow-hidden">
             <div
-              className="h-4 bg-green-400 transition-all duration-700"
+              className="h-4 bg-success-400 transition-all duration-700"
               style={{
                 width: `${Math.round((score / maxScore) * 100)}%`,
               }}
@@ -66,17 +78,7 @@ const Score = ({
       </div>
 
       {/* Personalized message */}
-      <div className="text-lg text-white font-medium">
-        {score === maxScore && "🌟 Perfect score! You nailed every question."}
-        {score >= maxScore * 0.8 &&
-          score < maxScore &&
-          "🔥 Great job! You're almost perfect."}
-        {score >= maxScore * 0.5 &&
-          score < maxScore * 0.8 &&
-          "👍 Good effort! Keep practicing to improve even more."}
-        {score < maxScore * 0.5 &&
-          "💡 Don’t worry! Every mistake is a step toward learning."}
-      </div>
+      <div className="text-lg text-white font-medium">{feedbackMessage}</div>
     </Card>
   );
 };

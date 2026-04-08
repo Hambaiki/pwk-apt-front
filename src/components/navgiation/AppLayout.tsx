@@ -304,6 +304,9 @@ export function AppSidebarLayout({
                   {crumb.href ? (
                     <Link
                       href={crumb.href}
+                      aria-current={
+                        index === breadcrumbs.length - 1 ? "page" : undefined
+                      }
                       className={cn(
                         "truncate text-neutral-500 hover:text-neutral-500/80",
                         "transition-colors duration-200 ease-out",
@@ -316,6 +319,9 @@ export function AppSidebarLayout({
                     </Link>
                   ) : (
                     <span
+                      aria-current={
+                        index === breadcrumbs.length - 1 ? "page" : undefined
+                      }
                       className={cn(
                         "truncate text-neutral-500",
                         index === breadcrumbs.length - 1 &&

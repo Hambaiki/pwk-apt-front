@@ -1,9 +1,10 @@
+import { exercises } from "@/constants/exercise";
 import type {
   AppSidebarFooterSection,
   AppSidebarNavSection,
 } from "@/types/navbar";
 import type { LucideIcon } from "lucide-react";
-import { File, Home, Info } from "lucide-react";
+import { Home, Info, LineSquiggle } from "lucide-react";
 
 export const NAV_ITEMS: Record<
   string,
@@ -19,18 +20,6 @@ export const NAV_ITEMS: Record<
     href: "/",
     icon: Home,
     check: (path: string) => path === "/",
-  },
-  exercises: {
-    label: "Exercises",
-    href: "/exercises",
-    icon: File,
-    check: (path: string) => path.startsWith("/exercises"),
-  },
-  tools: {
-    label: "Tools",
-    href: "/tools",
-    icon: Info,
-    check: (path: string) => path.startsWith("/tools"),
   },
 } as const;
 
@@ -51,6 +40,74 @@ export const ADDITIONAL_NAV_ITEMS: Record<
   },
 } as const;
 
+const exerciseMap = new Map(
+  exercises
+    .filter((exercise) => Boolean(exercise.href))
+    .map((exercise) => [exercise.href, exercise]),
+);
+
+const trainingCorePaths = ["/comparison", "/scanning", "/grid-memory"];
+const trainingAdvancedPaths = [
+  "/read-back-memory",
+  "/flight-information",
+  "/sequence-memory",
+];
+
+const toNavItem = (path: string) => {
+  const exercise = exerciseMap.get(path);
+  if (!exercise) return null;
+
+  return {
+    href: exercise.href,
+    label: exercise.title,
+    icon: exercise.icon as LucideIcon,
+  };
+};
+
+const coreExerciseItems = trainingCorePaths
+  .map(toNavItem)
+  .filter(Boolean) as Array<{ href: string; label: string; icon: LucideIcon }>;
+
+const advancedExerciseItems = trainingAdvancedPaths
+  .map(toNavItem)
+  .filter(Boolean) as Array<{ href: string; label: string; icon: LucideIcon }>;
+
+const dualTaskItems = [
+  {
+    href: "/dual-task-coordination",
+    label: "Dual Task Coordination",
+    icon: exercises.find(
+      (exercise) => exercise.href === "/dual-task-coordination",
+    )?.icon as LucideIcon,
+  },
+  {
+    href: "/dual-task-coordination/line-generator",
+    label: "Line Generator",
+    icon: LineSquiggle,
+  },
+];
+
+export const ROUTE_LABELS: Record<string, string> = {
+  "/": "Home",
+  "/about": "About",
+  "/develop": "Develop Playground",
+  "/privacy": "Privacy",
+  "/terms": "Terms",
+  "/comparison": "Comparison",
+  "/comparison/print": "Printable Sheet",
+  "/comparison/run": "Session",
+  "/scanning": "Scanning Shapes",
+  "/scanning/run": "Session",
+  "/grid-memory": "Grid Memory",
+  "/grid-memory/run": "Session",
+  "/read-back-memory": "Read Back Memory",
+  "/flight-information": "Flight Information Memory",
+  "/sequence-memory": "Sequence Memory",
+  "/dual-task-coordination": "Dual Task Coordination",
+  "/dual-task-coordination/run": "Session",
+  "/dual-task-coordination/line-generator": "Line Generator",
+};
+
 export const NAV_SECTIONS: AppSidebarNavSection[] = [
   {
     items: [
@@ -60,17 +117,19 @@ export const NAV_SECTIONS: AppSidebarNavSection[] = [
         icon: NAV_ITEMS.home.icon,
         exact: true,
       },
-      {
-        href: NAV_ITEMS.exercises.href,
-        label: NAV_ITEMS.exercises.label,
-        icon: NAV_ITEMS.exercises.icon,
-      },
-      {
-        href: NAV_ITEMS.tools.href,
-        label: NAV_ITEMS.tools.label,
-        icon: NAV_ITEMS.tools.icon,
-      },
     ],
+  },
+  {
+    title: "Core Drills",
+    items: coreExerciseItems,
+  },
+  {
+    title: "Advanced Memory",
+    items: advancedExerciseItems,
+  },
+  {
+    title: "Dual Task Lab",
+    items: dualTaskItems,
   },
 ];
 

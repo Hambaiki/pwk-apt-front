@@ -1,15 +1,8 @@
 "use client";
 
 import MainSection from "@/components/content/MainSection";
-import {
-  Alert,
-  Badge,
-  Button,
-  Card,
-  Input,
-  Select,
-  TextArea,
-} from "@/components/ui";
+import { Alert, Badge, Button, Card, TextArea } from "@/components/ui";
+import { FormInput, FormSelect, FormSelectOption } from "@/components/ui/form";
 import { ComparisonExerciseCard } from "@/features/comparison/components/ComparisonExerciseCard";
 import { ComparisonItem } from "@/features/comparison/types";
 import { generateComparisonExercise } from "@/features/comparison/utils/generator";
@@ -22,7 +15,7 @@ export default function ColorShowcasePage() {
     <MainSection>
       {/* Header */}
       <div className="space-y-6">
-        <Card className="p-20 mb-8 rounded-xl bg-gradient-to-br from-brand-800 to-brand-600 shadow-medium">
+        <Card className="p-20 mb-8 rounded-xl bg-linear-to-br from-brand-800 to-brand-600 shadow-medium">
           <h1 className="mb-2 text-white">
             Aptitude Exercise App - Design System
           </h1>
@@ -233,21 +226,19 @@ const BackgroundColor = () => (
       Background Colors
     </h3>
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div className="bg-background-primary border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
+      <div className="bg-surface border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
         <div className="font-medium">Primary Background</div>
-        <div className="text-sm text-gray-500 mt-1">bg-background-primary</div>
+        <div className="text-sm text-gray-500 mt-1">bg-surface</div>
         <div className="text-xs font-mono mt-2">#ffffff</div>
       </div>
-      <div className="bg-background-secondary border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
+      <div className="bg-surface border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
         <div className="font-medium">Secondary Background</div>
-        <div className="text-sm text-gray-500 mt-1">
-          bg-background-secondary
-        </div>
+        <div className="text-sm text-gray-500 mt-1">bg-surface</div>
         <div className="text-xs font-mono mt-2">#f8fafc</div>
       </div>
-      <div className="bg-background-tertiary border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
+      <div className="bg-surface border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
         <div className="font-medium">Tertiary Background</div>
-        <div className="text-sm text-gray-500 mt-1">bg-background-tertiary</div>
+        <div className="text-sm text-gray-500 mt-1">bg-surface</div>
         <div className="text-xs font-mono mt-2">#f1f5f9</div>
       </div>
     </div>
@@ -339,7 +330,7 @@ const ComponentExamples = () => (
       {/* Cards */}
       <div className="space-y-3">
         <h4 className="font-medium text-gray-700">Cards</h4>
-        <div className="bg-background-secondary border border-secondary-200 p-4 rounded-lg shadow-soft">
+        <div className="bg-surface border border-secondary-200 p-4 rounded-lg shadow-soft">
           <h5 className="font-medium text-text-primary">Question 1</h5>
           <p className="text-text-secondary text-sm mt-1">
             Sample question content
@@ -431,7 +422,7 @@ const ExerciseUIPreview = () => (
       Aptitude App UI Preview
     </h3>
 
-    <div className="bg-background-secondary rounded-lg p-6 border border-secondary-200">
+    <div className="bg-surface rounded-lg p-6 border border-secondary-200">
       {/* Mock header */}
       <div className="bg-brand-500 text-white p-4 rounded-lg mb-6">
         <div className="flex justify-between items-center">
@@ -511,11 +502,11 @@ const ElementExample = () => {
       <section>
         <h3 className="text-xl font-semibold mb-4">Inputs</h3>
         <div className="space-y-4 max-w-md">
-          <Input placeholder="Text input" />
-          <Select>
-            <option>Option A</option>
-            <option>Option B</option>
-          </Select>
+          <FormInput placeholder="Text input" />
+          <FormSelect>
+            <FormSelectOption value="A">Option A</FormSelectOption>
+            <FormSelectOption value="B">Option B</FormSelectOption>
+          </FormSelect>
           <TextArea placeholder="Write something..." />
         </div>
       </section>
@@ -658,11 +649,11 @@ const TestComparisonExercise = () => {
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
           <label>
             Count
-            <Input name="count" type="number" />
+            <FormInput name="count" type="number" />
           </label>
           <label>
             Length
-            <Input name="length" type="number" />
+            <FormInput name="length" type="number" />
           </label>
           <Button>Generate Questions</Button>
         </form>

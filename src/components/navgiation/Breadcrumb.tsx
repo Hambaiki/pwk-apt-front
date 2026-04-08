@@ -14,9 +14,7 @@ export function Breadcrumb({ children, className }: BreadcrumbProps) {
   const childrenArray = Children.toArray(children);
 
   return (
-    <div
-      className={cn("flex flex-row flex-wrap bg-background-primary", className)}
-    >
+    <div className={cn("flex flex-row flex-wrap bg-surface", className)}>
       {childrenArray.map((child, index) => {
         if (isValidElement(child)) {
           const isLast = index === childrenArray.length - 1;
@@ -47,6 +45,7 @@ export function BreadcrumbItem({
   return (
     <Link
       href={href}
+      aria-current={isLast ? "page" : undefined}
       className={`flex items-center transition-colors mr-2 text-sm ${
         isLast ? "font-bold text-brand-500" : ""
       }`}

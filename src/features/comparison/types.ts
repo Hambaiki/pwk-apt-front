@@ -73,6 +73,6 @@ export interface ComparisonGeneratorOptions {
 }
 
 export interface Config extends ComparisonGeneratorOptions {
-  key: string;
+  key?: string;
   timer: number;
 }

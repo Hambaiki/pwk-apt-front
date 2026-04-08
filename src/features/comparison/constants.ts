@@ -140,6 +140,5 @@ export const defaultComparisonOptions: ComparisonGeneratorOptions & {
 };
 
 export const defaultConfig: Config = {
-  key: "default",
   ...defaultComparisonOptions,
 };

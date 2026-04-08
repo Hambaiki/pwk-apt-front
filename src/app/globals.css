@@ -1,37 +1,19 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-} */
-
-/* :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 255, 255, 255;
-  --background-end-rgb: 255, 255, 255;
-} */
-
-/* :root {
-  --foreground-rgb: #000000;
-  --background-start-rgb: #f1f5f9;
-  --background-end-rgb: #ebf2fa;
-} */
+@import "tailwindcss";
+@plugin 'tailwind-scrollbar';
+@config "../../tailwind.config.ts";
 
 :root {
   --foreground-rgb: #000000;
   --background-start-rgb: #ffffff;
   --background-end-rgb: #fafafa;
+
+  --background: 255 255 255;
+  --foreground: 41 41 41;
+  --background-primary: 255 255 255;
+  --text-primary: 41 41 41;
+  --text-secondary: 83 83 83;
+  --text-tertiary: 124 124 124;
+  --text-inverse: 249 249 249;
 
   --color-primary-50: 243 246 248;
   --color-primary-100: 231 237 242;
@@ -55,12 +37,6 @@
   --color-neutral-800: 62 62 62;
   --color-neutral-900: 41 41 41;
 }
-
-/* :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 50, 50, 50;
-  --background-end-rgb: 50, 50, 50;
-} */
 
 body {
   color: var(--foreground-rgb);
@@ -105,4 +81,250 @@ body {
   code {
     @apply font-mono text-sm bg-info-100 rounded px-1.5 py-0.5;
   }
+}
+
+/* ── Animation keyframes ─────────────────────────── */
+@keyframes modal-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes modal-backdrop-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes modal-panel-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes modal-panel-out {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(6px);
+  }
+}
+@keyframes cart-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes cart-item-out {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(10px) scale(0.98);
+  }
+}
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes dropdown-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes drawer-right-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes drawer-right-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes drawer-left-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes drawer-left-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes drawer-bottom-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes drawer-bottom-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+@keyframes drawer-top-in {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes drawer-top-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes scanner-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes scanner-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes scanner-badge-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.86;
+  }
+}
+@keyframes toast-in {
+  from {
+    transform: translateY(10px) scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes toast-out {
+  from {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(8px) scale(0.98);
+    opacity: 0;
+  }
+}
+
+@keyframes modal-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes modal-backdrop-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@theme inline {
+  /* Modal animations */
+  --animate-modal-backdrop-in: modal-backdrop-in 0.2s ease-out;
+  --animate-modal-backdrop-out: modal-backdrop-out 0.15s ease-in forwards;
+  --animate-modal-panel-in: modal-panel-in 0.2s ease-out;
+  --animate-modal-panel-out: modal-panel-out 0.15s ease-in forwards;
+  --animate-dropdown-in: dropdown-in 0.16s ease-out;
+  --animate-dropdown-out: dropdown-out 0.12s ease-in forwards;
+  --animate-rotation: rotation 1s linear infinite;
+  --animate-scanner-overlay-in: scanner-overlay-in 0.18s ease-out;
+  --animate-scanner-card-in: scanner-card-in 0.24s
+    cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-scanner-badge-pulse: scanner-badge-pulse 1.2s ease-in-out infinite;
+  --animate-toast-in: toast-in 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-toast-out: toast-out 0.18s ease-in forwards;
+  --animate-drawer-right-in: drawer-right-in 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-drawer-right-out: drawer-right-out 0.25s
+    cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-drawer-left-in: drawer-left-in 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-drawer-left-out: drawer-left-out 0.25s
+    cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-drawer-bottom-in: drawer-bottom-in 0.3s
+    cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-drawer-bottom-out: drawer-bottom-out 0.25s
+    cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-drawer-top-in: drawer-top-in 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-drawer-top-out: drawer-top-out 0.25s cubic-bezier(0.32, 0.72, 0, 1);
 }

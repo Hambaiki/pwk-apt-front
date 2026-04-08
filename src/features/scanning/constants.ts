@@ -1,6 +1,11 @@
 import { shapeRenderers } from "@/features/scanning/utils/renderer";
 
-import { Config, ShapeGridItem, ShapeName } from "@/features/scanning/types";
+import {
+  Config,
+  QuestionFormat,
+  ShapeGridItem,
+  ShapeName,
+} from "@/features/scanning/types";
 
 // Shape types and their corresponding symbols
 export const shapes = Object.keys(shapeRenderers).map((name) => ({
@@ -30,10 +35,10 @@ export const sampleShapes: Omit<
 }));
 
 export const defaultConfig: Config = {
-  key: "default",
   itemCount: 40, // Number of item groups
   questionCount: 20, // Questions per group
   timeLimit: 600, // Time limit in seconds
+  questionFormat: QuestionFormat.SharedGrid,
   shapes: shapes, // Shapes to use
   isMonotoneMode: false, // Whether to use monotone colors
 };

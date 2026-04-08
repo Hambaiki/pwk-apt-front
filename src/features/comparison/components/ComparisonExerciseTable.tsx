@@ -4,16 +4,30 @@ import { Button } from "@/components/ui";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Download } from "lucide-react";
-import { ComparisonItem } from "../types";
+import { useCallback, useEffect } from "react";
+import { ComparisonItem, GenerationType } from "../types";
 
 interface ComparisonExerciseTableProps {
   exercises: ComparisonItem[];
+  showDownloadButton?: boolean;
 }
+
+const formatSequenceForPrint = (
+  base: string[],
+  generationType: GenerationType,
+) => {
+  if (generationType === GenerationType.WORDS) {
+    return base.join(" ");
+  }
+
+  return base.join("");
+};
 
 export default function ComparisonExerciseTable({
   exercises,
+  showDownloadButton = true,
 }: ComparisonExerciseTableProps) {
-  const handleDownloadPDF = () => {
+  const handleDownloadPDF = useCallback(() => {
     const doc = new jsPDF({
       orientation: "portrait",
       unit: "mm",
@@ -45,8 +59,8 @@ export default function ComparisonExerciseTable({
     ];
     const tableBody = exercises.map((ex, idx) => [
       idx + 1,
-      ex.base.join(" "),
-      ex.mutatedBase.join(" "),
+      formatSequenceForPrint(ex.base, ex.generationType),
+      formatSequenceForPrint(ex.mutatedBase, ex.generationType),
       "",
       "",
       "",
@@ -192,10 +206,14 @@ export default function ComparisonExerciseTable({
       doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
       doc.text(`Base:`, 14, y);
-      doc.text(ex.base.join(" "), 30, y);
+      doc.text(formatSequenceForPrint(ex.base, ex.generationType), 30, y);
       y += 5;
       doc.text(`Mutated:`, 14, y);
-      doc.text(ex.mutatedBase.join(" "), 30, y);
+      doc.text(
+        formatSequenceForPrint(ex.mutatedBase, ex.generationType),
+        30,
+        y,
+      );
       y += 5;
       doc.text(`Mutation Count: ${ex.mutationCount}`, 14, y);
       y += 5;
@@ -221,17 +239,37 @@ export default function ComparisonExerciseTable({
 
     // === SAVE FILE ===
     doc.save("mutation_exercise.pdf");
-  };
+  }, [exercises]);
+
+  useEffect(() => {
+    const handleExternalDownload = () => {
+      handleDownloadPDF();
+    };
+
+    window.addEventListener(
+      "comparison-print-download",
+      handleExternalDownload,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "comparison-print-download",
+        handleExternalDownload,
+      );
+    };
+  }, [handleDownloadPDF]);
 
   return (
     <div className="mx-auto">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold">Mutation Exercise Sheet</h1>
 
-        <Button onClick={handleDownloadPDF}>
-          <Download size={16} className="mr-2" />
-          Download PDF
-        </Button>
+        {showDownloadButton && (
+          <Button onClick={handleDownloadPDF}>
+            <Download size={16} className="mr-2" />
+            Download PDF
+          </Button>
+        )}
       </div>
 
       <p className="mb-6">
@@ -259,8 +297,12 @@ export default function ComparisonExerciseTable({
           {exercises.map((ex, i) => (
             <tr key={i}>
               <td className="border px-2 py-1 text-center">{i + 1}</td>
-              <td className="border px-2 py-1">{ex.base.join(" ")}</td>
-              <td className="border px-2 py-1">{ex.mutatedBase.join(" ")}</td>
+              <td className="border px-2 py-1">
+                {formatSequenceForPrint(ex.base, ex.generationType)}
+              </td>
+              <td className="border px-2 py-1">
+                {formatSequenceForPrint(ex.mutatedBase, ex.generationType)}
+              </td>
               {["A", "B", "C", "D", "E", "F"].map((label, idx) => (
                 <td key={idx} className="border px-2 py-1 text-center"></td>
               ))}
@@ -279,10 +321,11 @@ export default function ComparisonExerciseTable({
               Question {i + 1} — {ex.generationType}
             </h3>
             <p>
-              <b>Base:</b> {ex.base.join(" ")}
+              <b>Base:</b> {formatSequenceForPrint(ex.base, ex.generationType)}
             </p>
             <p>
-              <b>Mutated:</b> {ex.mutatedBase.join(" ")}
+              <b>Mutated:</b>{" "}
+              {formatSequenceForPrint(ex.mutatedBase, ex.generationType)}
             </p>
             <p>
               <b>Mutation Count:</b> {ex.mutationCount}

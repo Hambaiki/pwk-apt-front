@@ -1,14 +1,15 @@
-"use client";
+﻿"use client";
 
-import Collapse from "@/components/content/Collapse";
-import Score from "@/components/exercise/Score";
-import Toolbar from "@/components/exercise/Toolbar";
-import { Button, Card, Modal } from "@/components/ui";
-import { ModalContent, ModalHeader } from "@/components/ui/Modal";
+import ExerciseSessionControls from "@/components/exercise/ExerciseSessionControls";
+import { Button, Card, Modal, ModalBody, ModalHeader } from "@/components/ui";
+import {
+  createResultId,
+  saveExerciseResult,
+} from "@/libs/exercise-result-store";
 import { cn } from "@/libs/utils/cn";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { symbolPool } from "../constants";
 import { Config, GridItem, InputType } from "../types";
 import GridCell from "./GridCell";
@@ -32,12 +33,7 @@ const GridMemoryExercise = ({
   const [gameState, setGameState] = useState<"memorize" | "input" | "result">(
     "memorize",
   );
-  const [userGrid, setUserGrid] = useState<GridItem[][]>([]);
-  const [currentCell, setCurrentCell] = useState({ row: 0, col: 0 });
-  const [isTimerActive, setIsTimerActive] = useState(true);
-  const [correctCount, setCorrectCount] = useState(0);
-
-  const initializeUserGrid = () => {
+  const createEmptyGrid = (): GridItem[][] => {
     const newUserGrid: GridItem[][] = [];
     for (let i = 0; i < 5; i++) {
       const row: GridItem[] = [];
@@ -46,12 +42,12 @@ const GridMemoryExercise = ({
       }
       newUserGrid.push(row);
     }
-    setUserGrid(newUserGrid);
+    return newUserGrid;
   };
 
-  useEffect(() => {
-    initializeUserGrid();
-  }, []);
+  const [userGrid, setUserGrid] = useState<GridItem[][]>(createEmptyGrid);
+  const [currentCell, setCurrentCell] = useState({ row: 0, col: 0 });
+  const [isTimerActive, setIsTimerActive] = useState(true);
 
   const calculateCorrectCount = () => {
     let correct = 0;
@@ -67,7 +63,7 @@ const GridMemoryExercise = ({
         }
       }
     }
-    setCorrectCount(correct);
+    return correct;
   };
 
   const handleCellInput = (inputType: InputType, inputValue: string) => {
@@ -92,9 +88,8 @@ const GridMemoryExercise = ({
 
   const resetExercise = () => {
     setGameState("memorize");
-    initializeUserGrid();
+    setUserGrid(createEmptyGrid());
     setCurrentCell({ row: 0, col: 0 });
-    setCorrectCount(0);
     setIsTimerActive(true);
   };
 
@@ -102,23 +97,30 @@ const GridMemoryExercise = ({
     if (gameState === "memorize") {
       setGameState("input");
     } else if (gameState === "input") {
-      setGameState("result");
-      setIsTimerActive(false);
-      calculateCorrectCount();
+      const correct = calculateCorrectCount();
+      const resultId = createResultId();
+      saveExerciseResult("grid-memory", resultId, {
+        grid,
+        userGrid,
+        correctCount: correct,
+      });
+      router.push(
+        `/grid-memory/end?score=${correct}&total=25&attempted=25&resultId=${resultId}`,
+      );
     }
   };
 
   const exitExercise = () => {
-    router.push("/exercises/grid-memory");
+    router.push("/grid-memory");
   };
 
   return (
     <div {...props} className={cn("flex flex-col gap-y-4", className)}>
-      <Toolbar
+      <ExerciseSessionControls
         isRunning={
           isTimerActive && (gameState === "memorize" || gameState === "input")
         }
-        isComplete={gameState === "result"}
+        isComplete={false}
         timerLimit={
           gameState === "memorize" ? config.memoryTime : config.timeLimit
         }
@@ -128,81 +130,54 @@ const GridMemoryExercise = ({
         onRestart={resetExercise}
         onExit={exitExercise}
       />
+      {
+        <div
+          className={`grid lg:grid-cols-2 gap-8 transition-all ${
+            !isTimerActive ? "blur pointer-events-none" : ""
+          }`}
+        >
+          {/* Grid Display */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold text-gray-700">
+              {gameState === "memorize" && "Memorize this grid:"}
+              {gameState === "input" && "Fill in what you remember:"}
+            </h3>
 
-      <Collapse isOpen={gameState === "result"}>
-        <Score
-          answerCount={
-            Object.keys(
-              userGrid
-                .flatMap((row) => row)
-                .filter((cell) => cell.value !== ""),
-            ).length
-          }
-          correctCount={correctCount}
-          totalCount={userGrid.flatMap((row) => row).length}
-          score={correctCount}
-          maxScore={userGrid.flatMap((row) => row).length}
-        />
-      </Collapse>
-
-      <div
-        className={`grid lg:grid-cols-2 gap-8 transition-all ${
-          !isTimerActive && gameState !== "result"
-            ? "blur pointer-events-none"
-            : ""
-        }`}
-      >
-        {/* Grid Display */}
-        <div className="space-y-4">
-          <h3 className="text-xl font-semibold text-gray-700">
-            {gameState === "memorize" && "Memorize this grid:"}
-            {gameState === "input" && "Fill in what you remember:"}
-            {gameState === "result" && "Your Results:"}
-          </h3>
-
-          <div className="grid grid-cols-5 gap-2 mx-auto">
-            {(gameState === "memorize" ? grid : userGrid).map((row, rowIndex) =>
-              row.map((cell, colIndex) => (
-                <GridCell
-                  item={cell}
-                  key={`${rowIndex}-${colIndex}`}
-                  variant={
-                    gameState === "input" &&
-                    currentCell.row === rowIndex &&
-                    currentCell.col === colIndex
-                      ? "active"
-                      : gameState === "result"
-                        ? userGrid[rowIndex][colIndex].type === InputType.EMPTY
-                          ? "unanswered"
-                          : userGrid[rowIndex][colIndex].value ===
-                              grid[rowIndex][colIndex].value
-                            ? "correct"
-                            : "incorrect"
-                        : "default"
-                  }
-                  onClick={() =>
-                    gameState === "input" &&
-                    setCurrentCell({ row: rowIndex, col: colIndex })
-                  }
-                />
-              )),
-            )}
+            <div className="grid grid-cols-5 gap-2 mx-auto">
+              {(gameState === "memorize" ? grid : userGrid).map(
+                (row, rowIndex) =>
+                  row.map((cell, colIndex) => (
+                    <GridCell
+                      item={cell}
+                      key={`${rowIndex}-${colIndex}`}
+                      variant={
+                        gameState === "input" &&
+                        currentCell.row === rowIndex &&
+                        currentCell.col === colIndex
+                          ? "active"
+                          : "default"
+                      }
+                      onClick={() =>
+                        gameState === "input" &&
+                        setCurrentCell({ row: rowIndex, col: colIndex })
+                      }
+                    />
+                  )),
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Input Panel */}
-        {(gameState === "input" || gameState === "memorize") && (
+          {/* Input Panel */}
           <div
             className={`space-y-4 ${
               gameState === "memorize" && "opacity-50 pointer-events-none"
             }`}
           >
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <h3 className="text-xl font-semibold text-gray-700">
                 Input Panel - Cell ({currentCell.row + 1}, {currentCell.col + 1}
                 )
               </h3>
-              {/* Clear cell button */}
               <Button
                 variant="outline"
                 onClick={() => handleCellInput(InputType.EMPTY, "")}
@@ -212,38 +187,24 @@ const GridMemoryExercise = ({
               </Button>
             </div>
             <InputKeyboard
-              // letters={letterPool}
-              // numbers={numberPool}
               symbols={symbolPool}
               onInput={(type, value) => handleCellInput(type, value)}
             />
           </div>
-        )}
+        </div>
+      }
 
-        {/* Results Panel */}
-        {gameState === "result" && (
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-gray-700">
-              Original Grid:
-            </h3>
-            <div className="grid grid-cols-5 gap-2 mx-auto">
-              {grid.map((row, rowIndex) =>
-                row.map((cell, colIndex) => (
-                  <GridCell item={cell} key={`orig-${rowIndex}-${colIndex}`} />
-                )),
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-
-      <Modal isOpen={isViewingHelp} onClose={() => setIsViewingHelp(false)}>
-        <ModalContent>
-          <ModalHeader>
-            <h2 className="text-lg font-semibold">
-              How to Complete the Exercise
-            </h2>
-          </ModalHeader>
+      <Modal
+        open={isViewingHelp}
+        onClose={() => setIsViewingHelp(false)}
+        size="2xl"
+        scrollable
+      >
+        <ModalHeader
+          title="How to Complete the Exercise"
+          onClose={() => setIsViewingHelp(false)}
+        />
+        <ModalBody>
           <Card variant="info">
             <ol className="list-decimal list-inside space-y-2">
               <li>Memorize the grid during the memory phase</li>
@@ -253,7 +214,7 @@ const GridMemoryExercise = ({
               <li>Review your performance and improve over time</li>
             </ol>
           </Card>
-        </ModalContent>
+        </ModalBody>
       </Modal>
     </div>
   );

@@ -50,7 +50,7 @@ export function Logo({
   size = "md",
   className,
   priority = false,
-  alt = "Cho-Huai POS",
+  alt = "PWK-APT",
 }: LogoProps) {
   const h = resolveSize(size);
 

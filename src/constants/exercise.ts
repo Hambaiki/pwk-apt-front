@@ -34,38 +34,38 @@ export const exercises: Exercise[] = [
     title: "Comparison",
     description:
       "Compare 2 values and determine whether they are the same or not",
-    href: "/exercises/comparison",
+    href: "/comparison",
     icon: GitCompareArrows,
   },
   {
     title: "Scanning Shapes",
     description: "Identify and count specific shapes in a grid",
-    href: "/exercises/scanning",
+    href: "/scanning",
     icon: Shapes,
   },
   {
     title: "Grid Memory",
     description: "Memorize and recall items in a grid",
-    href: "/exercises/grid-memory",
+    href: "/grid-memory",
     icon: Grid,
   },
   {
     title: "Read Back Memory",
     description: "Memorize and repeat back sequences of numbers and letters",
-    href: "/exercises/read-back-memory",
+    href: "/read-back-memory",
     icon: MessageSquareText,
   },
   {
     title: "Flight Information Memory",
     description:
       "Read flight briefings and recall or calculate key flight details.",
-    href: "/exercises/flight-information",
+    href: "/flight-information",
     icon: Plane,
   },
   {
     title: "Sequence Memory",
     description: "Memorize and recall sequences of colors",
-    href: "/exercises/sequence-memory",
+    href: "/sequence-memory",
     icon: List,
     tag: ExerciseTag.UnderDevelopment,
   },
@@ -73,7 +73,7 @@ export const exercises: Exercise[] = [
     title: "Dual Task Coordination",
     description:
       "Test your ability to manage and perform two tasks simultaneously",
-    href: "/exercises/dual-task-coordination",
+    href: "/dual-task-coordination",
     icon: Hand,
     tag: ExerciseTag.UnderDevelopment,
   },

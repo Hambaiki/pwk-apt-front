@@ -2,13 +2,13 @@ import { cn } from "@/libs/utils/cn";
 import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
 
-const cardVariants = cva("transition-colors border", {
+const cardVariants = cva("transition-colors border border-border", {
   variants: {
     variant: {
       default: "bg-surface",
       outlined: "bg-transparent",
-      shadowed: "shadow-strong bg-background-primary",
-      borderless: "bg-background-primary border-0",
+      shadowed: "shadow-strong bg-surface",
+      borderless: "bg-surface border-0",
       info: "bg-brand-50 border-info-200 text-info-700",
     },
     size: {

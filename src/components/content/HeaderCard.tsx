@@ -21,7 +21,7 @@ const HeaderCardTitle = ({
   className?: string;
 }) => {
   return (
-    <h1 className={cn("mb-2 text-3xl font-bold text-gray-800", className)}>
+    <h1 className={cn("mb-2 text-3xl font-bold text-neutral-800", className)}>
       {children}
     </h1>
   );
@@ -34,7 +34,7 @@ const HeaderCardDescription = ({
   children: React.ReactNode;
   className?: string;
 }) => {
-  return <p className={cn("text-gray-600", className)}>{children}</p>;
+  return <p className={cn("text-neutral-600", className)}>{children}</p>;
 };
 
 export { HeaderCard, HeaderCardDescription, HeaderCardTitle };

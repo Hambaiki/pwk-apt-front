@@ -1,133 +1,231 @@
 "use client";
 
-import { X } from "lucide-react";
-
 import { cn } from "@/libs/utils/cn";
-import { cva, VariantProps } from "class-variance-authority";
-import * as React from "react";
+import { X } from "lucide-react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
-const ModalContext = React.createContext<{
-  isOpen: boolean;
-  onClose: () => void;
-} | null>(null);
+type Phase = "visible" | "exiting" | "hidden";
 
-const modalVariants = cva(
-  "fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-all duration-200 ease-in-out",
-  {
-    variants: {
-      isOpen: {
-        true: "opacity-100",
-        false: "opacity-0 pointer-events-none",
-      },
-    },
-    defaultVariants: {
-      isOpen: false,
-    },
-  },
-);
+const BACKDROP_ANIMATIONS = {
+  visible: "modal-backdrop-in 0.2s ease-out",
+  exiting: "modal-backdrop-out 0.15s ease-in forwards",
+} as const;
 
-interface ModalProps
-  extends
-    React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof modalVariants> {
-  onClose: () => void;
+const PANEL_ANIMATIONS = {
+  visible: "modal-panel-in 0.2s ease-out",
+  exiting: "modal-panel-out 0.15s ease-in forwards",
+} as const;
+
+const SIZE_MAP: Record<string, string> = {
+  sm: "max-w-sm",
+  md: "max-w-md",
+  lg: "max-w-lg",
+  xl: "max-w-xl",
+  "2xl": "max-w-2xl",
+};
+
+interface ModalLayoutContextValue {
+  scrollable: boolean;
 }
 
-const Modal = React.forwardRef<HTMLDivElement, ModalProps>((props, ref) => {
-  const { className, children, isOpen, onClose, ...rest } = props;
+const ModalLayoutContext = createContext<ModalLayoutContextValue>({
+  scrollable: false,
+});
 
-  return (
-    <ModalContext.Provider
-      value={{
-        isOpen: isOpen ?? false,
-        onClose: onClose,
+// ── Root ────────────────────────────────────────────────────────────────────
+
+interface ModalProps {
+  open: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+  /** Max-width of the dialog panel. Default: "md" */
+  size?: keyof typeof SIZE_MAP;
+  /** Extra classes forwarded to the panel element */
+  className?: string;
+  /** Render edge-to-edge full-screen panel */
+  fullScreen?: boolean;
+  /** Enables a flex + bounded-height layout so ModalBody can scroll by default */
+  scrollable?: boolean;
+}
+
+export function Modal({
+  open,
+  onClose,
+  children,
+  size = "md",
+  className,
+  fullScreen = false,
+  scrollable = false,
+}: ModalProps) {
+  const [phase, setPhase] = useState<Phase>(open ? "visible" : "hidden");
+
+  // Freeze the last children seen while the modal was open so content
+  // remains visible throughout the exit animation, regardless of what
+  // the parent renders while open=false.
+  const childrenSnapshot = useRef(children);
+  if (open) {
+    childrenSnapshot.current = children;
+  }
+
+  useEffect(() => {
+    if (open) {
+      setPhase("visible");
+    } else if (phase === "visible") {
+      setPhase("exiting");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  // Escape key dismissal
+  useEffect(() => {
+    if (phase !== "visible") return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [phase, onClose]);
+
+  if (phase === "hidden") return null;
+
+  const isExiting = phase === "exiting";
+  const backdropAnimation = isExiting
+    ? BACKDROP_ANIMATIONS.exiting
+    : BACKDROP_ANIMATIONS.visible;
+  const panelAnimation = fullScreen
+    ? backdropAnimation
+    : isExiting
+      ? PANEL_ANIMATIONS.exiting
+      : PANEL_ANIMATIONS.visible;
+
+  return createPortal(
+    <div
+      role="dialog"
+      aria-modal="true"
+      className={cn(
+        "fixed inset-0 z-50 grid place-items-center",
+        fullScreen ? "p-0" : "p-4",
+      )}
+      style={{
+        backgroundColor: "rgb(15 23 42 / 0.45)",
+        animation: backdropAnimation,
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       <div
-        ref={ref}
-        className={cn(modalVariants({ isOpen }), className)}
-        {...rest}
+        className={cn(
+          "w-full overflow-hidden rounded-2xl border border-border bg-surface shadow-xl",
+          SIZE_MAP[size] ?? SIZE_MAP.md,
+          fullScreen && "h-dvh max-w-none rounded-none border-0 shadow-none",
+          !fullScreen &&
+            scrollable &&
+            "flex max-h-[calc(100dvh-2rem)] flex-col",
+          className,
+        )}
+        style={{ animation: panelAnimation }}
+        onAnimationEnd={(e) => {
+          if (e.currentTarget === e.target && isExiting) setPhase("hidden");
+        }}
       >
-        {children}
+        <ModalLayoutContext.Provider value={{ scrollable }}>
+          {childrenSnapshot.current}
+        </ModalLayoutContext.Provider>
       </div>
-    </ModalContext.Provider>
+    </div>,
+    document.body,
   );
-});
-Modal.displayName = "Modal";
+}
 
-const ModalHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->((props, ref) => {
-  const { className, children, ...rest } = props;
+// ── Header ─────────────────────────────────────────────────────────────────
 
-  const context = React.useContext(ModalContext);
-  if (!context) {
-    throw new Error("ModalHeader must be used within a Modal");
-  }
+interface ModalHeaderProps {
+  title: string;
+  description?: string;
+  onClose?: () => void;
+  className?: string;
+}
 
-  const { onClose } = context;
+export function ModalHeader({
+  title,
+  description,
+  onClose,
+  className,
+}: ModalHeaderProps) {
+  const { scrollable } = useContext(ModalLayoutContext);
 
   return (
     <div
-      ref={ref}
-      className={cn("flex items-center justify-between pb-4", className)}
-      {...rest}
-    >
-      {children}
-      <button onClick={onClose} className="p-2">
-        <X className="text-red-500 hover:text-red-700 transition-colors" />
-      </button>
-    </div>
-  );
-});
-ModalHeader.displayName = "ModalHeader";
-
-const ModalFooter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->((props, ref) => {
-  const { className, children, ...rest } = props;
-
-  return (
-    <div
-      ref={ref}
-      className={cn("flex justify-end pt-4 transition-all")}
-      {...rest}
-    >
-      {children}
-    </div>
-  );
-});
-ModalFooter.displayName = "ModalFooter";
-
-const ModalContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->((props, ref) => {
-  const { className, children, ...rest } = props;
-
-  const context = React.useContext(ModalContext);
-  if (!context) {
-    throw new Error("ModalHeader must be used within a Modal");
-  }
-
-  const { isOpen } = context;
-
-  return (
-    <div
-      ref={ref}
       className={cn(
-        "bg-background-primary p-6 m-6 rounded-2xl shadow-2xl transition-all ease-in-out duration-100",
-        isOpen ? "scale-100" : "scale-95",
+        "flex items-start justify-between gap-4 border-b border-border px-5 py-4",
+        scrollable && "shrink-0",
         className,
       )}
-      {...rest}
+    >
+      <div>
+        <h3 className="text-base font-semibold text-neutral-900">{title}</h3>
+        {description && (
+          <p className="mt-1 text-sm text-neutral-500">{description}</p>
+        )}
+      </div>
+      {onClose && (
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="mt-1 rounded-md p-1 text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-600 cursor-pointer"
+        >
+          <X size={16} />
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ── Body ────────────────────────────────────────────────────────────────────
+
+interface ModalBodyProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function ModalBody({ children, className }: ModalBodyProps) {
+  const { scrollable } = useContext(ModalLayoutContext);
+
+  return (
+    <div
+      className={cn(
+        "px-5 py-4",
+        scrollable && "min-h-0 flex-1 overflow-y-auto",
+        className,
+      )}
     >
       {children}
     </div>
   );
-});
-ModalContent.displayName = "ModalContent";
+}
 
-export { Modal, ModalContent, ModalFooter, ModalHeader };
+// ── Footer ──────────────────────────────────────────────────────────────────
+
+interface ModalFooterProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function ModalFooter({ children, className }: ModalFooterProps) {
+  const { scrollable } = useContext(ModalLayoutContext);
+
+  return (
+    <div
+      className={cn(
+        "flex items-center justify-end gap-2 border-t border-border px-5 py-4",
+        scrollable && "shrink-0",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+}

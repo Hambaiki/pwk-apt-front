@@ -1,4 +1,5 @@
-import { Button, Card, Input } from "@/components/ui";
+import { Button, Card } from "@/components/ui";
+import { FormInput, FormSelect, FormSelectOption } from "@/components/ui/form";
 import { InputType } from "@/features/grid-memory/types";
 import { useState } from "react";
 
@@ -42,25 +43,24 @@ const InputKeyboard = ({
         >
           <label className="flex flex-col">
             Input Type
-            <select
+            <FormSelect
               value={inputType ?? ""}
               className="mt-1 p-2 border rounded"
-              onChange={(e) => {
-                const value = e.currentTarget.value;
+              onChange={(value) => {
                 if (value) {
                   setInputType(value as InputType);
                 }
               }}
             >
-              <option value="">Select input type</option>
-              <option value="letter">Letter</option>
-              <option value="number">Number</option>
-              {/* <option value="symbol">Symbol</option> */}
-            </select>
+              <FormSelectOption value="">Select input type</FormSelectOption>
+              <FormSelectOption value="letter">Letter</FormSelectOption>
+              <FormSelectOption value="number">Number</FormSelectOption>
+              {/* <FormSelectOption value="symbol">Symbol</FormSelectOption> */}
+            </FormSelect>
           </label>
           <label className="flex flex-col">
             Value
-            <Input
+            <FormInput
               value={inputValue}
               type="text"
               placeholder="Enter letter"

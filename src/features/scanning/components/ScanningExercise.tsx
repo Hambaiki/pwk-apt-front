@@ -1,38 +1,41 @@
 "use client";
 
-import Collapse from "@/components/content/Collapse";
-import Score from "@/components/exercise/Score";
-import Toolbar from "@/components/exercise/Toolbar";
-import { Card, Modal } from "@/components/ui";
-import { ModalContent, ModalHeader } from "@/components/ui/Modal";
+import ExerciseQuestionContentCard from "@/components/exercise/ExerciseQuestionContentCard";
+import ExerciseQuestionRunLayout from "@/components/exercise/ExerciseQuestionRunLayout";
+import ExerciseSessionControls from "@/components/exercise/ExerciseSessionControls";
+import { Card, Modal, ModalBody, ModalHeader } from "@/components/ui";
+import {
+  createResultId,
+  saveExerciseResult,
+} from "@/libs/exercise-result-store";
 import { cn } from "@/libs/utils/cn";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { defaultConfig } from "../constants";
-import { Config, ShapeGridItem, Stage } from "../types";
+import {
+  Config,
+  QuestionFormat,
+  ScanningQuestionSet,
+  ShapeGridItem,
+} from "../types";
 import HowToCard from "./HowToCard";
 import ShapeItem from "./ShapeItem";
 
 interface ScanningExerciseProps extends React.HTMLAttributes<HTMLDivElement> {
-  items: ShapeGridItem[];
-  questions: ShapeGridItem[];
+  questionSets: ScanningQuestionSet[];
   config?: Config;
 }
 
 const ScanningExercise = ({
-  items,
-  questions,
+  questionSets,
   config = defaultConfig,
   className,
   ...props
 }: ScanningExerciseProps) => {
   const router = useRouter();
 
-  const [stage, setStage] = useState<Stage>(Stage.Questions); // 'reference', 'questions', 'results'
-
   // Question and item state
   const [answers, setAnswers] = useState<Record<number, string>>({});
-  const [score, setScore] = useState(0);
 
   // Timer state (in seconds)
   const [isTimerActive, setIsTimerActive] = useState(true);
@@ -51,38 +54,104 @@ const ScanningExercise = ({
   // Calculate score
   const calculateScore = () => {
     let correct = 0;
-    questions.forEach((question) => {
-      if (answers[question.id] === question.letter) {
+    questionSets.forEach((questionSet) => {
+      if (answers[questionSet.id] === questionSet.question.letter) {
         correct++;
       }
     });
-    setScore(correct);
+    return correct;
   };
 
   const endExercise = () => {
-    calculateScore();
-    setStage(Stage.Results);
-    setIsTimerActive(false);
-    window.scrollTo({ behavior: "smooth", top: 0 });
+    const correct = calculateScore();
+    const attempted = Object.keys(answers).length;
+    const resultId = createResultId();
+    saveExerciseResult("scanning", resultId, {
+      questionSets,
+      answers,
+      score: correct,
+      config,
+    });
+    router.push(
+      `/scanning/end?score=${correct}&total=${questionSets.length}&attempted=${attempted}&resultId=${resultId}`,
+    );
   };
 
   // Reset exercise
   const resetExercise = () => {
-    setStage(Stage.Questions);
     setIsTimerActive(true);
     setAnswers({});
-    setScore(0);
   };
 
   const exitExercise = () => {
-    router.push("/exercises/scanning");
+    router.push("/scanning");
+  };
+
+  const renderShapeGrid = (
+    items: ShapeGridItem[],
+    options?: {
+      compact?: boolean;
+      blur?: boolean;
+    },
+  ) => {
+    const compact = options?.compact ?? false;
+    const shouldBlur = options?.blur ?? false;
+
+    return (
+      <div
+        className={cn(
+          "overflow-x-auto rounded-2xl border border-neutral-200 bg-white p-3 shadow-sm sm:p-4",
+          shouldBlur ? "blur" : "",
+        )}
+      >
+        <div
+          className={cn(
+            "relative mx-auto",
+            compact
+              ? "h-55 w-90 sm:h-60 sm:w-95"
+              : "h-95 w-160 sm:h-110 sm:w-190 lg:h-130 lg:w-225",
+          )}
+        >
+          {items.map((item) => (
+            <div
+              key={item.id}
+              className="absolute flex items-center justify-center text-white font-bold text-sm"
+              style={{
+                left: `${item.x}%`,
+                top: `${item.y}%`,
+                transform: "translate(-50%, -50%)",
+                rotate: `${item.rotation}deg`,
+              }}
+            >
+              <ShapeItem
+                shape={item.shape.name}
+                color={item.color}
+                number={item.number}
+                letter={item.letter}
+                isMonotoneMode={config.isMonotoneMode}
+                size={
+                  compact
+                    ? Math.max(40, Math.floor(item.size * 0.48))
+                    : item.size
+                }
+                fontSize={
+                  compact
+                    ? Math.max(10, Math.floor(item.size / 10))
+                    : Math.max(14, item.size / 6)
+                }
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   return (
-    <div {...props} className={cn("flex flex-col gap-y-4", className)}>
-      <Toolbar
-        isRunning={isTimerActive && stage === Stage.Questions}
-        isComplete={stage === Stage.Results}
+    <div {...props} className={cn("flex flex-col gap-y-6", className)}>
+      <ExerciseSessionControls
+        isRunning={isTimerActive}
+        isComplete={false}
         timerLimit={config.timeLimit}
         onEnd={endExercise}
         onPause={() => setIsTimerActive((prev) => !prev)}
@@ -91,138 +160,123 @@ const ScanningExercise = ({
         onExit={exitExercise}
       />
 
-      <Collapse isOpen={stage === Stage.Results}>
-        <Score
-          answerCount={Object.keys(answers).length}
-          correctCount={score}
-          totalCount={questions.length}
-          score={score}
-          maxScore={questions.length}
-        />
-      </Collapse>
+      <>
+        {config.questionFormat !== QuestionFormat.PerQuestionGrid && (
+          <Card className="bg-surface p-4 sm:p-5">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <p className="text-sm font-semibold text-neutral-700">
+                Reference Grid
+              </p>
+              <p className="text-xs text-neutral-500">
+                Scroll sideways on small screens
+              </p>
+            </div>
+            {renderShapeGrid(questionSets[0]?.items ?? [], {
+              blur: !isTimerActive,
+            })}
+          </Card>
+        )}
 
-      <Card className="mt-4 bg-background-primary">
-        <div
-          className={cn(
-            "pr-1 overflow-x-auto transition-all",
-            !isTimerActive && stage === Stage.Questions ? "blur" : "",
-          )}
+        <ExerciseQuestionRunLayout
+          panelTitle="Answer Panel"
+          panelMeta={
+            <p className="text-xs text-neutral-500">
+              Enter the letter for each target shape
+            </p>
+          }
+          navigatorTitle="Question Navigator"
+          blocked={!isTimerActive}
+          navigatorItems={questionSets.map((questionSet, index) => ({
+            id: String(questionSet.id),
+            label: `Q${index + 1}`,
+            targetId: `scanning-question-${questionSet.id}`,
+            isCompleted: Boolean(answers[questionSet.id]),
+            completedLabel: "Answered",
+            pendingLabel: "Pending",
+          }))}
         >
-          <div className="relative w-[800px] h-[500px] mx-auto">
-            {items.map((item) => (
-              <div
-                key={item.id}
-                className="absolute flex items-center justify-center text-white font-bold text-sm"
-                style={{
-                  left: `${item.x}%`,
-                  top: `${item.y}%`,
-                  transform: "translate(-50%, -50%)",
-                  rotate: `${item.rotation}deg`,
-                }}
-              >
-                <ShapeItem
-                  shape={item.shape.name}
-                  color={item.color}
-                  number={item.number}
-                  letter={item.letter}
-                  isMonotoneMode={config.isMonotoneMode}
-                  size={item.size}
-                  fontSize={Math.max(14, item.size / 6)}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </Card>
-
-      <Card className="mt-4 bg-background-primary">
-        <div className="pr-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-96 overflow-y-auto">
-          {questions.map((question, index) => {
-            const userAnswer = answers[question.id] || "";
-            const isCorrect = userAnswer === question.letter;
-            const isSubmitted = stage === Stage.Results;
+          {questionSets.map((questionSet, index) => {
+            const { question, items } = questionSet;
 
             return (
-              <Card
-                key={question.id}
-                className={cn(
-                  `flex flex-col transition-all`,
-                  !isTimerActive && stage === Stage.Questions
-                    ? "blur pointer-events-none"
-                    : "",
-                  isSubmitted
-                    ? isCorrect
-                      ? "bg-green-50 border-green-300"
-                      : "bg-red-50 border-red-300"
-                    : "",
-                )}
+              <ExerciseQuestionContentCard
+                key={questionSet.id}
+                id={`scanning-question-${questionSet.id}`}
+                questionLabel={`Question ${index + 1}`}
+                title="Enter the matching letter for the target shape."
+                className="border border-neutral-200 bg-white"
+                contentClassName="space-y-3"
               >
-                <div className="text-center mb-3">
-                  <span className="text-sm font-semibold text-gray-600">
-                    Question {index + 1}
-                  </span>
-                </div>
-                <div className="flex-1 flex items-center justify-center mb-4">
-                  <ShapeItem
-                    shape={question.shape.name}
-                    color={question.color}
-                    number={question.number}
-                    isMonotoneMode={config.isMonotoneMode}
-                    fontSize={Math.max(14, question.size / 6)}
-                  />
-                </div>
-                <div className="text-center">
-                  <p className="text-sm text-gray-600 mb-2">
-                    {question.shape.name.charAt(0).toUpperCase() +
-                      question.shape.name.slice(1)}{" "}
-                    with {question.number}
-                  </p>
-                  <input
-                    type="text"
-                    maxLength={1}
-                    disabled={stage === Stage.Results}
-                    value={answers[question.id] || ""}
-                    onChange={(e) =>
-                      handleAnswerChange(question.id, e.target.value)
-                    }
-                    className="w-12 h-12 text-center text-xl font-bold border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
-                    placeholder="?"
-                  />
-                </div>
+                {config.questionFormat === QuestionFormat.PerQuestionGrid && (
+                  <div>
+                    <p className="mb-1.5 text-xs font-medium text-neutral-500">
+                      Grid for question {index + 1}
+                    </p>
+                    {renderShapeGrid(items, { compact: true })}
+                  </div>
+                )}
 
-                {stage === Stage.Results && (
-                  <Card variant="info" className="mt-4 text-sm">
-                    <p>
-                      <span className="font-semibold">Your answer: </span>
-                      <span
-                        className={
-                          isCorrect ? "text-green-600" : "text-red-600"
-                        }
-                      >
-                        {userAnswer || "No answer"}
+                <div className="flex items-center gap-3">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-xs font-bold text-neutral-600">
+                    {index + 1}
+                  </span>
+
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-dashed border-neutral-200 bg-neutral-50">
+                    <ShapeItem
+                      shape={question.shape.name}
+                      color={question.color}
+                      number={question.number}
+                      isMonotoneMode={config.isMonotoneMode}
+                      size={52}
+                      fontSize={12}
+                    />
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold capitalize text-neutral-800">
+                      {question.shape.name}
+                    </p>
+                    <p className="text-xs text-neutral-500">
+                      Number&nbsp;
+                      <span className="font-medium text-neutral-700">
+                        {question.number}
                       </span>
                     </p>
-                    <p>
-                      <span className="font-semibold">Correct answer: </span>
-                      <span className="text-green-600">{question.letter}</span>
-                    </p>
-                  </Card>
-                )}
-              </Card>
+                  </div>
+
+                  <input
+                    id={`scan-answer-${questionSet.id}`}
+                    type="text"
+                    inputMode="text"
+                    autoCapitalize="characters"
+                    maxLength={1}
+                    value={answers[questionSet.id] || ""}
+                    onChange={(e) =>
+                      handleAnswerChange(questionSet.id, e.target.value)
+                    }
+                    className="h-12 w-14 shrink-0 rounded-xl border border-neutral-300 bg-white text-center text-xl font-bold tracking-widest text-neutral-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    placeholder="A"
+                  />
+                </div>
+              </ExerciseQuestionContentCard>
             );
           })}
-        </div>
-      </Card>
+        </ExerciseQuestionRunLayout>
+      </>
 
-      <Modal isOpen={isViewingHelp} onClose={() => setIsViewingHelp(false)}>
-        <ModalContent>
-          <ModalHeader>
-            <h2 className="text-lg font-semibold">
-              How to Complete the Exercise
-            </h2>
-          </ModalHeader>
+      <Modal
+        open={isViewingHelp}
+        onClose={() => setIsViewingHelp(false)}
+        size="2xl"
+        scrollable
+      >
+        <ModalHeader
+          title="How to Complete the Exercise"
+          onClose={() => setIsViewingHelp(false)}
+        />
+        <ModalBody>
           <HowToCard />
-        </ModalContent>
+        </ModalBody>
       </Modal>
     </div>
   );

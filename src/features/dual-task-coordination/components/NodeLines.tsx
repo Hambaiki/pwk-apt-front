@@ -1,17 +1,19 @@
 "use client";
 
-import { Button, Card, Input, Option, Select } from "@/components/ui";
+import { Button, Card } from "@/components/ui";
+import { FormInput, FormSelect } from "@/components/ui/form";
+import { FormSelectOption } from "@/components/ui/form/FormSelectOption";
 import {
-  defaultConfig,
-  defaultViewBox,
-} from "@/features/node-line-generator/constants";
+  defaultLineGeneratorConfig,
+  defaultLineGeneratorViewBox,
+} from "@/features/dual-task-coordination/line-generator";
 import {
   Color,
-  Config,
   Node,
+  NodeLineConfig,
   Shape,
   ViewBox,
-} from "@/features/node-line-generator/types";
+} from "@/features/dual-task-coordination/line-generator.types";
 import { randomInt } from "@/libs/utils/number";
 import { Download, LineSquiggle } from "lucide-react";
 import { useRef, useState } from "react";
@@ -19,8 +21,10 @@ import { useRef, useState } from "react";
 export default function NodeLines() {
   const svgRef = useRef<SVGSVGElement>(null);
 
-  const [viewBox, setViewBox] = useState<ViewBox>(defaultViewBox);
-  const [config, setConfig] = useState<Config>(defaultConfig);
+  const [viewBox, setViewBox] = useState<ViewBox>(defaultLineGeneratorViewBox);
+  const [config, setConfig] = useState<NodeLineConfig>(
+    defaultLineGeneratorConfig,
+  );
   const [lines, setLines] = useState<Node[][] | undefined>();
 
   // NOTE: Generate lines based on current config
@@ -73,7 +77,7 @@ export default function NodeLines() {
 
   // NOTE: compute bounding box so SVG fits the content
   const computeViewBox = (lines: Node[][]) => {
-    if (!lines || lines.length === 0) return defaultViewBox;
+    if (!lines || lines.length === 0) return defaultLineGeneratorViewBox;
 
     let minX = Infinity,
       minY = Infinity,
@@ -108,10 +112,10 @@ export default function NodeLines() {
   };
 
   const handleChangeConfig = (
-    key: keyof Config,
+    key: keyof NodeLineConfig,
     value: string | number | string[] | Shape[],
   ) => {
-    setConfig((prev) => ({ ...prev, [key]: value }) as Config);
+    setConfig((prev) => ({ ...prev, [key]: value }) as NodeLineConfig);
   };
 
   const handleDownloadImage = async () => {
@@ -201,19 +205,19 @@ export default function NodeLines() {
       <Card className="space-y-4">
         <label className="flex flex-col">
           Orientation:
-          <Select
+          <FormSelect
             value={config.orientation}
-            onChange={(e) =>
+            onChange={(value) =>
               handleChangeConfig(
                 "orientation",
-                e.target.value as "horizontal" | "vertical",
+                value as "horizontal" | "vertical",
               )
             }
             className="border rounded px-2 py-1"
           >
-            <Option value="horizontal">Horizontal</Option>
-            <Option value="vertical">Vertical</Option>
-          </Select>
+            <FormSelectOption value="horizontal">Horizontal</FormSelectOption>
+            <FormSelectOption value="vertical">Vertical</FormSelectOption>
+          </FormSelect>
         </label>
 
         <label className="flex flex-col gap-2">
@@ -221,7 +225,7 @@ export default function NodeLines() {
           <div className="flex gap-4">
             {(["circle", "square", "triangle"] as Shape[]).map((shape) => (
               <label key={shape} className="flex items-center gap-2">
-                <input
+                <FormInput
                   type="checkbox"
                   checked={config.shapes.includes(shape)}
                   onChange={(e) => {
@@ -251,7 +255,7 @@ export default function NodeLines() {
               Color.Purple,
             ].map((color) => (
               <label key={color} className="flex items-center gap-2">
-                <input
+                <FormInput
                   type="checkbox"
                   checked={config.colors.includes(color)}
                   onChange={(e) =>
@@ -279,7 +283,7 @@ export default function NodeLines() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
           <label className="flex flex-col">
             Lines:
-            <Input
+            <FormInput
               type="number"
               min={1}
               value={config.lineCount}
@@ -291,7 +295,7 @@ export default function NodeLines() {
 
           <label className="flex flex-col">
             Nodes / line:
-            <Input
+            <FormInput
               type="number"
               min={1}
               value={config.countPerLine}
@@ -303,7 +307,7 @@ export default function NodeLines() {
 
           <label className="flex flex-col">
             Step:
-            <Input
+            <FormInput
               type="number"
               value={config.step}
               onChange={(e) =>
@@ -314,7 +318,7 @@ export default function NodeLines() {
 
           <label className="flex flex-col">
             Line gap:
-            <Input
+            <FormInput
               type="number"
               value={config.lineGap}
               onChange={(e) =>
@@ -325,7 +329,7 @@ export default function NodeLines() {
 
           <label className="flex flex-col">
             Wiggle:
-            <Input
+            <FormInput
               type="number"
               value={config.wiggle}
               onChange={(e) =>
@@ -336,7 +340,7 @@ export default function NodeLines() {
 
           <label className="flex flex-col">
             Node radius:
-            <Input
+            <FormInput
               type="number"
               value={config.nodeRadius}
               onChange={(e) =>
@@ -347,7 +351,10 @@ export default function NodeLines() {
         </div>
 
         <div className="flex flex-wrap justify-end gap-3 items-center">
-          <Button variant="outline" onClick={() => setConfig(defaultConfig)}>
+          <Button
+            variant="outline"
+            onClick={() => setConfig(defaultLineGeneratorConfig)}
+          >
             Reset Configuration
           </Button>
           <Button onClick={handleGenerate}>Generate</Button>
@@ -370,7 +377,7 @@ export default function NodeLines() {
           </Button>
         </div>
 
-        <div className="flex flex-col items-center p-6 border rounded-xl bg-white overflow-auto">
+        <div className="flex flex-col items-center p-6 border border-border rounded-xl bg-white overflow-auto">
           <svg
             ref={svgRef}
             viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`}
