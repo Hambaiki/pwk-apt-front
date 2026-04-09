@@ -5,3 +5,11 @@ export interface Config {
   questionTime: number; // in seconds
   symbolMode: boolean;
 }
+
+export type DualTaskQuestionStatus = "expired" | "ended";
+
+export interface DualTaskQuestionHistoryItem {
+  id: number;
+  prompt: string;
+  status: DualTaskQuestionStatus;
+}

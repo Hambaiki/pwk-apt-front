@@ -1,5 +1,5 @@
 import ExerciseConfigureForm from "@/components/exercise/ExerciseConfigureForm";
-import { FormInput } from "@/components/ui/form";
+import { FormInput, FormToggle } from "@/components/ui/form";
 import { defaultConfig } from "../constants";
 import { Config } from "../types";
 
@@ -89,21 +89,27 @@ export default function ConfigurerForm({
             </div>
           </div>
 
-          <div className="flex flex-col mt-4">
-            <label className="flex items-center text-sm font-medium text-neutral-700">
-              <FormInput
-                type="checkbox"
-                checked={config.symbolMode}
-                onChange={(e) =>
-                  setConfig({ ...config, symbolMode: e.target.checked })
+          <div className="mt-4 rounded-xl border border-neutral-200 bg-surface p-3">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium text-neutral-700">
+                  Symbol Target Mode
+                </p>
+                <p className="mt-1 text-xs text-neutral-500">
+                  When enabled, the exercise will focus on symbol recognition
+                  and coordination.
+                </p>
+              </div>
+              <FormToggle
+                value={config.symbolMode}
+                onChange={(checked) =>
+                  setConfig({ ...config, symbolMode: checked })
                 }
-                className="mr-2"
+                aria-label="Toggle symbol target mode"
               />
-              Symbol Target Mode
-            </label>
+            </div>
             <p className="mt-1 text-xs text-neutral-500">
-              When enabled, the exercise will focus on symbol recognition and
-              coordination.
+              Tip: enable this for more visual tracking pressure.
             </p>
           </div>
         </>

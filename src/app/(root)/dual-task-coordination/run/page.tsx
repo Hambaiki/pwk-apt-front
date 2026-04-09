@@ -14,7 +14,7 @@ const DualTaskCoordinationPage = () => {
     if (instanceId === 0) {
       router.replace("/dual-task-coordination");
     }
-  }, []);
+  }, [instanceId, router]);
 
   if (instanceId === 0) return null;
 

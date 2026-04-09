@@ -1,35 +1,19 @@
 "use client";
 
-import Score from "@/components/exercise/Score";
 import { GridItem, InputType } from "../types";
 import GridCell from "./GridCell";
 
 interface GridMemoryResultProps {
   grid: GridItem[][];
   userGrid: GridItem[][];
-  correctCount: number;
 }
 
 const GridMemoryResult = ({
   grid,
   userGrid,
-  correctCount,
 }: GridMemoryResultProps) => {
-  const totalCells = userGrid.flatMap((row) => row).length;
-  const answeredCount = userGrid
-    .flatMap((row) => row)
-    .filter((cell) => cell.value !== "").length;
-
   return (
     <div className="space-y-6">
-      <Score
-        answerCount={answeredCount}
-        correctCount={correctCount}
-        totalCount={totalCells}
-        score={correctCount}
-        maxScore={totalCells}
-      />
-
       <div className="grid gap-8 lg:grid-cols-2">
         {/* User result grid */}
         <div className="space-y-4">

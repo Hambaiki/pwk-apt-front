@@ -1,5 +1,10 @@
 import ExerciseConfigureForm from "@/components/exercise/ExerciseConfigureForm";
-import { FormInput, FormSelect, FormSelectOption } from "@/components/ui/form";
+import {
+  FormInput,
+  FormSelect,
+  FormSelectOption,
+  FormToggle,
+} from "@/components/ui/form";
 import { defaultConfig, sampleShapes, shapes } from "../constants";
 import { Config, QuestionFormat } from "../types";
 import ShapeItem from "./ShapeItem";
@@ -169,42 +174,45 @@ export default function ConfigurerForm({
 
               <label className="flex flex-col text-sm font-medium text-neutral-700">
                 Monotone Mode
-                <div className="mt-2 flex items-center">
-                  <FormInput
-                    type="checkbox"
-                    checked={config.isMonotoneMode}
-                    onChange={(e) =>
+                <div className="mt-2 flex items-center justify-between rounded-lg border border-neutral-100 bg-neutral-50 px-3 py-2">
+                  <span className="text-sm font-medium text-neutral-700">
+                    Enable Monotone Mode
+                  </span>
+                  <FormToggle
+                    value={config.isMonotoneMode}
+                    onChange={(checked) =>
                       setConfig((prev) => ({
                         ...prev,
-                        isMonotoneMode: e.target.checked,
+                        isMonotoneMode: checked,
                       }))
                     }
-                    className="mr-2 h-4 w-4"
+                    aria-label="Toggle monotone mode"
                   />
-                  Enable Monotone Mode
                 </div>
               </label>
 
               <div className="flex flex-col text-sm font-medium text-neutral-700">
                 Shapes to Include
-                <div className="mt-2 flex flex-wrap gap-3">
+                <div className="mt-2 space-y-2 rounded-xl border border-neutral-200 bg-white p-3">
                   {shapes.map((shape) => (
-                    <label className="flex items-center" key={shape.name}>
-                      <FormInput
-                        type="checkbox"
-                        checked={config.shapes.includes(shape)}
-                        onChange={(e) => {
+                    <div
+                      className="flex items-center justify-between rounded-lg border border-neutral-100 bg-neutral-50 px-3 py-2"
+                      key={shape.name}
+                    >
+                      <span className="capitalize">{shape.name}</span>
+                      <FormToggle
+                        value={config.shapes.includes(shape)}
+                        onChange={(checked) => {
                           setConfig((prev) => ({
                             ...prev,
-                            shapes: e.target.checked
+                            shapes: checked
                               ? [...prev.shapes, shape]
                               : prev.shapes.filter((s) => s !== shape),
                           }));
                         }}
-                        className="mr-2 h-4 w-4"
+                        aria-label={`Toggle shape ${shape.name}`}
                       />
-                      {shape.name}
-                    </label>
+                    </div>
                   ))}
                 </div>
               </div>

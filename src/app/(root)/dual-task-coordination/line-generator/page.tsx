@@ -1,55 +1,73 @@
 import MainSection from "@/components/content/MainSection";
 import { PageHeader } from "@/components/content/PageHeader";
-import { Card } from "@/components/ui";
+import {
+  SectionCard,
+  SectionCardBody,
+  SectionCardHeader,
+} from "@/components/content/SectionCard";
 import NodeLines from "@/features/dual-task-coordination/components/NodeLines";
-
-import { Cog, Info } from "lucide-react";
 
 const DualTaskCoordinationPage = () => {
   return (
     <MainSection>
-      <PageHeader
-        title="Dual Task Coordination Line Generator"
-        description="Generate custom dual task coordination lines for practice and training."
-        backHref="/dual-task-coordination"
-        backLabel="Back to Dual Task Coordination"
-      />
+      <section className="space-y-8">
+        <PageHeader
+          title="Dual Task Line Generator"
+          description="Generate reusable line patterns for dual-task coordination drills and export them as images for practice sessions."
+          backHref="/dual-task-coordination"
+          backLabel="Back to Dual Task Coordination"
+        />
 
-      <div className="space-y-4">
-        <h2 className="mb-4 flex items-center gap-2">
-          <Info className="w-8 h-8" />
-          Introduction
-        </h2>
-        <p>
-          This tool allows you to create personalized dual task coordination
-          lines. Customize the parameters to generate lines that suit your
-          training needs.
-        </p>
-      </div>
+        <SectionCard className="bg-surface">
+          <SectionCardHeader
+            title="Generator Overview"
+            description="Create line templates that match your training goals."
+          />
+          <SectionCardBody>
+            <p>
+              Use this tool to build custom line sets for printable or on-screen
+              dual-task practice. Tune spacing, direction, shape style, and
+              visual variation to simulate easier or more demanding tracking
+              patterns.
+            </p>
+          </SectionCardBody>
+        </SectionCard>
 
-      <Card variant="info" className="space-y-4">
-        <ol className="list-disc list-inside space-y-2">
-          <li>Adjust the configuration settings to your preference.</li>
-          <li>
-            Click &quot;Generate Lines&quot; to create a new set of lines.
-          </li>
-          <li>Use the SVG output for your dual task coordination exercises.</li>
-          <li>
-            Reset to default settings anytime using the &quot;Reset
-            Configuration&quot; button.
-          </li>
-        </ol>
-      </Card>
+        <SectionCard className="bg-surface">
+          <SectionCardHeader
+            title="How to Use"
+            description="Recommended workflow for generating practice-ready lines."
+          />
+          <SectionCardBody>
+            <ol className="list-inside list-disc space-y-2 text-sm text-neutral-700">
+              <li>
+                Adjust orientation, shape set, color set, and spacing settings
+                to match the exercise difficulty you want.
+              </li>
+              <li>
+                Click <strong>Generate</strong> to preview a new line layout.
+              </li>
+              <li>
+                Repeat until the preview looks right for your training purpose.
+              </li>
+              <li>
+                Click <strong>Download</strong> to export the SVG preview as a
+                PNG image.
+              </li>
+            </ol>
+          </SectionCardBody>
+        </SectionCard>
 
-      <div className="space-y-4">
-        <h2 className="flex items-center gap-2">
-          <Cog size={32} />
-          Configuration
-        </h2>
-        <p>Adjust the settings below for the line generator.</p>
-
-        <NodeLines />
-      </div>
+        <SectionCard className="bg-surface">
+          <SectionCardHeader
+            title="Configuration and Output"
+            description="Set generator parameters, preview the result, and download when ready."
+          />
+          <SectionCardBody>
+            <NodeLines />
+          </SectionCardBody>
+        </SectionCard>
+      </section>
     </MainSection>
   );
 };

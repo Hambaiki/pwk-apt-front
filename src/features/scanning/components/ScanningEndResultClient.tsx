@@ -35,7 +35,6 @@ const ScanningEndResultClient = ({ resultId }: { resultId?: string }) => {
     <ScanningResult
       questionSets={payload.questionSets}
       answers={payload.answers}
-      score={payload.score}
       config={payload.config}
     />
   );

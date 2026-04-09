@@ -119,14 +119,14 @@ const GridMemoryExercisePage = () => {
     if (instanceId === 0) {
       router.replace("/grid-memory");
     }
-  }, []);
+  }, [instanceId, router]);
 
   const { sanitizedConfig, grid } = useMemo(() => {
     if (instanceId === 0)
       return { sanitizedConfig: defaultConfig, grid: [] as GridItem[][] };
     const sanitized = sanitizeConfig(config);
     return { sanitizedConfig: sanitized, grid: generateGrid(sanitized) };
-  }, [instanceId]);
+  }, [instanceId, config]);
 
   if (instanceId === 0) return null;
 

@@ -245,7 +245,7 @@ const ReadBackMemoryExercise = ({
       {questions.length > 0 && (
         <>
           <ExerciseQuestionRunLayout
-            panelTitle="Read Back Memory – Mixed Numbers & Letters"
+            panelTitle="Read Back Memory"
             panelMeta={
               <div className="flex flex-wrap gap-2 text-sm">
                 <span className="rounded-full border border-info-200 bg-info-50 px-3 py-1 text-info-800">
@@ -274,7 +274,7 @@ const ReadBackMemoryExercise = ({
                   key={question.id}
                   id={`readback-question-${question.id}`}
                   questionLabel={`Question ${index + 1}`}
-                  title={RESPONSE_MODE_LABEL[question.mode]}
+                  title="Listen to the sequence, then answer from memory."
                   badge={
                     <Badge variant="info" className="w-fit">
                       {RESPONSE_MODE_SHORT_LABEL[question.mode]}
@@ -282,29 +282,31 @@ const ReadBackMemoryExercise = ({
                   }
                 >
                   <div className="space-y-3">
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Sequence (played one by one)
-                    </p>
-                    {isSequenceVisible ? (
-                      <div className="flex flex-wrap gap-2">
-                        {question.sequence.map((char, charIndex) => (
-                          <div
-                            key={`${question.id}-${charIndex}-${char}`}
-                            className={`flex h-10 w-10 items-center justify-center rounded-full border text-lg font-semibold transition-all ${
-                              isPlaying && playIndex === charIndex
-                                ? "bg-brand-500 text-white border-primary scale-110 shadow-md"
-                                : "bg-muted text-foreground border-muted-foreground/20"
-                            }`}
-                          >
-                            {char}
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-sm italic text-muted-foreground">
-                        Sequence hidden. Click <strong>Replay</strong> to see and hear it again.
+                    <div className="rounded-lg border border-brand-200 bg-brand-50 px-4 py-3 text-sm leading-relaxed">
+                      <p className="mb-2 font-medium text-brand-800">
+                        {RESPONSE_MODE_LABEL[question.mode]}
                       </p>
-                    )}
+                      {isSequenceVisible ? (
+                        <div className="flex flex-wrap gap-2">
+                          {question.sequence.map((char, charIndex) => (
+                            <div
+                              key={`${question.id}-${charIndex}-${char}`}
+                              className={`flex h-9 w-9 items-center justify-center rounded-md border text-base font-semibold transition-all ${
+                                isPlaying && playIndex === charIndex
+                                  ? "bg-brand-500 text-white border-primary scale-105"
+                                  : "bg-white text-neutral-700 border-neutral-200"
+                              }`}
+                            >
+                              {char}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="italic text-brand-700/80">
+                          Sequence is hidden until playback starts.
+                        </p>
+                      )}
+                    </div>
 
                     <div className="flex flex-wrap gap-3">
                       <Button
@@ -312,67 +314,54 @@ const ReadBackMemoryExercise = ({
                         disabled={playingQuestionId !== null}
                         variant="primary"
                       >
-                        {isPlaying ? "Playing..." : "Play sequence"}
-                      </Button>
-                      <Button
-                        onClick={() => playSequence(question)}
-                        variant="outline"
-                        disabled={playingQuestionId !== null}
-                      >
-                        Replay
+                        {isPlaying ? "Playing sequence..." : "Play sequence"}
                       </Button>
                     </div>
 
-                    <p className="text-xs text-muted-foreground">
-                      The sequence will be highlighted one character at a time and,
-                      if supported by your browser, read aloud using synthesized speech.
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col space-y-2 pt-2">
-                    <label className="text-sm font-medium text-muted-foreground">
-                      Your answer
-                    </label>
-                    <FormInput
-                      value={currentAnswer}
-                      onChange={(e) =>
-                        setAnswers((prev) => ({
-                          ...prev,
-                          [question.id]: e.target.value,
-                        }))
-                      }
-                      placeholder="Type the sequence here, e.g. 3G9AD"
-                      disabled={playingQuestionId !== null}
-                    />
-
-                    <div className="flex flex-wrap gap-3">
-                      {index < questions.length - 1 && (
-                        <Button
-                          variant="outline"
-                          onClick={() => scrollToNextQuestion(index)}
-                          disabled={!isAnswered}
-                        >
-                          Next question
-                        </Button>
-                      )}
-                      <Button
-                        variant="outline"
-                        onClick={() =>
+                    <div className="space-y-2 pt-1">
+                      <label className="text-sm font-medium text-muted-foreground">
+                        Your answer
+                      </label>
+                      <FormInput
+                        value={currentAnswer}
+                        onChange={(e) =>
                           setAnswers((prev) => ({
                             ...prev,
-                            [question.id]: "",
+                            [question.id]: e.target.value,
                           }))
                         }
-                        disabled={!isAnswered}
-                      >
-                        Clear answer
-                      </Button>
-                    </div>
+                        placeholder="Type your recalled sequence (e.g. 3G9AD)"
+                        disabled={playingQuestionId !== null}
+                      />
 
-                    <p className="text-xs text-muted-foreground">
-                      Your input is compared without spaces and is not case-sensitive.
-                      Full grading appears on the end page.
-                    </p>
+                      <p className="text-xs text-muted-foreground">
+                        Answers ignore spaces and letter casing.
+                      </p>
+
+                      <div className="flex flex-wrap gap-3">
+                        {index < questions.length - 1 && (
+                          <Button
+                            variant="outline"
+                            onClick={() => scrollToNextQuestion(index)}
+                            disabled={!isAnswered}
+                          >
+                            Next question
+                          </Button>
+                        )}
+                        <Button
+                          variant="outline"
+                          onClick={() =>
+                            setAnswers((prev) => ({
+                              ...prev,
+                              [question.id]: "",
+                            }))
+                          }
+                          disabled={!isAnswered}
+                        >
+                          Clear answer
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </ExerciseQuestionContentCard>
               );

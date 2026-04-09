@@ -31,6 +31,10 @@ export function AppSidebarLayout({
   const pathname = usePathname();
   const breadcrumbs = getBreadcrumbs(pathname);
   const sidebarRef = useRef<HTMLElement | null>(null);
+  const activeNavHref = navSections
+    .flatMap((section) => section.items)
+    .filter((item) => isActiveNavItem(pathname, item))
+    .sort((a, b) => b.href.length - a.href.length)[0]?.href;
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [compactExpanded, setCompactExpanded] = useState(false);
@@ -152,12 +156,7 @@ export function AppSidebarLayout({
             ) : null}
             <div className={cn("space-y-1")}>
               {section.items.map(({ href, label, icon: Icon, exact }) => {
-                const active = isActiveNavItem(pathname, {
-                  href,
-                  label,
-                  icon: Icon,
-                  exact,
-                });
+                const active = activeNavHref === href;
 
                 return (
                   <Link

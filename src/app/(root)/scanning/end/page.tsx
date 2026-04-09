@@ -19,15 +19,16 @@ const parseParam = (value?: string): number | undefined => {
   return Number.isFinite(parsed) ? parsed : undefined;
 };
 
-export default function ScanningEndPage({
+export default async function ScanningEndPage({
   searchParams,
 }: {
-  searchParams: EndSearchParams;
+  searchParams: Promise<EndSearchParams>;
 }) {
-  const score = parseParam(searchParams.score);
-  const total = parseParam(searchParams.total);
-  const attempted = parseParam(searchParams.attempted);
-  const resultId = searchParams.resultId;
+  const params = await searchParams;
+  const score = parseParam(params.score);
+  const total = parseParam(params.total);
+  const attempted = parseParam(params.attempted);
+  const resultId = params.resultId;
 
   return (
     <ExerciseEndScreen

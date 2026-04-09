@@ -22,9 +22,9 @@ export interface FormSelectOptionProps {
  * ```
  */
 export function FormSelectOption({
-  value: _value, // eslint-disable-line @typescript-eslint/no-unused-vars
-  disabled: _disabled, // eslint-disable-line @typescript-eslint/no-unused-vars
-  children: _children, // eslint-disable-line @typescript-eslint/no-unused-vars
+  value: _value,
+  disabled: _disabled,
+  children: _children,
 }: FormSelectOptionProps) {
   // NOTE: This component itself doesn't render anything.
   // It's purely a data structure that FormSelect extracts via React.Children.toArray.

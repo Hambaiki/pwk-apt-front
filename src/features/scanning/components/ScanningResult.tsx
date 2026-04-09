@@ -1,6 +1,5 @@
 "use client";
 
-import Score from "@/components/exercise/Score";
 import { Card } from "@/components/ui";
 import { cn } from "@/libs/utils/cn";
 import {
@@ -14,7 +13,6 @@ import ShapeItem from "./ShapeItem";
 interface ScanningResultProps {
   questionSets: ScanningQuestionSet[];
   answers: Record<number, string>;
-  score: number;
   config: Config;
 }
 
@@ -50,19 +48,10 @@ const renderMiniGrid = (items: ShapeGridItem[], isMonotone?: boolean) => (
 const ScanningResult = ({
   questionSets,
   answers,
-  score,
   config,
 }: ScanningResultProps) => {
   return (
     <div className="space-y-4">
-      <Score
-        answerCount={Object.keys(answers).length}
-        correctCount={score}
-        totalCount={questionSets.length}
-        score={score}
-        maxScore={questionSets.length}
-      />
-
       <Card className="bg-surface p-4 sm:p-5">
         <div className="mb-4">
           <p className="text-sm font-semibold text-neutral-700">

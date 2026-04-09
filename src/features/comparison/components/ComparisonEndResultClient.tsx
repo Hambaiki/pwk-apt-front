@@ -35,7 +35,6 @@ const ComparisonEndResultClient = ({ resultId }: { resultId?: string }) => {
     <ComparisonResult
       items={payload.items}
       answers={payload.answers}
-      correctAnswerCount={payload.correctAnswerCount}
     />
   );
 };

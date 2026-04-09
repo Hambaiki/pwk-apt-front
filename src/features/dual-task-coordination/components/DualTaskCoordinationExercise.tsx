@@ -1,73 +1,104 @@
 "use client";
 
+import ExerciseQuestionRunLayout from "@/components/exercise/ExerciseQuestionRunLayout";
 import ExerciseSessionControls from "@/components/exercise/ExerciseSessionControls";
-import { Button, Card } from "@/components/ui";
+import { Button, Card, Modal, ModalBody, ModalHeader } from "@/components/ui";
 import { defaultConfig } from "@/features/dual-task-coordination/constants";
 import {
   spellBackwardsQuestions,
   triviaQuestions,
 } from "@/features/dual-task-coordination/constants/pool";
-import { Config } from "@/features/dual-task-coordination/types";
+import {
+  Config,
+  DualTaskQuestionHistoryItem,
+} from "@/features/dual-task-coordination/types";
 import {
   createResultId,
   saveExerciseResult,
 } from "@/libs/exercise-result-store";
-import { formatTime } from "@/libs/time";
 import { cn } from "@/libs/utils/cn";
-import { Hand, Pause, Play, RotateCcw } from "lucide-react";
+import { Hand, Play } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import HowToCard from "./HowToCard";
 
-const baseTempo = 80; // BPM
+const baseTempo = 80;
 const symbols = ["●", "▲", "■", "◆", "★", "♣", "♠", "♥"];
+
+type RunQuestionStatus = DualTaskQuestionHistoryItem["status"] | "active";
+
+interface RunQuestionItem {
+  id: number;
+  prompt: string;
+  status: RunQuestionStatus;
+}
+
+interface DualTaskResultPayload {
+  completedQuestions: number;
+  totalQuestions: number;
+  durationSec: number;
+  symbolMode: boolean;
+  questionHistory: DualTaskQuestionHistoryItem[];
+}
 
 interface DualTaskCoordinationExerciseProps {
   config?: Config;
 }
 
+const getQuestionStatusLabel = (status: RunQuestionStatus) => {
+  if (status === "active") return "Active";
+  if (status === "expired") return "Timed Out";
+  return "Session Ended";
+};
+
+const getQuestionStatusTone = (status: RunQuestionStatus) => {
+  if (status === "active") return "border-info-200 bg-info-50 text-info-700";
+  if (status === "expired") {
+    return "border-warning-200 bg-warning-50 text-warning-700";
+  }
+  return "border-neutral-200 bg-neutral-100 text-neutral-700";
+};
+
 const DualTaskCoordinationExercise = ({
   config = defaultConfig,
 }: DualTaskCoordinationExerciseProps) => {
   const router = useRouter();
+  const hasNavigatedToEndRef = useRef(false);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const questionIdRef = useRef(1);
+
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [isViewingHelp, setIsViewingHelp] = useState(false);
+
   const [timeRemaining, setTimeRemaining] = useState(config.exerciseDuration);
   const [questionsRemaining, setQuestionsRemaining] = useState(
     config.totalQuestions,
   );
-  const [currentQuestion, setCurrentQuestion] = useState("");
   const [questionTimeLeft, setQuestionTimeLeft] = useState(config.questionTime);
+
+  const [currentQuestion, setCurrentQuestion] = useState("");
+  const [currentQuestionId, setCurrentQuestionId] = useState<number | null>(
+    null,
+  );
+  const [questionHistory, setQuestionHistory] = useState<
+    DualTaskQuestionHistoryItem[]
+  >([]);
+
+  const [tempo, setTempo] = useState(baseTempo);
+  const [symbolMode, setSymbolMode] = useState(config.symbolMode);
+  const [targetSymbols, setTargetSymbols] = useState({ left: "", right: "" });
+
   const [leftHandPosition, setLeftHandPosition] = useState(0);
   const [rightHandPosition, setRightHandPosition] = useState(0);
   const [leftDirection, setLeftDirection] = useState(1);
   const [rightDirection, setRightDirection] = useState(1);
-  const [activeHand, setActiveHand] = useState("left"); // which hand moves next
-  const [tempo, setTempo] = useState(baseTempo); // BPM
-  const [symbolMode, setSymbolMode] = useState(config.symbolMode);
-  const [targetSymbols, setTargetSymbols] = useState({ left: "", right: "" });
-
-  // Settings
-  const [exerciseDuration, setExerciseDuration] = useState(
-    config.exerciseDuration,
-  );
-  const [totalQuestions, setTotalQuestions] = useState(config.totalQuestions);
-  const [questionTime, setQuestionTime] = useState(config.questionTime);
-
-  const intervalRef: React.MutableRefObject<NodeJS.Timeout | null> =
-    useRef(null);
-  const questionIntervalRef: React.MutableRefObject<NodeJS.Timeout | null> =
-    useRef(null);
-  const audioContextRef: React.MutableRefObject<AudioContext | null> =
-    useRef(null);
-  const hasNavigatedToEndRef = useRef(false);
+  const [activeHand, setActiveHand] = useState<"left" | "right">("left");
 
   const nodeCount = 8;
 
   useEffect(() => {
-    setExerciseDuration(config.exerciseDuration);
-    setTotalQuestions(config.totalQuestions);
-    setQuestionTime(config.questionTime);
     setSymbolMode(config.symbolMode);
     setTimeRemaining(config.exerciseDuration);
     setQuestionsRemaining(config.totalQuestions);
@@ -75,18 +106,15 @@ const DualTaskCoordinationExercise = ({
   }, [config]);
 
   const speak = (text: string) => {
-    if ("speechSynthesis" in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "en-US"; // or "th-TH" for Thai, etc.
-      utterance.rate = 1; // 0.5 = slow, 1 = normal, 1.5 = fast
-      utterance.pitch = 1; // 0–2
-      window.speechSynthesis.speak(utterance);
-    } else {
-      console.warn("Speech synthesis not supported in this browser");
-    }
+    if (!("speechSynthesis" in window)) return;
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-US";
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    window.speechSynthesis.speak(utterance);
   };
 
-  // Generate questions
   const generateQuestion = useCallback(() => {
     const questionTypes = [
       () => {
@@ -95,111 +123,72 @@ const DualTaskCoordinationExercise = ({
         return `${a} × ${b} = ?`;
       },
       () => {
-        const words = spellBackwardsQuestions;
-        const word = words[Math.floor(Math.random() * words.length)];
+        const word =
+          spellBackwardsQuestions[
+            Math.floor(Math.random() * spellBackwardsQuestions.length)
+          ];
         return `Spell "${word}" backwards`;
       },
       () => {
-        const questions = triviaQuestions;
-        return questions[Math.floor(Math.random() * questions.length)];
+        return triviaQuestions[Math.floor(Math.random() * triviaQuestions.length)];
       },
     ];
 
-    const randomType =
-      questionTypes[Math.floor(Math.random() * questionTypes.length)];
-    return randomType();
+    return questionTypes[Math.floor(Math.random() * questionTypes.length)]();
   }, []);
 
-  // Audio functions
   const playBeep = useCallback((frequency = 800, duration = 100) => {
     if (!audioContextRef.current) {
       audioContextRef.current = new window.AudioContext();
     }
 
-    const oscillator = audioContextRef.current.createOscillator();
-    const gainNode = audioContextRef.current.createGain();
+    const context = audioContextRef.current;
+    const oscillator = context.createOscillator();
+    const gainNode = context.createGain();
 
     oscillator.connect(gainNode);
-    gainNode.connect(audioContextRef.current.destination);
+    gainNode.connect(context.destination);
 
-    oscillator.frequency.setValueAtTime(
-      frequency,
-      audioContextRef.current.currentTime,
-    );
+    oscillator.frequency.setValueAtTime(frequency, context.currentTime);
     oscillator.type = "sine";
 
-    gainNode.gain.setValueAtTime(0.3, audioContextRef.current.currentTime);
+    gainNode.gain.setValueAtTime(0.3, context.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(
       0.01,
-      audioContextRef.current.currentTime + duration / 1000,
+      context.currentTime + duration / 1000,
     );
 
-    oscillator.start(audioContextRef.current.currentTime);
-    oscillator.stop(audioContextRef.current.currentTime + duration / 1000);
+    oscillator.start(context.currentTime);
+    oscillator.stop(context.currentTime + duration / 1000);
   }, []);
-
-  // Movement logic
-  //   const moveHands = useCallback(() => {
-  //     setLeftHandPosition((prev) => {
-  //       const newPos = prev + leftDirection;
-  //       if (newPos >= nodeCount - 1) {
-  //         setLeftDirection(-1);
-  //         return nodeCount - 1;
-  //       } else if (newPos <= 0) {
-  //         setLeftDirection(1);
-  //         return 0;
-  //       }
-  //       return newPos;
-  //     });
-
-  //     setRightHandPosition((prev) => {
-  //       const newPos = prev + rightDirection;
-  //       if (newPos >= nodeCount - 1) {
-  //         setRightDirection(-1);
-  //         return nodeCount - 1;
-  //       } else if (newPos <= 0) {
-  //         setRightDirection(1);
-  //         return 0;
-  //       }
-  //       return newPos;
-  //     });
-
-  //     setActiveHand((prev) => (prev === "left" ? "right" : "left"));
-  //     playBeep(activeHand === "left" ? 600 : 800, 80);
-  //   }, [
-  //     leftDirection,
-  //     rightDirection,
-  //     activeHand,
-  //     playBeep,
-  //     symbolMode,
-  //     symbols,
-  //   ]);
 
   const moveHands = useCallback(() => {
     if (activeHand === "left") {
       setLeftHandPosition((prev) => {
-        const newPos = prev + leftDirection;
-        if (newPos >= nodeCount - 1) {
+        const next = prev + leftDirection;
+        if (next >= nodeCount - 1) {
           setLeftDirection(-1);
           return nodeCount - 1;
-        } else if (newPos <= 0) {
+        }
+        if (next <= 0) {
           setLeftDirection(1);
           return 0;
         }
-        return newPos;
+        return next;
       });
       playBeep(600, 80);
     } else {
       setRightHandPosition((prev) => {
-        const newPos = prev + rightDirection;
-        if (newPos >= nodeCount - 1) {
+        const next = prev + rightDirection;
+        if (next >= nodeCount - 1) {
           setRightDirection(-1);
           return nodeCount - 1;
-        } else if (newPos <= 0) {
+        }
+        if (next <= 0) {
           setRightDirection(1);
           return 0;
         }
-        return newPos;
+        return next;
       });
       playBeep(800, 80);
     }
@@ -207,295 +196,511 @@ const DualTaskCoordinationExercise = ({
     setActiveHand((prev) => (prev === "left" ? "right" : "left"));
   }, [activeHand, leftDirection, rightDirection, playBeep]);
 
-  // Start exercise
-  const startExercise = () => {
-    hasNavigatedToEndRef.current = false;
-    if (isPaused) {
-      setIsPaused(false);
-    } else {
-      setTimeRemaining(exerciseDuration);
-      setQuestionsRemaining(totalQuestions);
-      setQuestionTimeLeft(questionTime);
-      setCurrentQuestion(generateQuestion());
-      setLeftHandPosition(0);
-      setRightHandPosition(0);
-      setLeftDirection(1);
-      setRightDirection(1);
-      setActiveHand("left");
+  const spawnNextQuestion = useCallback(() => {
+    const prompt = generateQuestion();
+    setCurrentQuestion(prompt);
+    setCurrentQuestionId(questionIdRef.current);
+    questionIdRef.current += 1;
+    setQuestionTimeLeft(config.questionTime);
+  }, [config.questionTime, generateQuestion]);
 
-      if (symbolMode) {
-        setTargetSymbols({
-          left: symbols[Math.floor(Math.random() * symbols.length)],
-          right: symbols[Math.floor(Math.random() * symbols.length)],
-        });
+  const buildFinalHistory = useCallback(
+    (baseHistory: DualTaskQuestionHistoryItem[]): DualTaskQuestionHistoryItem[] => {
+      if (!currentQuestion || currentQuestionId === null) {
+        return baseHistory;
       }
+
+      return [
+        ...baseHistory,
+        {
+          id: currentQuestionId,
+          prompt: currentQuestion,
+          status: "ended" as const,
+        },
+      ];
+    },
+    [currentQuestion, currentQuestionId],
+  );
+
+  const finishExercise = useCallback(
+    (
+      reason: "completed" | "stopped",
+      historyOverride?: DualTaskQuestionHistoryItem[],
+    ) => {
+      if (hasNavigatedToEndRef.current) return;
+      hasNavigatedToEndRef.current = true;
+
+      setIsRunning(false);
+      setIsPaused(false);
+
+      const baseHistory = historyOverride ?? questionHistory;
+      const finalHistory =
+        reason === "stopped" ? buildFinalHistory(baseHistory) : baseHistory;
+
+      const completed = Math.min(config.totalQuestions, finalHistory.length);
+      const resultId = createResultId();
+
+      const payload: DualTaskResultPayload = {
+        completedQuestions: completed,
+        totalQuestions: config.totalQuestions,
+        durationSec: config.exerciseDuration,
+        symbolMode,
+        questionHistory: finalHistory,
+      };
+
+      saveExerciseResult("dual-task-coordination", resultId, payload);
+      router.push(
+        `/dual-task-coordination/end?score=${completed}&total=${config.totalQuestions}&attempted=${completed}&resultId=${resultId}`,
+      );
+    },
+    [
+      buildFinalHistory,
+      config.exerciseDuration,
+      config.totalQuestions,
+      questionHistory,
+      router,
+      symbolMode,
+    ],
+  );
+
+  const startExercise = () => {
+    if (hasStarted && isPaused) {
+      setIsRunning(true);
+      setIsPaused(false);
+      return;
     }
+
+    hasNavigatedToEndRef.current = false;
+    questionIdRef.current = 1;
+
+    setHasStarted(true);
     setIsRunning(true);
+    setIsPaused(false);
+
+    setTimeRemaining(config.exerciseDuration);
+    setQuestionsRemaining(config.totalQuestions);
+    setQuestionHistory([]);
+
+    setLeftHandPosition(0);
+    setRightHandPosition(0);
+    setLeftDirection(1);
+    setRightDirection(1);
+    setActiveHand("left");
+
+    setTempo(baseTempo);
+
+    if (symbolMode) {
+      setTargetSymbols({
+        left: symbols[Math.floor(Math.random() * symbols.length)],
+        right: symbols[Math.floor(Math.random() * symbols.length)],
+      });
+    }
+
+    spawnNextQuestion();
   };
 
   const pauseExercise = () => {
-    setIsPaused(true);
     setIsRunning(false);
+    setIsPaused(true);
   };
 
   const resetExercise = () => {
     hasNavigatedToEndRef.current = false;
+    questionIdRef.current = 1;
+
+    setHasStarted(false);
     setIsRunning(false);
     setIsPaused(false);
-    setTimeRemaining(exerciseDuration);
-    setQuestionsRemaining(totalQuestions);
-    setQuestionTimeLeft(questionTime);
+
+    setTimeRemaining(config.exerciseDuration);
+    setQuestionsRemaining(config.totalQuestions);
+    setQuestionTimeLeft(config.questionTime);
+
     setCurrentQuestion("");
+    setCurrentQuestionId(null);
+    setQuestionHistory([]);
+
+    setTempo(baseTempo);
     setLeftHandPosition(0);
     setRightHandPosition(0);
+    setLeftDirection(1);
+    setRightDirection(1);
+    setActiveHand("left");
   };
 
-  // Main game loop
-  useEffect(() => {
-    if (isRunning && !isPaused) {
-      // Movement interval
-      const interval = 60000 / tempo; // Convert BPM to milliseconds
-      intervalRef.current = setInterval(moveHands, interval);
-
-      return () => {
-        if (!intervalRef.current) return;
-        clearInterval(intervalRef.current);
-      };
-    }
-  }, [isRunning, isPaused, tempo, moveHands]);
+  const exitExercise = () => {
+    router.push("/dual-task-coordination");
+  };
 
   useEffect(() => {
-    if (!isRunning || isPaused) return;
+    if (!isRunning || isPaused || !hasStarted) return;
 
-    const interval = setInterval(() => {
+    const interval = window.setInterval(moveHands, 60000 / tempo);
+    return () => window.clearInterval(interval);
+  }, [hasStarted, isPaused, isRunning, moveHands, tempo]);
+
+  useEffect(() => {
+    if (!isRunning || isPaused || !hasStarted) return;
+
+    const interval = window.setInterval(() => {
       setTimeRemaining((prev) => {
         if (prev <= 1) {
-          setIsRunning(false);
-          clearInterval(interval);
+          window.clearInterval(interval);
+          finishExercise("completed");
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
 
-    return () => clearInterval(interval);
-  }, [isRunning, isPaused]);
+    return () => window.clearInterval(interval);
+  }, [finishExercise, hasStarted, isPaused, isRunning]);
 
-  // Speak current question when it changes
   useEffect(() => {
-    if (currentQuestion) {
-      speak(currentQuestion);
-    }
-  }, [currentQuestion]);
+    if (!isRunning || isPaused || !currentQuestion) return;
 
-  // Question timer
+    const interval = window.setInterval(() => {
+      setQuestionTimeLeft((prev) => Math.max(0, prev - 1));
+    }, 1000);
+
+    return () => window.clearInterval(interval);
+  }, [currentQuestion, isPaused, isRunning]);
+
   useEffect(() => {
-    if (isRunning && !isPaused && currentQuestion) {
-      questionIntervalRef.current = setInterval(() => {
-        setQuestionTimeLeft((prev) => {
-          if (prev <= 1) {
-            // Next question
-            setQuestionsRemaining((prevQ) => {
-              const newCount = prevQ - 1;
-              if (newCount <= 0) {
-                setIsRunning(false);
-                return 0;
-              }
-              return newCount;
-            });
-            setCurrentQuestion(generateQuestion());
-            return questionTime;
+    if (!isRunning || isPaused || !currentQuestion) return;
+    if (questionTimeLeft > 0) return;
+
+    const timedOutQuestion: DualTaskQuestionHistoryItem | null =
+      currentQuestion && currentQuestionId !== null
+        ? {
+            id: currentQuestionId,
+            prompt: currentQuestion,
+            status: "expired",
           }
-          return prev - 1;
-        });
-      }, 1000);
+        : null;
 
-      return () => {
-        if (!questionIntervalRef.current) return;
-        clearInterval(questionIntervalRef.current);
-      };
+    const nextHistory = timedOutQuestion
+      ? [...questionHistory, timedOutQuestion]
+      : questionHistory;
+
+    setQuestionHistory(nextHistory);
+
+    const nextRemaining = questionsRemaining - 1;
+    setQuestionsRemaining(Math.max(0, nextRemaining));
+
+    if (nextRemaining <= 0) {
+      setCurrentQuestion("");
+      setCurrentQuestionId(null);
+      finishExercise("completed", nextHistory);
+      return;
     }
-  }, [isRunning, isPaused, currentQuestion, questionTime, generateQuestion]);
 
-  // Dynamic tempo changes
-  useEffect(() => {
-    if (isRunning) {
-      const tempoChange = setInterval(() => {
-        setTempo(() => {
-          const variation = Math.random() * 40 - 20; // ±20 BPM variation
-          // const newTempo = Math.max(80, Math.min(160, prev + variation));
-          const newTempo = Math.max(60, Math.min(120, baseTempo + variation));
-          return Math.round(newTempo);
-        });
-      }, 10000); // Change tempo every 10 seconds
-
-      return () => clearInterval(tempoChange);
-    }
-  }, [isRunning]);
-
-  // Dynamic symbol changes
-  useEffect(() => {
-    if (symbolMode && isRunning) {
-      const symbolChange = setInterval(() => {
-        setTargetSymbols({
-          left: symbols[Math.floor(Math.random() * symbols.length)],
-          right: symbols[Math.floor(Math.random() * symbols.length)],
-        });
-      }, 30000); // Change symbols every 30 seconds
-
-      return () => clearInterval(symbolChange);
-    }
-  }, [symbolMode, isRunning]);
-
-  const isCompleted =
-    !isRunning &&
-    !isPaused &&
-    (timeRemaining === 0 || questionsRemaining === 0);
-
-  useEffect(() => {
-    if (!isCompleted || hasNavigatedToEndRef.current) return;
-
-    hasNavigatedToEndRef.current = true;
-    const completed = Math.max(0, totalQuestions - questionsRemaining);
-    const resultId = createResultId();
-    saveExerciseResult("dual-task-coordination", resultId, {
-      completedQuestions: completed,
-      totalQuestions,
-      durationSec: exerciseDuration,
-      symbolMode,
-    });
-    router.push(
-      `/dual-task-coordination/end?score=${completed}&total=${totalQuestions}&attempted=${completed}&resultId=${resultId}`,
-    );
+    spawnNextQuestion();
   }, [
-    isCompleted,
-    totalQuestions,
+    currentQuestion,
+    currentQuestionId,
+    finishExercise,
+    isPaused,
+    isRunning,
+    questionHistory,
+    questionTimeLeft,
     questionsRemaining,
-    router,
-    exerciseDuration,
-    symbolMode,
+    spawnNextQuestion,
   ]);
 
-  return (
-    <div className="">
-      {/* Settings Panel */}
+  useEffect(() => {
+    if (!currentQuestion) return;
+    speak(currentQuestion);
+  }, [currentQuestion]);
 
-      {/* Status Bar */}
+  useEffect(() => {
+    if (!isRunning || !hasStarted) return;
+
+    const tempoChange = window.setInterval(() => {
+      const variation = Math.random() * 40 - 20;
+      const nextTempo = Math.max(60, Math.min(120, baseTempo + variation));
+      setTempo(Math.round(nextTempo));
+    }, 10000);
+
+    return () => window.clearInterval(tempoChange);
+  }, [hasStarted, isRunning]);
+
+  useEffect(() => {
+    if (!symbolMode || !isRunning || !hasStarted) return;
+
+    const symbolChange = window.setInterval(() => {
+      setTargetSymbols({
+        left: symbols[Math.floor(Math.random() * symbols.length)],
+        right: symbols[Math.floor(Math.random() * symbols.length)],
+      });
+    }, 30000);
+
+    return () => window.clearInterval(symbolChange);
+  }, [hasStarted, isRunning, symbolMode]);
+
+  const runQuestions: RunQuestionItem[] = [
+    ...questionHistory,
+    ...(currentQuestion && currentQuestionId !== null
+      ? [
+          {
+            id: currentQuestionId,
+            prompt: currentQuestion,
+            status: "active" as const,
+          },
+        ]
+      : []),
+  ];
+
+  const reviewVisible = hasStarted && (!isRunning || isPaused);
+
+  const renderHandTrack = (
+    label: string,
+    position: number,
+    isActive: boolean,
+    activeColorClass: string,
+  ) => {
+    return (
+      <div className="space-y-3 rounded-xl border border-neutral-200 bg-neutral-50 p-3">
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-semibold text-neutral-700">{label}</p>
+          <span
+            className={cn(
+              "inline-flex rounded-full border px-2 py-1 text-xs font-medium",
+              isActive
+                ? `${activeColorClass} border-transparent text-white`
+                : "border-neutral-200 bg-white text-neutral-600",
+            )}
+          >
+            {isActive ? "Active" : "Standby"}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-8 gap-1">
+          {Array.from({ length: nodeCount }).map((_, index) => (
+            <div
+              key={`${label}-${index}`}
+              className={cn(
+                "h-3 rounded-full",
+                index === position
+                  ? activeColorClass
+                  : "border border-neutral-200 bg-white",
+              )}
+            />
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2 text-xs text-neutral-600">
+          <Hand size={14} />
+          <span>Position: Node {position + 1}</span>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="space-y-6">
       <ExerciseSessionControls
         timeRemaining={timeRemaining}
         isRunning={isRunning}
-        className="mb-6"
+        onHelp={() => setIsViewingHelp(true)}
+        onPause={hasStarted ? (isRunning ? pauseExercise : startExercise) : undefined}
+        onEnd={hasStarted ? () => finishExercise("stopped") : undefined}
+        onRestart={hasStarted ? resetExercise : undefined}
+        onExit={exitExercise}
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-          <Card className="flex flex-col justify-center items-center bg-green-50 p-3 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <Card className="bg-emerald-50 p-3 text-center">
+            <p className="text-xs font-medium uppercase tracking-wide text-emerald-700">
+              Questions Left
+            </p>
+            <p className="mt-1 text-2xl font-bold text-emerald-700">
               {questionsRemaining}
-            </div>
-            <div className="text-sm text-gray-600">Questions Left</div>
+            </p>
           </Card>
-          <Card className="flex flex-col justify-center items-center bg-orange-50 p-3 rounded-lg">
-            <div className="text-2xl font-bold text-orange-600">
-              {formatTime(questionTimeLeft)}
-            </div>
-            <div className="text-sm text-gray-600">Question Time</div>
+
+          <Card className="bg-warning-50 p-3 text-center">
+            <p className="text-xs font-medium uppercase tracking-wide text-warning-700">
+              Question Timer
+            </p>
+            <p className="mt-1 text-2xl font-bold text-warning-700">
+              {questionTimeLeft}s
+            </p>
           </Card>
-          <Card className="flex flex-col justify-center items-center bg-purple-50 p-3 rounded-lg">
-            <div className="text-2xl font-bold text-purple-600">{tempo}</div>
-            <div className="text-sm text-gray-600">BPM</div>
+
+          <Card className="bg-info-50 p-3 text-center">
+            <p className="text-xs font-medium uppercase tracking-wide text-info-700">
+              Tempo
+            </p>
+            <p className="mt-1 text-2xl font-bold text-info-700">{tempo} BPM</p>
+          </Card>
+
+          <Card className="bg-neutral-100 p-3 text-center">
+            <p className="text-xs font-medium uppercase tracking-wide text-neutral-600">
+              Mode
+            </p>
+            <p className="mt-1 text-lg font-semibold text-neutral-800">
+              {symbolMode ? "Symbol" : "Standard"}
+            </p>
           </Card>
         </div>
       </ExerciseSessionControls>
 
-      {/* Node Lines */}
-      <Card className="mb-6">
-        <h3 className="text-lg font-semibold mb-4 text-center">
-          Hand Coordination
-        </h3>
-        {/* {renderNodes(
-          leftHandPosition,
-          "left",
-          activeHand === "left" && isRunning
-        )}
-        {renderNodes(
-          rightHandPosition,
-          "right",
-          activeHand === "right" && isRunning
-        )} */}
-
-        <div className="text-center mt-4">
-          Active Hand {/* Left hand */}
-          <div className="flex justify-center items-center space-x-12">
-            <div className="space-y-2">
-              <Hand
-                size={64}
-                className={cn(
-                  "transition-colors",
-                  activeHand === "left" ? "text-blue-500" : "text-blue-200",
-                )}
-              />
-              <p>Left Hand</p>
-            </div>
-            <div className="space-y-2">
-              <Hand
-                size={64}
-                className={cn(
-                  "transition-colors",
-                  activeHand === "right" ? "text-red-500" : "text-red-200",
-                )}
-              />
-              <p>Right Hand</p>
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      {/* Question Display */}
-      {currentQuestion && (
-        <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-lg mb-6">
-          <h3 className="text-lg font-semibold mb-2">Current Question:</h3>
-          <p className="text-xl font-medium text-gray-800 mb-2">
-            {currentQuestion}
+      {!hasStarted ? (
+        <Card className="space-y-4 bg-surface p-6 text-center">
+          <h3 className="text-xl font-semibold text-neutral-800">
+            Ready to start the dual-task session?
+          </h3>
+          <p className="text-sm text-neutral-600">
+            Start to begin alternating hand cues and timed verbal prompts.
           </p>
-          <div className="text-sm text-gray-600">
-            Answer time remaining:{" "}
-            <span className="font-bold text-orange-600">
-              {questionTimeLeft}s
-            </span>
+          <div>
+            <Button onClick={startExercise}>
+              <Play size={16} className="mr-2" />
+              Start Session
+            </Button>
           </div>
-        </div>
+        </Card>
+      ) : (
+        <ExerciseQuestionRunLayout
+          panelTitle="Dual Task Session"
+          panelMeta={
+            <p className="text-xs text-neutral-500">
+              Follow active-hand cues and answer prompts verbally before time runs
+              out.
+            </p>
+          }
+          navigatorTitle="Prompt History"
+          blocked={false}
+          navigatorItems={runQuestions.map((item) => ({
+            id: String(item.id),
+            label: `Q${item.id}`,
+            targetId:
+              item.status === "active"
+                ? `dual-task-question-${item.id}`
+                : `dual-task-history-question-${item.id}`,
+            isCompleted: item.status !== "active",
+            completedLabel: getQuestionStatusLabel(item.status),
+            pendingLabel: "Active",
+          }))}
+        >
+          <Card className="space-y-4 border border-neutral-200 bg-white">
+            <h3 className="text-lg font-semibold text-neutral-800">
+              Hand Coordination
+            </h3>
+
+            <div className="grid gap-3 md:grid-cols-2">
+              {renderHandTrack(
+                "Left Hand",
+                leftHandPosition,
+                activeHand === "left" && isRunning,
+                "bg-blue-500",
+              )}
+              {renderHandTrack(
+                "Right Hand",
+                rightHandPosition,
+                activeHand === "right" && isRunning,
+                "bg-rose-500",
+              )}
+            </div>
+
+            {symbolMode && (
+              <div className="grid gap-3 rounded-xl border border-neutral-200 bg-surface p-3 sm:grid-cols-2">
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+                    Left Target
+                  </p>
+                  <p className="text-2xl font-bold text-neutral-800">
+                    {targetSymbols.left || "-"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+                    Right Target
+                  </p>
+                  <p className="text-2xl font-bold text-neutral-800">
+                    {targetSymbols.right || "-"}
+                  </p>
+                </div>
+              </div>
+            )}
+          </Card>
+
+          {currentQuestion && currentQuestionId !== null && (
+            <Card
+              id={`dual-task-question-${currentQuestionId}`}
+              className="space-y-2 border border-neutral-200 bg-warning-50"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-lg font-semibold text-neutral-800">
+                  Current Prompt (Q{currentQuestionId})
+                </h3>
+                <span className="inline-flex rounded-full border border-warning-200 bg-white px-2.5 py-1 text-xs font-medium text-warning-700">
+                  {questionTimeLeft}s left
+                </span>
+              </div>
+              <p className="text-base font-medium text-neutral-800">
+                {currentQuestion}
+              </p>
+              <p className="text-xs text-neutral-600">
+                Answer verbally while maintaining hand rhythm.
+              </p>
+            </Card>
+          )}
+
+          {reviewVisible && (
+            <Card className="space-y-3 border border-neutral-200 bg-surface">
+              <h3 className="text-lg font-semibold text-neutral-800">
+                Question History Review
+              </h3>
+              {runQuestions.length === 0 ? (
+                <p className="text-sm text-neutral-600">
+                  No prompts asked yet in this session.
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {runQuestions.map((item) => (
+                    <div
+                      key={`review-${item.id}`}
+                      id={`dual-task-history-question-${item.id}`}
+                      className="rounded-lg border border-neutral-200 bg-white p-3"
+                    >
+                      <div className="mb-1 flex items-center justify-between gap-2">
+                        <p className="text-sm font-semibold text-neutral-800">
+                          Q{item.id}
+                        </p>
+                        <span
+                          className={cn(
+                            "inline-flex rounded-full border px-2 py-0.5 text-xs font-medium",
+                            getQuestionStatusTone(item.status),
+                          )}
+                        >
+                          {getQuestionStatusLabel(item.status)}
+                        </span>
+                      </div>
+                      <p className="text-sm text-neutral-700">{item.prompt}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Card>
+          )}
+        </ExerciseQuestionRunLayout>
       )}
 
-      {/* Controls */}
-      <div className="flex justify-center space-x-4 mb-6">
-        {!isRunning ? (
-          <Button
-            onClick={startExercise}
-            className="flex items-center space-x-2 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
-          >
-            <Play size={20} />
-            <span>{isPaused ? "Resume" : "Start"}</span>
-          </Button>
-        ) : (
-          <Button
-            onClick={pauseExercise}
-            className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
-          >
-            <Pause size={20} />
-            <span>Pause</span>
-          </Button>
-        )}
-
-        <Button
-          onClick={resetExercise}
-          className="flex items-center space-x-2 bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
-        >
-          <RotateCcw size={20} />
-          <span>Reset</span>
-        </Button>
-      </div>
-
-      {/* Instructions */}
-      <HowToCard />
+      <Modal
+        open={isViewingHelp}
+        onClose={() => setIsViewingHelp(false)}
+        size="2xl"
+        scrollable
+      >
+        <ModalHeader
+          title="How to Complete the Exercise"
+          onClose={() => setIsViewingHelp(false)}
+        />
+        <ModalBody>
+          <HowToCard />
+        </ModalBody>
+      </Modal>
     </div>
   );
 };

@@ -157,7 +157,7 @@ const ScanningExerciseQuestionPage = () => {
     if (instanceId === 0) {
       router.replace("/scanning");
     }
-  }, []);
+  }, [instanceId, router]);
 
   const { sanitizedConfig, questionSets } = useMemo(() => {
     if (instanceId === 0)
@@ -167,7 +167,7 @@ const ScanningExerciseQuestionPage = () => {
       sanitizedConfig: sanitized,
       questionSets: generateQuestionSets(sanitized),
     };
-  }, [instanceId]);
+  }, [instanceId, config]);
 
   if (instanceId === 0) return null;
 

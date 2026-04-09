@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface ExerciseResultState {
   resultsByExercise: Record<string, Record<string, unknown>>;
@@ -9,66 +10,73 @@ interface ExerciseResultState {
 }
 
 export const useExerciseResultStore = create<ExerciseResultState>()(
-  (set, get) => ({
-    resultsByExercise: {},
+  persist(
+    (set, get) => ({
+      resultsByExercise: {},
 
-    saveResult: (exerciseKey, resultId, payload) => {
-      set((state) => ({
-        resultsByExercise: {
-          ...state.resultsByExercise,
-          [exerciseKey]: {
-            ...(state.resultsByExercise[exerciseKey] ?? {}),
-            [resultId]: payload,
+      saveResult: (exerciseKey, resultId, payload) => {
+        set((state) => ({
+          resultsByExercise: {
+            ...state.resultsByExercise,
+            [exerciseKey]: {
+              ...(state.resultsByExercise[exerciseKey] ?? {}),
+              [resultId]: payload,
+            },
           },
-        },
-      }));
-    },
+        }));
+      },
 
-    readResult: (exerciseKey, resultId) => {
-      if (!resultId) return null;
-      const exerciseResults = get().resultsByExercise[exerciseKey];
-      if (!exerciseResults) return null;
+      readResult: (exerciseKey, resultId) => {
+        if (!resultId) return null;
+        const exerciseResults = get().resultsByExercise[exerciseKey];
+        if (!exerciseResults) return null;
 
-      const payload = exerciseResults[resultId];
-      return (payload as never) ?? null;
-    },
+        const payload = exerciseResults[resultId];
+        return (payload as never) ?? null;
+      },
 
-    clearResult: (exerciseKey, resultId) => {
-      set((state) => {
-        const exerciseResults = state.resultsByExercise[exerciseKey];
-        if (!exerciseResults || !(resultId in exerciseResults)) return state;
+      clearResult: (exerciseKey, resultId) => {
+        set((state) => {
+          const exerciseResults = state.resultsByExercise[exerciseKey];
+          if (!exerciseResults || !(resultId in exerciseResults)) return state;
 
-        const { [resultId]: _removed, ...rest } = exerciseResults;
+          const { [resultId]: _removed, ...rest } = exerciseResults;
 
-        if (Object.keys(rest).length === 0) {
-          const { [exerciseKey]: _exerciseRemoved, ...remainingExercises } =
+          if (Object.keys(rest).length === 0) {
+            const { [exerciseKey]: _exerciseRemoved, ...remainingExercises } =
+              state.resultsByExercise;
+
+            return {
+              resultsByExercise: remainingExercises,
+            };
+          }
+
+          return {
+            resultsByExercise: {
+              ...state.resultsByExercise,
+              [exerciseKey]: rest,
+            },
+          };
+        });
+      },
+
+      clearExerciseResults: (exerciseKey) => {
+        set((state) => {
+          if (!(exerciseKey in state.resultsByExercise)) return state;
+
+          const { [exerciseKey]: _removed, ...remainingExercises } =
             state.resultsByExercise;
 
           return {
             resultsByExercise: remainingExercises,
           };
-        }
-
-        return {
-          resultsByExercise: {
-            ...state.resultsByExercise,
-            [exerciseKey]: rest,
-          },
-        };
-      });
+        });
+      },
+    }),
+    {
+      name: "pwk-apt-exercise-result",
+      storage: createJSONStorage(() => sessionStorage),
+      partialize: (state) => ({ resultsByExercise: state.resultsByExercise }),
     },
-
-    clearExerciseResults: (exerciseKey) => {
-      set((state) => {
-        if (!(exerciseKey in state.resultsByExercise)) return state;
-
-        const { [exerciseKey]: _removed, ...remainingExercises } =
-          state.resultsByExercise;
-
-        return {
-          resultsByExercise: remainingExercises,
-        };
-      });
-    },
-  }),
+  ),
 );

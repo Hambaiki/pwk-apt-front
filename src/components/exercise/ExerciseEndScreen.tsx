@@ -28,6 +28,20 @@ const ExerciseEndScreen = ({
 }: ExerciseEndScreenProps) => {
   const hasScore =
     typeof score === "number" && typeof total === "number" && total > 0;
+  const accuracy = hasScore ? Math.round((score / total) * 100) : null;
+
+  let feedbackMessage: string | null = null;
+  if (hasScore) {
+    if (score === total) {
+      feedbackMessage = "Perfect score! You nailed every question.";
+    } else if (score >= total * 0.8) {
+      feedbackMessage = "Great job! You're almost perfect.";
+    } else if (score >= total * 0.5) {
+      feedbackMessage = "Good effort! Keep practicing to improve even more.";
+    } else {
+      feedbackMessage = "Don't worry. Every mistake is a step toward learning.";
+    }
+  }
 
   return (
     <MainSection>
@@ -64,7 +78,7 @@ const ExerciseEndScreen = ({
                 Accuracy
               </p>
               <p className="text-2xl font-semibold text-neutral-900">
-                {Math.round((score / total) * 100)}%
+                {accuracy}%
               </p>
             </div>
             <div>
@@ -76,6 +90,12 @@ const ExerciseEndScreen = ({
               </p>
             </div>
           </Card>
+        )}
+
+        {feedbackMessage && (
+          <p className="text-center text-sm font-medium text-neutral-700 sm:text-base">
+            {feedbackMessage}
+          </p>
         )}
 
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">

@@ -16,12 +16,12 @@ const ComparisonExerciseQuestionPage = () => {
     if (instanceId === 0) {
       router.replace("/comparison");
     }
-  }, []);
+  }, [instanceId, router]);
 
   const items = useMemo(() => {
     if (instanceId === 0) return [] as ComparisonItem[];
     return generateComparisonExercise(config);
-  }, [instanceId]);
+  }, [instanceId, config]);
 
   if (instanceId === 0) return null;
 

@@ -34,7 +34,6 @@ const GridMemoryEndResultClient = ({ resultId }: { resultId?: string }) => {
     <GridMemoryResult
       grid={payload.grid}
       userGrid={payload.userGrid}
-      correctCount={payload.correctCount}
     />
   );
 };

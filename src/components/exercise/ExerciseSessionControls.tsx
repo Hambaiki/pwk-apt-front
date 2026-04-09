@@ -51,12 +51,13 @@ const ExerciseSessionControls = ({
     useState<number>(timerLimit);
   const hasTriggeredTimeUpRef = useRef(false);
 
-  // Uncontrolled mode: reset local timer when timerLimit changes.
-  useEffect(() => {
-    if (isControlledTimer) return;
-    setUncontrolledTimeRemaining(timerLimit);
-    hasTriggeredTimeUpRef.current = false;
-  }, [isControlledTimer, timerLimit]);
+  const handleRestart = () => {
+    if (!isControlledTimer) {
+      setUncontrolledTimeRemaining(timerLimit);
+      hasTriggeredTimeUpRef.current = false;
+    }
+    onRestart?.();
+  };
 
   // Uncontrolled mode: countdown locally once per second while running.
   useEffect(() => {
@@ -147,7 +148,7 @@ const ExerciseSessionControls = ({
             )}
 
             {onRestart && (
-              <Button variant="outline" onClick={onRestart}>
+              <Button variant="outline" onClick={handleRestart}>
                 <RefreshCcw size={16} />
                 <span className="ml-2 hidden sm:block">Restart</span>
               </Button>

@@ -1,6 +1,10 @@
 import ExerciseConfigureForm from "@/components/exercise/ExerciseConfigureForm";
-import { Checkbox } from "@/components/ui";
-import { FormInput, FormSelect, FormSelectOption } from "@/components/ui/form";
+import {
+  FormInput,
+  FormSelect,
+  FormSelectOption,
+  FormToggle,
+} from "@/components/ui/form";
 import { defaultConfig } from "../constants";
 import { ExerciseConfig } from "../types";
 
@@ -72,13 +76,23 @@ export default function ConfigurerForm({
           </div>
 
           <div className="space-y-3 rounded-lg border border-neutral-200 bg-surface p-3">
-            <Checkbox
-              checked={config.timed ?? false}
-              onChange={(e) =>
-                setConfig((prev) => ({ ...prev, timed: e.target.checked }))
-              }
-              label="Enable timed mode"
-            />
+            <div className="flex items-center justify-between gap-4 rounded-lg border border-neutral-100 bg-white px-3 py-2">
+              <div>
+                <p className="text-sm font-medium text-neutral-700">
+                  Enable timed mode
+                </p>
+                <p className="text-xs text-neutral-500">
+                  Adds a per-passage countdown.
+                </p>
+              </div>
+              <FormToggle
+                value={config.timed ?? false}
+                onChange={(checked) =>
+                  setConfig((prev) => ({ ...prev, timed: checked }))
+                }
+                aria-label="Toggle timed mode"
+              />
+            </div>
 
             <div className="flex max-w-xs flex-col space-y-1">
               <label className="text-sm font-medium text-neutral-700">
@@ -103,16 +117,26 @@ export default function ConfigurerForm({
               />
             </div>
 
-            <Checkbox
-              checked={config.autoPlayAudio ?? false}
-              onChange={(e) =>
-                setConfig((prev) => ({
-                  ...prev,
-                  autoPlayAudio: e.target.checked,
-                }))
-              }
-              label="Auto-play passage audio"
-            />
+            <div className="flex items-center justify-between gap-4 rounded-lg border border-neutral-100 bg-white px-3 py-2">
+              <div>
+                <p className="text-sm font-medium text-neutral-700">
+                  Auto-play passage audio
+                </p>
+                <p className="text-xs text-neutral-500">
+                  Starts narration automatically for each passage.
+                </p>
+              </div>
+              <FormToggle
+                value={config.autoPlayAudio ?? false}
+                onChange={(checked) =>
+                  setConfig((prev) => ({
+                    ...prev,
+                    autoPlayAudio: checked,
+                  }))
+                }
+                aria-label="Toggle auto-play passage audio"
+              />
+            </div>
           </div>
         </>
       )}
